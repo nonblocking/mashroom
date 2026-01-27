@@ -5,6 +5,8 @@ Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend
 
 This plugin adds a service for internationalization. It determines the language from the HTTP headers and supports translation of messages.
 
+Currently, it determines the users language either from the *accept-language" header or from a cookie named *mashroom_preferred_lang*.
+
 ## Usage
 
 If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-i18n** as *dependency*.

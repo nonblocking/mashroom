@@ -7,7 +7,8 @@ It exposes the full Bootstrap CSS, so you can use in your Microfrontends (Portal
 
  * All Bootstrap variables, like *--bs-primary*
  * All Bootstrap CSS classes, like *col-sm* and *btn-primary*
- * Any UI framework that uses Bootstrap, like [react-bootstrap](https://react-bootstrap.netlify.app)
+ * Any UI framework that uses Bootstrap, like [react-bootstrap](https://react-bootstrap.netlify.app) or [bootstrap-vue-next](https://bootstrap-vue-next.github.io/bootstrap-vue-next).
+   Check out [mashroom-portal-demo-react-bootstrap-app](../mashroom-portal-demo-react-bootstrap-app) for an example.
 
 The theme uses [Handlebars](https://handlebarsjs.com) as a template engine and comes with a dark mode.
 

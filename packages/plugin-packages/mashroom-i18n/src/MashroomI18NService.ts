@@ -13,6 +13,7 @@ import type {MashroomI18NService as MashroomI18NServiceType} from '../type-defin
 
 const BUILT_IN_MESSAGES_FOLDER = path.resolve(__dirname, '../messages');
 const MESSAGES_EXISTS_CACHE: Record<string, boolean> = {};
+const COOKIE_NAME_PREFERRED_LANGUAGE = 'mashroom_preferred_lang';
 
 export default class MashroomI18NService implements MashroomI18NServiceType {
 
@@ -38,9 +39,21 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
     getLanguage(req: Request): string {
         let language = req.session.lang;
         if (!language) {
-            language = this._detectBrowserLanguage(req);
-            this.setLanguage(language, req);
+            // Infer from cookie mashroom_portal_preferredLanguage
+            const cookie = req.headers['cookie'];
+            const preferredLang = cookie?.split(';')
+                ?.find((c) => c.indexOf(`${COOKIE_NAME_PREFERRED_LANGUAGE}=`) !== -1)
+                ?.split('=')
+                ?.pop();
+            if (preferredLang) {
+                language = preferredLang;
+            }
         }
+        if (!language) {
+            // Infer from browser language
+            language = this._detectBrowserLanguage(req);
+        }
+        this.setLanguage(language, req);
         return language;
     }
 

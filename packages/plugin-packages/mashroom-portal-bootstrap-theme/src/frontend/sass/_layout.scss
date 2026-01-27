@@ -348,18 +348,53 @@ footer {
     border-top: 1px solid $secondary;
     font-size: 0.8em;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: var(--mashroom-portal-spacing-default);
 
-    .powered-by {
-        text-align: center;
+    #display-mode-selector {
+        cursor: pointer;
+        margin-top: -2px;
+
+        &:after {
+            content: '\f042';
+            font-family: var(--mashroom-portal-font-icon), sans-serif;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
     }
 
-    .copyright {
-        text-align: center;
-    }
+    .language-selector {
+        cursor: pointer;
+        position: relative;
 
+        .current-language {
+            font-weight: bold;
+        }
+
+        #available-languages {
+            display: none;
+            position: absolute;
+            bottom: 20px;
+            background-color: var(--mashroom-portal-background-color-nav);
+            border: var(--bs-border-width) solid var(--bs-border-color);
+            border-radius: var(--bs-border-radius);
+
+            .language {
+                cursor: pointer;
+                padding: 2px var(--mashroom-portal-spacing-small);
+
+                &:hover {
+                    background-color: var(--mashroom-portal-background-color-nav-hover);
+                }
+            }
+
+            &.show {
+                display: block;
+            }
+        }
+    }
 }
-
-.mashroom-portal-apps-container {}
 
 #mashroom-portal-modal-overlay {
     position: fixed;

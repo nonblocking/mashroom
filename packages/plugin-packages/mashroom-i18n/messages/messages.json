@@ -9,5 +9,7 @@
     "portalAppLoadingFailed": "<strong>${name}</strong> is temporarily not available",
     "pageNotFound": "Page Not Found",
     "accessDenied": "Access Denied",
-    "serverError": "Server Error"
+    "serverError": "Server Error",
+    "selectLanguage": "Select Language",
+    "toggleDarkMode": "Toggle Dark Mode"
 }

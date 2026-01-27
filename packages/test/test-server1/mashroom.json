@@ -106,7 +106,7 @@
         },
         "Mashroom Security Default Login Webapp": {
             "pageTitle": "Mashroom Test Server",
-            "darkMode": false,
+            "darkMode": "auto",
             "styleFile": "./login_style.css"
         },
         "Mashroom Storage Services": {
@@ -186,14 +186,14 @@
             "showEnvAndVersions": true,
             "showPortalAppHeaders": false,
             "spaMode": true,
-            "darkMode": false,
+            "darkMode": "auto",
             "styleFile": "./defaultThemeOverrides.css"
         },
         "Mashroom Portal Bootstrap Theme": {
             "showEnvAndVersions": true,
             "showPortalAppHeaders": false,
             "spaMode": true,
-            "darkMode": false
+            "darkMode": "auto"
         },
         "Mashroom Remote Package Scanner": {
             "remotePackageUrls": "./remotePackageUrls.json"

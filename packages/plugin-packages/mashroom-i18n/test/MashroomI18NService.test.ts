@@ -5,7 +5,7 @@ import MashroomI18NService from '../src/MashroomI18NService';
 
 describe('MashroomI18NService', () => {
 
-    it('determines the browser locale correctly', () => {
+    it('determines the user language from the accept-language header', () => {
         const i18nService = new MashroomI18NService(['fr', 'en', 'de'], 'de', '', '', loggingUtils.dummyLoggerFactory);
 
         const req: any = {
@@ -23,6 +23,26 @@ describe('MashroomI18NService', () => {
 
         expect(lang).toBe('en');
         expect(req.session.lang).toBe('en');
+    });
+
+    it('determines the user language from the preferred language cookie', () => {
+        const i18nService = new MashroomI18NService(['fr', 'en', 'de'], 'de', '', '', loggingUtils.dummyLoggerFactory);
+
+        const req: any = {
+            headers: {
+                cookie: 'foo=bar; mashroom_preferred_lang=fr; x=2',
+            },
+            session: {
+            },
+            pluginContext: {
+                loggerFactory: loggingUtils.dummyLoggerFactory,
+            }
+        };
+
+        const lang = i18nService.getLanguage(req);
+
+        expect(lang).toBe('fr');
+        expect(req.session.lang).toBe('fr');
     });
 
     it('sets the locale in the session object', () => {
