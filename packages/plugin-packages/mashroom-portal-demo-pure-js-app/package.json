@@ -14,7 +14,7 @@
         "mashroom.ts"
     ],
     "devDependencies": {
-        "@mashroom/mashroom-portal": "2.9.3"
+        "@mashroom/mashroom-portal": "2.9.4"
     },
     "scripts": {
         "lint": "eslint --fix",

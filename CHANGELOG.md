@@ -138,6 +138,10 @@
 
 ## [unreleased v2]
 
+## 2.9.4 (January 5, 2026)
+
+ * Core: The *trustProxy* property is now also propagated to child webapps, which was not the case by default. See: https://github.com/expressjs/express/issues/2552
+
 ## 2.9.3 (December 10, 2025)
 
  * Core: Added a server config property *trustProxy* which is forwarded to [Express](https://expressjs.com/en/5x/api.html#trust.proxy.options.table).

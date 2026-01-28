@@ -14,8 +14,8 @@
     ],
     "devDependencies": {
         "@open-microfrontends/types": "^1.0.0",
-        "@mashroom/mashroom": "2.9.3",
-        "@mashroom/mashroom-utils": "2.9.3"
+        "@mashroom/mashroom": "2.9.4",
+        "@mashroom/mashroom-utils": "2.9.4"
     },
     "jest": {
         "testEnvironment": "node",

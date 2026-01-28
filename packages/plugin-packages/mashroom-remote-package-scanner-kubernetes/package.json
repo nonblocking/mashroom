@@ -21,9 +21,9 @@
         "semver": "^7.7.2"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.9.3",
-        "@mashroom/mashroom-monitoring-metrics-collector": "2.9.3",
-        "@mashroom/mashroom-utils": "2.9.3",
+        "@mashroom/mashroom": "2.9.4",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.9.4",
+        "@mashroom/mashroom-utils": "2.9.4",
         "@types/semver": "^7.7.0"
     },
     "jest": {

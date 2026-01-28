@@ -60,8 +60,11 @@ export default class MashroomWebAppPluginLoader implements MashroomPluginLoader 
             }
         }
 
-        if (webapp && typeof (webapp.disable) === 'function') {
+        if (webapp && process.env.NODE_ENV !== 'test') {
             webapp.disable('x-powered-by');
+            // Express sets some defaults on webapps that override the parent ones,
+            // see https://github.com/expressjs/express/issues/2552
+            webapp.set('trust proxy', contextHolder.getPluginContext().serverConfig.trustProxy);
         }
 
         this._logger.info(`Adding ${plugin.type} Express plugin ${plugin.name} to path: ${pluginConfig.path}`);
