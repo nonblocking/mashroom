@@ -11,7 +11,7 @@ type Props = {
     labelId: string,
 }
 
-export default ({ id, name, labelId}: Props) => {
+export default ({ name, labelId}: Props) => {
     const [field, meta, helpers] = useField(name);
     const languages = useStore((state) => state.languages);
 
@@ -96,7 +96,7 @@ export default ({ id, name, labelId}: Props) => {
 
     return (
         <div className={`i18nstring-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
-            <FieldLabel htmlFor={id} labelId={labelId} />
+            <FieldLabel labelId={labelId} />
             <div>
                 <div className='i18n-field-inputs'>
                     {inputFields}

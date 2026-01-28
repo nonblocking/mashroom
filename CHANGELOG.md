@@ -3,6 +3,10 @@
 
 ## [unreleased v3]
 
+ * Added a [React Bootstrap Demo Microfrontend](packages/plugin-packages/mashroom-portal-demo-react-bootstrap-app)
+ * Added a new [Boostrap based Portal Theme](packages/plugin-packages/mashroom-portal-bootstrap-theme) which is also the Default Theme now.
+   It uses the default Boostrap customizing and exposes all Bootstrap components.
+   So, Microfrontends can use libraries like [react-bootstrap](https://react-bootstrap.netlify.app) or [bootstrap-vue-next](https://bootstrap-vue-next.github.io/bootstrap-vue-next).
  * Portal: Added new plugin type *portal-app-config*.
    This plugin can be used to (re-)configure one or many Portal Apps and to adapt:
    * The proxy target URL

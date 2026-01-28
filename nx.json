@@ -17,7 +17,8 @@
       "outputs": [
         "{projectRoot}/dist",
         "{projectRoot}/lib",
-        "{projectRoot}/public"
+        "{projectRoot}/public",
+        "{projectRoot}/views"
       ]
     },
     "lint": {

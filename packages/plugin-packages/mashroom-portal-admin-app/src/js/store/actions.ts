@@ -206,6 +206,11 @@ export type ShowModalAction = {
     readonly show: boolean;
 }
 
+export type SetAppWrapperDataAttributesAction = {
+    readonly type: 'SET_APP_WRAPPER_DATA_ATTRIBUTES';
+    readonly dataAttributes: Record<string, string>;
+}
+
 export type SetActiveTabAction = {
     readonly type: 'SET_ACTIVE_TAB';
     readonly dialogName: string;
@@ -220,7 +225,8 @@ export type AnyAction = SetUserNameAction | SetShowPortalAppControls | SetAvaila
     | SetSelectedPageLoadingErrorAction | SetSelectedPageUpdatingErrorAction | SetSelectedPageDataAction | SetSelectedPageRefDataAction
     | SetPagesLoadingAction | SetPagesErrorAction | SetPagesAction | SetPagesFlattenedAction | SetSelectedPagePermittedRolesAction
     | SetSelectedSiteAction | SetSelectedSiteNewAction | SetSelectedSiteLoadingAction | SetSelectedSiteLoadingErrorAction
-    | SetSelectedSiteUpdatingErrorAction | SetSelectedSiteDataAction | SetSelectedSitePermittedRolesAction | ShowModalAction | SetActiveTabAction;
+    | SetSelectedSiteUpdatingErrorAction | SetSelectedSiteDataAction | SetSelectedSitePermittedRolesAction | ShowModalAction
+    | SetAppWrapperDataAttributesAction | SetActiveTabAction;
 
 export const setUserName = (userName: string): SetUserNameAction => {
     return {
@@ -495,6 +501,13 @@ export const setShowModal = (dialogName: string, show: boolean): ShowModalAction
         type: 'SET_SHOW_MODAL',
         dialogName,
         show,
+    };
+};
+
+export const setAppWrapperDataAttributes = (dataAttributes: Record<string, string>): SetAppWrapperDataAttributesAction => {
+    return {
+        type: 'SET_APP_WRAPPER_DATA_ATTRIBUTES',
+        dataAttributes,
     };
 };
 

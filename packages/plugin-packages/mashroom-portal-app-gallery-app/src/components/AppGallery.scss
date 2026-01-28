@@ -1,7 +1,7 @@
 @use "../variables" as *;
 
 .AppGallery {
-    background-color: $COLOR_BACKGROUND;
+    background-color: transparent;
     padding: $DEFAULT_SPACING;
 
     h2 {
@@ -10,7 +10,7 @@
     }
 
     .Error {
-        color: $COLOR_ERROR;
+        color: red;
         padding: $DEFAULT_SPACING;
     }
 

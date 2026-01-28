@@ -1,11 +1,14 @@
 
 import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mashroom/mashroom-portal/type-definitions';
 
-(global as any).toggleMenu = () => {
+const COOKIE_DISPLAY_MODE = 'mashroom_portal_display_mode';
+const COOKIE_PREFERRED_LANGUAGE = 'mashroom_preferred_lang';
+
+(globalThis as any).toggleMenu = () => {
     document.getElementById('navigation')?.classList.toggle('show');
 };
 
-(global as any).toggleShowAppVersions = () => {
+(globalThis as any).toggleShowAppVersions = () => {
     const clientServices: MashroomPortalClientServices | undefined = (global as any).MashroomPortalServices;
     if (!clientServices) {
         return;
@@ -17,7 +20,7 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
     }
 };
 
-(global as any).onpopstate = (ev: PopStateEvent) => {
+(globalThis as any).onpopstate = (ev: PopStateEvent) => {
     const clientServices: MashroomPortalClientServices | undefined = (global as any).MashroomPortalServices;
     if (!clientServices) {
         return;
@@ -46,7 +49,7 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
 };
 
 // Dynamically replace the page content
-(global as any).replacePageContent = (pageId: string, pageUrl: string, dontAddToHistory = false): boolean => {
+(globalThis as any).replacePageContent = (pageId: string, pageUrl: string, dontAddToHistory = false): boolean => {
     const clientServices: MashroomPortalClientServices | undefined = (global as any).MashroomPortalServices;
     if (!clientServices) {
         return false;
@@ -124,3 +127,68 @@ const highlightPageIdInNavigation = (pageId: string): void => {
         newActiveNavItem.classList.add('active');
     }
 };
+
+const initDisplayMode = () => {
+    const preferDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    let mode = document.documentElement.getAttribute('data-bs-theme');
+    let modeFromCookie = getCookieValue(COOKIE_DISPLAY_MODE);
+    if (modeFromCookie) {
+        mode = modeFromCookie;
+    }
+    if (!mode || mode === 'auto') {
+        mode = preferDarkMode ? 'dark' : 'light';
+    }
+    document.documentElement.setAttribute('data-bs-theme', mode);
+    (globalThis as any).__MASHROOM_PORTAL_DARK_MODE__ = mode === 'dark';
+};
+
+(globalThis as any).toggleDisplayMode = () =>  {
+    const mode = document.documentElement.getAttribute('data-bs-theme');
+    const newMode = mode === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-bs-theme', newMode);
+    (globalThis as any).__MASHROOM_PORTAL_DARK_MODE__ = newMode === 'dark';
+    setCookie(COOKIE_DISPLAY_MODE, newMode);
+};
+
+const languageSelectorOutsideClickListener = (event: MouseEvent) => {
+    const availableLanguages = document.getElementById('available-languages');
+    if (!availableLanguages?.contains(event.target as Node)) {
+        availableLanguages?.classList.remove('show');
+        globalThis.removeEventListener('click', languageSelectorOutsideClickListener);
+    }
+};
+
+(globalThis as any).openLanguageSelector = () =>  {
+    const availableLanguages = document.getElementById('available-languages');
+    if (!availableLanguages) {
+        return;
+    }
+    availableLanguages.classList.add('show');
+    setTimeout(() => globalThis.addEventListener('click', languageSelectorOutsideClickListener), 100);
+};
+
+(globalThis as any).selectLanguage = (lang: string) =>  {
+    document.getElementById('available-languages')?.classList.remove('show');
+    globalThis.removeEventListener('click', languageSelectorOutsideClickListener);
+    const clientServices: MashroomPortalClientServices | undefined = (global as any).MashroomPortalServices;
+    if (!clientServices) {
+        return;
+    }
+    setCookie(COOKIE_PREFERRED_LANGUAGE, lang);
+    clientServices.portalUserService.setUserLanguage(lang).then(() => {
+        document.location.reload();
+    });
+};
+
+const setCookie = (name: string, value: string) => {
+    document.cookie = `${name}=${value};path=/;max-age=31536000`;
+};
+
+const getCookieValue = (name: string): string | undefined => {
+    return document.cookie
+        .split(';')
+        .find((row) => row.indexOf(`${name}=`) !== -1)
+        ?.split('=').pop();
+};
+
+initDisplayMode();

@@ -142,8 +142,8 @@ $COLOR_DROP_ZONE: var(--mashroom-admin-app-color-drop-zone, #645e9d);
         width: 70%;
 
         .mashroom-portal-app-sidebar {
-            width: calc(42% - var(--mashroom-portal-gutter-width, 0));
-            padding-right: var(--mashroom-portal-gutter-width, 0);
+            width: calc(42% - 16px);
+            padding-right: 16px;
         }
     }
 }

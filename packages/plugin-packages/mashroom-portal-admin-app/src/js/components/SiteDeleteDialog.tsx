@@ -17,6 +17,7 @@ export default () => {
     const sites = useStore((state) => state.sites);
     const selectedSite = useStore((state) => state.selectedSite);
     const showModal = useStore((state) => !!state.modals[DIALOG_NAME_SITE_DELETE]?.show);
+    const appWrapperDataAttributes = useStore((state) => state.appWrapperDataAttributes);
     const dispatch = useStore((state) => state.dispatch);
     const {portalAdminService} = useContext(DependencyContext);
     const setErrorUpdating = (error: boolean) => dispatch(setSelectedSiteUpdatingError(error));
@@ -83,6 +84,7 @@ export default () => {
     return (
         <Modal
             appWrapperClassName='mashroom-portal-admin-app'
+            appWrapperDataAttributes={appWrapperDataAttributes}
             className='site-delete-dialog'
             show={showModal}
             close={closeModal}

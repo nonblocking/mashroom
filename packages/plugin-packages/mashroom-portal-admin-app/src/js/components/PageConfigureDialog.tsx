@@ -53,6 +53,7 @@ export default () => {
     const availableLayouts = useStore((state) => state.availableLayouts);
     const selectedPage = useStore((state) => state.selectedPage);
     const showModal = useStore((state) => !!state.modals[DIALOG_NAME_PAGE_CONFIGURE]?.show);
+    const appWrapperDataAttributes = useStore((state) => state.appWrapperDataAttributes);
     const activeTabName = useStore((state) => state.tabDialogs[TAB_DIALOG_ID]?.active);
     const dispatch = useStore((state) => state.dispatch);
     const {dataLoadingService, portalAdminService, portalSiteService} = useContext(DependencyContext);
@@ -315,6 +316,7 @@ export default () => {
     return (
         <Modal
             appWrapperClassName='mashroom-portal-admin-app'
+            appWrapperDataAttributes={appWrapperDataAttributes}
             className='page-configure-dialog'
             show={showModal}
             close={closeModal}

@@ -10,7 +10,7 @@ import type {MashroomPortalPageRenderModel} from '@mashroom/mashroom-portal/type
 
 themeParams.setParams({
     spaMode: false,
-    darkMode: false,
+    darkMode: true,
     logoImageUrl: null,
     styleFile: null,
     showPortalAppHeaders: true,
@@ -259,8 +259,8 @@ app.get('/', (req: Request, res: Response) => {
     res.render('portal', model);
 });
 
-app.listen(5055, () => {
-    console.info('Server started at port 5055');
+app.listen(5066, () => {
+    console.info('Server started at http://localhost:5066');
 });
 app.once('error', (error) => {
     console.error('Failed to start server!', error);

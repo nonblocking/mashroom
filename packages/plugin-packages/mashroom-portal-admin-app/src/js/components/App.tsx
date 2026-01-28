@@ -2,7 +2,7 @@
 import '../../sass/style.scss';
 
 import React, {useEffect, useMemo} from 'react';
-import {setUserName, setCurrentLanguage} from '../store/actions';
+import {setUserName, setCurrentLanguage, setAppWrapperDataAttributes} from '../store/actions';
 import MessagesProvider from '../messages/MessagesProvider';
 import {DependencyContextProvider} from '../DependencyContext';
 import PortalAppManagementServiceImpl from '../services/PortalAppManagementServiceImpl';
@@ -25,6 +25,7 @@ type Props = {
     portalUserService: MashroomPortalUserService;
     portalAppService: MashroomPortalAppService;
     portalAdminService: MashroomPortalAdminService;
+    appWrapperDataAttributes: Record<string, string>;
 }
 
 export default ({
@@ -33,13 +34,17 @@ export default ({
     portalSiteService,
     portalUserService,
     portalAppService,
-    portalAdminService
+    portalAdminService,
+    appWrapperDataAttributes,
 }: Props) => {
     const dispatch = useStore((state) => state.dispatch);
 
     useEffect(() => {
         dispatch(setUserName(userName || 'Administrator'));
         dispatch(setCurrentLanguage(lang));
+        if (appWrapperDataAttributes) {
+            dispatch(setAppWrapperDataAttributes(appWrapperDataAttributes));
+        }
     }, []);
 
     const dependencyContext: DependencyContextType = useMemo(() => {
@@ -67,4 +72,3 @@ export default ({
         </MessagesProvider>
     );
 };
-

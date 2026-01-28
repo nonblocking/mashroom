@@ -30,6 +30,7 @@ export type State = {
     readonly selectedPage: SelectedPage | undefined | null;
     readonly selectedSite: SelectedSite | undefined | null;
     readonly modals: ModalState;
+    readonly appWrapperDataAttributes: Record<string,string>;
     readonly tabDialogs: TabDialogState;
 }
 

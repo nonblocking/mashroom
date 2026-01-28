@@ -1,0 +1,31 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Demo React Bootstrap App",
+            "type": "portal-app2",
+            "clientBootstrap": "startReactBoostrapDemoApp",
+            "resources": {
+                "js": [
+                    "bundle.js"
+                ]
+            },
+            "screenshots": [
+                "screenshot.png"
+            ],
+            "local": {
+                "resourcesRoot": "./dist"
+            },
+            "defaultConfig": {
+                "title": "Demo React Bootstrap App",
+                "description": {
+                    "en": "A Microfrontend that uses React Bootstrap components"
+                },
+                "category": "Demo",
+                "appConfig": {
+                }
+            }
+        }
+    ]
+}

@@ -1,6 +1,6 @@
 {{! Portal page template }}
 <!doctype html>
-<html lang="{{lang}}" data-mashroom-theme="{{darkMode}}">
+<html lang="{{lang}}" data-bs-theme={{darkMode}}>
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta charset="utf-8">
@@ -33,11 +33,7 @@
     <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/solid.css?v={{fontawesomeVersion}}">
     <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/brands.css?v={{fontawesomeVersion}}">
 
-    {{#ifSpaMode}}
-        {{{inlineStyle 'portal.css'}}}
-    {{else}}
-        <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/portal.css?v={{themeVersionHash}}">
-     {{/ifSpaMode}}
+    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/portal.css?v={{themeVersionHash}}">
     {{#if user.admin}}
         <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/admin.css?v={{themeVersionHash}}">
     {{/if}}
@@ -53,17 +49,11 @@
     {{/if}}
 
     <script type="application/javascript" src="{{resourcesBasePath}}/main.js?v={{themeVersionHash}}"></script>
-
-    <script>
-        const preferDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const mode = document.getElementsByTagName("html")[0].getAttribute('data-mashroom-theme');
-        window.__MASHROOM_PORTAL_DARK_MODE__ = mode === 'dark' || mode === 'auto' && preferDarkMode;
-    </script>
 </head>
 <body>
     {{#if user.admin}}
         {{#if adminApp}}
-            <div id="mashroom-portal-admin-app-container">
+            <div id="mashroom-portal-admin-app-container" data-bs-theme="dark">
                 <!-- Admin app goes here -->
             </div>
         {{/if}}
@@ -129,7 +119,18 @@
 
     <footer>
         <div class="powered-by">
-            Powered by <a href="https://www.mashroom-server.com" rel="noopener" target="_blank">Mashroom Portal Server</a>
+            Powered by <a href="https://www.mashroom-server.com" target="_blank">Mashroom Portal Server</a>
+        </div>
+        <div id="display-mode-selector" title="{{__ messages "toggleDarkMode"}}" onclick="toggleDisplayMode()" role="switch"></div>
+        <div class="language-selector">
+            <div title="{{__ messages "selectLanguage"}}" onclick="openLanguageSelector()" class="current-language" role="button">
+                {{lang}}
+            </div>
+            <div id="available-languages" role="combobox">
+                 {{#each availableLanguages}}
+                    <div class="language" onclick="selectLanguage('{{this}}')" role="menuitem">{{this}}</div>
+                 {{/each}}
+            </div>
         </div>
     </footer>
 

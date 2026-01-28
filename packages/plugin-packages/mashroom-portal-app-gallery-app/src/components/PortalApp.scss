@@ -1,7 +1,7 @@
 @use "../variables" as *;
 
 .PortalApp {
-    background-color: $COLOR_PORTAL_APP_BACKGROUND;
+    background-color: transparent;
     box-shadow: 0 0 4px $COLOR_PORTAL_APP_BORDER;
     border-radius: 10px;
 
@@ -34,7 +34,7 @@
             margin: 3px 0;
 
             .DetailLabel {
-                color: var(--mashroom-portal-color-text-secondary);
+                color: #888;
                 flex: 0 0 135px;
             }
 

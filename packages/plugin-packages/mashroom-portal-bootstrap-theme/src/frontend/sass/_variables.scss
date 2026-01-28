@@ -1,0 +1,50 @@
+
+// Bootstrap variables
+// Light: https://github.com/twbs/bootstrap/blob/main/scss/_variables.scss
+// Dark: https://github.com/twbs/bootstrap/blob/main/scss/_variables-dark.scss
+$font-family-sans-serif: 'Open Sans', Helvetica, Arial, sans-serif;
+$headings-font-family: Bitter, 'Lucida Grande', 'Lucida Sans Unicode', serif;
+$primary: #4D487F;
+$secondary: #C49B5E;
+$body-bg: #F2F2F2;
+$body-bg-dark: #100F1A;
+$body-color: #111;
+$body-color-dark: white;
+$border-radius: 8px;
+$grid-gutter-width: 16px;
+$input-btn-padding-x: 16px;
+$input-btn-padding-y: 8px;
+$input-padding-x: 16px;
+$input-padding-y: 8px;
+$input-placeholder-color: #AAA;
+$table-bg: transparent;
+
+// Mashroom Portal variables
+$font-family-icon: 'Font Awesome 6 Free';
+$accent: #61DBFB;
+$spacing: 16px;
+$header-bg-color: $primary;
+$header-bg-color-dark: #201D35;
+$app-bg-color: white;
+$app-bg-color-dark: #1C192E;
+$app-bg-color-header: white;
+$app-bg-color-header-dark: #181628;
+$modal-bg-color: white;
+$modal-bg-color-dark: #181628;
+$modal-bg-color-header: white;
+$modal-bg-color-header-dark: #181628;
+$nav-color: #333;
+$nav-color-dark: #AAA;
+$nav-color-hover: black;
+$nav-color-hover-dark: white;
+$nav-color-active: white;
+$nav-color-active-dark: white;
+$nav-bg-color: #fafafa;
+$nav-bg-color-dark: #15141F;
+$nav-bg-color-hover: var(--bs-primary-bg-subtle);
+$nav-bg-color-hover-dark: #3a365f;
+$nav-bg-color-active: var(--bs-link-color);
+$nav-bg-color-active-dark: $primary;
+$admin-panel-bg: #222;
+$admin-panel-font-size: 14px;
+$admin-panel-bg-color-hover: #292645;
