@@ -1,5 +1,3 @@
-/* eslint no-console: off */
-
 import express from 'express';
 import {engine} from 'express-handlebars';
 import helpers from './handlebar-helpers';
@@ -115,22 +113,26 @@ app.get('/', (req: Request, res: Response) => {
                                 <h3>Header 3</h3>
                                 <h4>Header 4</h4>
                                 <table class="table-striped">
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Age</th>
-                                    </tr>
-                                    <tr>
-                                        <td>Malcom</td>
-                                        <td>12</td>
-                                    </tr>
-                                     <tr>
-                                        <td>Reese</td>
-                                        <td>14</td>
-                                    </tr>
-                                     <tr>
-                                        <td>Francis</td>
-                                        <td>18</td>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Age</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Malcom</td>
+                                            <td>12</td>
+                                        </tr>
+                                         <tr>
+                                            <td>Reese</td>
+                                            <td>14</td>
+                                        </tr>
+                                         <tr>
+                                            <td>Francis</td>
+                                            <td>18</td>
+                                        </tr>
+                                    </tbody>
                                 </table>
 
                                 <br/>

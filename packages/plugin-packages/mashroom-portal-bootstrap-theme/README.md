@@ -56,7 +56,7 @@ Structure of the theme plugin:
  * frontend
    * js
      * main.ts → helper functions and the logic to replace the page content (SPA mode)
-   * sass
+   * style
      * _apps.scss → style overrides for specific Portal Apps
      * _base.scss → style for base elements such as headers
      * _components.scss → styles for common ui components use by the Admin toolbar and other Apps shipped with Mashroom

@@ -14,7 +14,7 @@
         "mashroom.json"
     ],
     "devDependencies": {
-        "mashroom-portal-bootstrap-theme": "1.0.0"
+        "@mashroom/mashroom-portal-bootstrap-theme": "1.0.0"
     },
     "scripts": {
         "build": "node copy-theme mashroom-portal-bootstrap-theme"
