@@ -1,0 +1,24 @@
+<ul class="nav flex-column">
+    {{#each this}}
+        {{#unless hidden}}
+            <li class="nav-item">
+                {{#equals pageId @root.page.pageId}}
+                    {{#ifSpaMode}}
+                        <a class="nav-link active" href="{{@root.siteBasePath}}{{friendlyUrl}}" onclick="return replacePageContent('{{pageId}}', '{{@root.siteBasePath}}{{friendlyUrl}}')" data-mr-page-id="{{pageId}}">{{title}}</a>
+                    {{else}}
+                        <a class="nav-link active" href="" onclick="return false">{{title}}</a>
+                    {{/ifSpaMode}}
+                {{else}}
+                    {{#ifSpaMode}}
+                        <a class="nav-link" href="{{@root.siteBasePath}}{{friendlyUrl}}" onclick="return replacePageContent('{{pageId}}', '{{@root.siteBasePath}}{{friendlyUrl}}')" data-mr-page-id="{{pageId}}">{{title}}</a>
+                    {{else}}
+                        <a class="nav-link" href="{{@root.siteBasePath}}{{friendlyUrl}}">{{title}}</a>
+                    {{/ifSpaMode}}
+                {{/equals}}
+                {{#if subPages}}
+                    {{> pages subPages}}
+                {{/if}}
+            </li>
+        {{/unless}}
+    {{/each}}
+</ul>

@@ -1,7 +1,6 @@
 
 node_modules/
 dist/
-lib/
 test-data/
 test-reports/
 tmp/
@@ -16,6 +15,7 @@ lerna-debug.log
 .angular
 .nx
 
+/packages/core/mashroom-utils/lib
 /packages/plugin-packages/mashroom-background-jobs/public/
 /packages/plugin-packages/mashroom-docs-static/public/docs/
 /packages/plugin-packages/mashroom-remote-package-scanner/public/

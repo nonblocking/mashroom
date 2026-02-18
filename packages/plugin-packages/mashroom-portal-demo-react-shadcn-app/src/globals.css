@@ -1,0 +1,8 @@
+
+/* Wrap the generated utilities, so they are only applied to this App */
+#mashroom-portal-demo-react-shadcn-app {
+    @tailwind utilities;
+}
+
+/* Do NOT @import theme.css, because it must be provided by the Microfrontend host/shell */
+@reference "@mashroom/mashroom-portal-tailwind-theme/theme.css";

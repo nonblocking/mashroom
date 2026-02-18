@@ -1,8 +1,6 @@
-@import 'variables';
-@import 'mixins';
 
 header {
-    background-color: var(--mashroom-portal-background-color-header);
+    background-color: var(--color-header-background);
     color: white;
     position: relative;
 
@@ -36,11 +34,11 @@ header {
         font-size: 0.8em;
         line-height: 1.3em;
         margin-left: var(--mashroom-portal-spacing-default);
-        color: #DDD;
+        color: var(--color-gray-200);
         padding: 10px 0;
 
         a {
-            color: #DDD;
+            color: var(--color-gray-200);
 
             &:hover {
                 color: white;
@@ -104,19 +102,19 @@ header {
 .loading-animation {
     width: 100%;
     height: 2px;
-    background-color: var(--bs-secondary);
+    background-color: var(--color-secondary);
     position: relative;
 
     .loading-animation-progress {
         display: none;
         height: 2px;
-        background-color: var(--mashroom-portal-background-color-header);
+        background-color: var(--color-header-background);
         position: absolute;
         top: 0;
         right: 100%;
         bottom: 0;
         left: 0;
-        animation: progress-bar 1s linear infinite;
+        animation: var(--animate-progress-bar);
 
         &.show {
             display: block;
@@ -125,9 +123,9 @@ header {
 }
 
 .mashroom-portal-app-wrapper {
-    background-color: var(--mashroom-portal-background-color-app);
-    margin-bottom: $grid-gutter-width;
-    border-radius: 8px;
+    background-color: var(--color-app-background);
+    margin-bottom: var(--mashroom-portal-spacing-default);
+    border-radius: var(--radius-md);
 
     .mashroom-portal-app-host {
         min-height: 20px;
@@ -136,7 +134,6 @@ header {
     .mashroom-portal-app-loading {
         min-height: 100px;
         overflow: hidden;
-        opacity: 0;
         animation: show-delayed 0.1s;
         animation-delay: 1s;
         animation-iteration-count: 1;
@@ -149,8 +146,8 @@ header {
             width: 10px;
             height: 10px;
             border-radius: 5px;
-            background-color: var(--bs-primary-light);
-            animation: dot-flashing 1s infinite linear alternate;
+            background-color: var(--color-primary-subtle);
+            animation: var(--animate-dot-flashing);
             animation-delay: 1.5s;
             top: 0;
 
@@ -167,8 +164,8 @@ header {
                 width: 10px;
                 height: 10px;
                 border-radius: 5px;
-                background-color: var(--bs-primary-light);
-                animation: dot-flashing 1s infinite alternate;
+                background-color: var(--color-primary-subtle);
+                animation: var(--animate-dot-flashing);
                 animation-delay: 1s;
             }
 
@@ -177,23 +174,23 @@ header {
                 width: 10px;
                 height: 10px;
                 border-radius: 5px;
-                background-color: var(--bs-primary-light);
-                animation: dot-flashing 1s infinite alternate;
+                background-color: var(--color-primary-subtle);
+                animation: var(--animate-dot-flashing);
                 animation-delay: 2s;
             }
         }
     }
 
     .mashroom-portal-app-loading-error {
-        color: var(--bs-danger);
+        color: var(--color-destructive);
         padding: var(--mashroom-portal-spacing-small);
     }
 
     .mashroom-portal-app-header {
         display: none;
         align-items: center;
-        background-color: var(--mashroom-portal-background-color-app-header);
-        border-bottom: 1px solid var(--bs-body-bg);
+        background-color: var(--color-app-header-background);
+        border-bottom: 1px solid var(--color-background);
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
 
@@ -211,21 +208,13 @@ header {
                 font-family: var(--mashroom-portal-font-icon), sans-serif;
                 font-weight: bold;
                 padding-right: var(--mashroom-portal-spacing-default);
-                color: var(--bs-link-color);
+                color: var(--color-link);
             }
 
             &:hover:before {
-                color: var(--bs-link-hover-color);
+                color: var(--color-link-hover);
             }
         }
-    }
-
-    &.no-border {
-        box-shadow: none;
-    }
-
-    &.no-margin {
-        margin-bottom: 0;
     }
 
     &.show-header {
@@ -243,8 +232,8 @@ header {
     .mashroom-portal-app-info {
         left: 0;
         top: 0;
-        background-color: var(--bs-secondary-bg-subtle);
-        border: 2px solid var(--bs-secondary);
+        background-color: var(--color-secondary-subtle);
+        border: 2px solid var(--color-secondary);
         font-size: 0.7em;
         font-weight: bold;
         line-height: 1.2em;
@@ -256,8 +245,7 @@ header {
 
 
 main {
-    background-color: var(--bs-body-bg);
-    padding: $grid-gutter-width calc($grid-gutter-width / 2);
+    padding: var( --mashroom-portal-spacing-default) var( --mashroom-portal-spacing-small);
 
     &.show-portal-app-headers {
         .mashroom-portal-app-wrapper {
@@ -272,6 +260,7 @@ main {
         white-space: nowrap;
         min-width: 200px;
         margin-top: -15px;
+        margin-bottom: var(--mashroom-portal-spacing-default);
 
         &.show {
             display: block;
@@ -280,7 +269,6 @@ main {
         .nav {
             list-style: none;
             padding: 0;
-
         }
 
         .nav .nav {
@@ -308,24 +296,23 @@ main {
                 display: block;
                 position: relative;
                 padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
-                background-color: var(--mashroom-portal-background-color-nav);
-                color: var(--mashroom-portal-nav-color);
+                background-color: var(--color-nav-background);
+                color: var(--color-nav);
                 text-decoration: none;
-                @include hover-animation();
-
+                transition: var(--transition-hover);
 
                 &:hover {
-                    background-color: var(--mashroom-portal-background-color-nav-hover);
+                    background-color: var(--color-nav-hover-background);
                     color: var(--mashroom-portal-color-nav-hover);
                 }
 
                 &.active {
                     cursor: default;
-                    color: var(--mashroom-portal-color-nav-active);
-                    background-color: var(--mashroom-portal-background-color-nav-active);
+                    color: var(--color-nav-active);
+                    background-color: var(--color-nav-active-background);
 
                     &:hover {
-                        color: var(--mashroom-portal-color-nav-active);
+                        color: var(--color-nav-active);
                     }
                 }
             }
@@ -343,9 +330,8 @@ main {
 }
 
 footer {
-    color: var(--bs-secondary-color);
     padding: var(--mashroom-portal-spacing-default) 0;
-    border-top: 1px solid $secondary;
+    border-top: 1px solid var(--color-secondary);
     font-size: 0.8em;
     width: 100%;
     display: flex;
@@ -376,16 +362,16 @@ footer {
             display: none;
             position: absolute;
             bottom: 20px;
-            background-color: var(--mashroom-portal-background-color-nav);
-            border: var(--bs-border-width) solid var(--bs-border-color);
-            border-radius: var(--bs-border-radius);
+            background-color: var(--color-nav-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
 
             .language {
                 cursor: pointer;
                 padding: 2px var(--mashroom-portal-spacing-small);
 
                 &:hover {
-                    background-color: var(--mashroom-portal-background-color-nav-hover);
+                    background-color: var(--color-nav-hover-background);
                 }
             }
 
@@ -404,7 +390,7 @@ footer {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(#444, 0.6);
+    background-color: oklch(55.1% 0.027 264.364 / 50%);
     z-index: 5000;
     display: none;
 
@@ -418,7 +404,7 @@ footer {
         margin: 10% auto;
         min-width: 250px;
         max-width: 90%;
-        box-shadow: 4px 4px 8px #444;
+        box-shadow: 4px 4px 8px var(--color-gray-300);
         transition: opacity 0.3s ease;
     }
 
@@ -427,8 +413,8 @@ footer {
         display: flex;
         align-items: center;
         width: 100%;
-        background-color: var(--mashroom-portal-background-color-modal-header);
-        border-bottom: 1px solid var(--bs-body-bg);
+        background-color: var(--color-modal-header-background);
+        border-bottom: 1px solid var(--color-background);
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
 
@@ -439,8 +425,8 @@ footer {
             font-weight: bold;
 
             .mashroom-portal-modal-overlay-number {
-                background-color: var(--bs-body-color);
-                color: var(--mashroom-portal-background-color-modal-header);
+                background-color: var(--color-background);
+                color: var(--color-modal-header-background);
                 border-radius: 3px;
                 padding: 0 5px;
                 margin-right: var(--mashroom-portal-spacing-small);
@@ -460,11 +446,11 @@ footer {
                 content: '\f00d';
                 font-family: var(--mashroom-portal-font-icon), sans-serif;
                 font-weight: bold;
-                color: var(--bs-link-color);
+                color: var(--color-link);
             }
 
             &:hover:after {
-                color: var(--bs-link-hover-color);
+                color: var(--color-link-hover);
             }
         }
     }
@@ -472,7 +458,7 @@ footer {
     .mashroom-portal-modal-overlay-content {
         overflow: hidden;
         height: 100%;
-        background-color: var(--mashroom-portal-background-color-modal);
+        background-color: var(--color-modal-background);
         min-height: 60px;
         border-bottom-left-radius: 10px;
         border-bottom-right-radius: 10px;
@@ -497,11 +483,11 @@ footer {
 
     .mashroom-portal-auth-expires-warning-message {
         position: relative;
-        background-color: var(--bs-body-bg);
+        background-color: var(--color-background);
         opacity: 0.9;
         padding: 10px 20px 10px 30px;
-        border: 2px solid var(--bs-warning);
-        outline: 3px solid rgba(var(--bs-body-bg-rgb), 0.5);
+        border: 2px solid var(--color-warning);
+        outline: 3px solid rgba(4, 4, 4, 0.5);
         border-top: none;
         font-size: 0.8em;
         font-weight: 500;
@@ -513,15 +499,16 @@ footer {
             font-family: var(--mashroom-portal-font-icon), sans-serif;
             font-weight: bold;
             padding-right: 5px;
-            color: var(--bs-warning);
+            color: var(--color-warning);
         }
     }
 }
 
 
-@include media-breakpoint-up(sm) {
+@variant sm {
 
     .container-fluid {
+        max-width: 100%;
         width: 100%;
         overflow: hidden;
     }
@@ -581,15 +568,15 @@ footer {
 
         nav {
             display: block;
-            margin: 0 calc($grid-gutter-width / 2);
+            margin: 0 var(--mashroom-portal-spacing-small);
 
             &>ul {
                 margin: 0;
-                background-color: var(--mashroom-portal-background-color-navigation);
-                border-radius: var(--bs-border-radius);
+                background-color: var(--color-nav-background);
+                border-radius: var(--radius-md);
 
                 &>li {
-                    border-bottom: 1px solid var(--bs-body-bg);
+                    border-bottom: 1px solid var(--color-background);
 
                     &:first-child {
                         a {

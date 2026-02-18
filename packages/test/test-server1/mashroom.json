@@ -195,6 +195,12 @@
             "spaMode": true,
             "darkMode": "auto"
         },
+        "Mashroom Portal Tailwind Theme": {
+            "showEnvAndVersions": true,
+            "showPortalAppHeaders": false,
+            "spaMode": true,
+            "darkMode": "auto"
+        },
         "Mashroom Remote Package Scanner": {
             "remotePackageUrls": "./remotePackageUrls.json"
         },

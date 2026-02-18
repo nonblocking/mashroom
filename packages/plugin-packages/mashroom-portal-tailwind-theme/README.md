@@ -1,20 +1,30 @@
 
-# Mashroom Portal Bootstrap Theme
+# Mashroom Portal Tailwind Theme
 
-A [Bootstrap 5](https://getbootstrap.com/) based Portal Theme.
+A [Tailwind 4](https://tailwindcss.com/) based Portal Theme.
 
-It exposes the full Bootstrap CSS, so you can use in your Microfrontends (Portal Apps):
+It exposes a (static) *theme* and the *base* layer.
 
- * All Bootstrap variables, like *--bs-primary*
- * All Bootstrap CSS classes, like *col-sm* and *btn-primary*
- * Any UI framework that uses Bootstrap, like [react-bootstrap](https://react-bootstrap.netlify.app) or [bootstrap-vue-next](https://bootstrap-vue-next.github.io/bootstrap-vue-next).
-   Check out [mashroom-portal-demo-react-bootstrap-app](../mashroom-portal-demo-react-bootstrap-app) for an example.
+It also uses [tailwind-bootstrap-grid](https://github.com/karolis-sh/tailwind-bootstrap-grid) to provide a *Bootstrap 5* compatible grid,
+necessary for the default layouts to work.
+
+*Microfrontends* should import the *theme.css* of this Theme like this:
+
+```css
+/* Wrap the generated utilities, so they are only applied to this App */
+#some-wrapper {
+    @tailwind utilities;
+}
+
+/* Do NOT @import theme.css, it is provided by the Portal theme */
+@reference "@mashroom/mashroom-portal-tailwind-theme/theme.css";
+```
 
 The theme uses [Handlebars](https://handlebarsjs.com) as a template engine and comes with a dark mode.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-portal-bootstrap-theme** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-portal-tailwind-theme** as *dependency*.
 
 You can override the default config in your server config file like this:
 
@@ -45,7 +55,7 @@ You can override the default config in your server config file like this:
 ## Customizing
 
 The easiest way to customize this theme is to copy it and to change its name in *mashroom.json*.
-And then start by tweaking the variables in *src/frontend/style/_variables.scss*.
+And then start by tweaking the Tailwind theme in *src/frontend/style/theme.css*.
 
 Structure of the theme plugin:
 
@@ -57,13 +67,13 @@ Structure of the theme plugin:
    * js
      * main.ts → helper functions and the logic to replace the page content (SPA mode)
    * style
-     * _apps.scss → style overrides for specific Portal Apps
-     * _base.scss → style for base elements such as headers
-     * _components.scss → styles for common ui components use by the Admin toolbar and other Apps shipped with Mashroom
-     * _layout.scss → the page layout
-     * _variables.scss → Bootstrap and theme variables
-     * admin.scss → the style for the Admin Toolbar
+     * admin.css → the style for the Admin Toolbar
+     * apps.css → style overrides for specific Portal Apps
+     * base.css → style for base elements such as headers (without Tailwind classes)
+     * components.css → styles for common ui components use by the Admin toolbar and other Apps shipped with Mashroom
+     * layout.css → the page layout
      * portal.scss → the style for Portal pages
+     * theme.scss → the Tailwind theme
  * views
    * appError.handlebars → template for Portal App (loading) errors
    * appWrapper.handlebars → template for the Portal App wrapper
