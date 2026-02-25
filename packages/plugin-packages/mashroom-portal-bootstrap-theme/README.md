@@ -59,7 +59,7 @@ Structure of the theme plugin:
    * style
      * _apps.scss → style overrides for specific Portal Apps
      * _base.scss → style for base elements such as headers
-     * _components.scss → styles for common ui components use by the Admin toolbar and other Apps shipped with Mashroom
+     * _components.scss → styles for common ui components used by the Admin toolbar and other Apps shipped with Mashroom
      * _layout.scss → the page layout
      * _variables.scss → Bootstrap and theme variables
      * admin.scss → the style for the Admin Toolbar

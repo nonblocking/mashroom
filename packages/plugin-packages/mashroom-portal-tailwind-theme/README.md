@@ -70,10 +70,10 @@ Structure of the theme plugin:
      * admin.css → the style for the Admin Toolbar
      * apps.css → style overrides for specific Portal Apps
      * base.css → style for base elements such as headers (without Tailwind classes)
-     * components.css → styles for common ui components use by the Admin toolbar and other Apps shipped with Mashroom
+     * components.css → styles for common ui components used by the Admin toolbar and other Apps shipped with Mashroom
      * layout.css → the page layout
-     * portal.scss → the style for Portal pages
-     * theme.scss → the Tailwind theme
+     * portal.css → the style for Portal pages
+     * theme.css → the Tailwind theme
  * views
    * appError.handlebars → template for Portal App (loading) errors
    * appWrapper.handlebars → template for the Portal App wrapper
