@@ -14,12 +14,12 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "express-session": "^1.18.1"
+        "express-session": "^1.19.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.9.4",
-        "@types/express-session": "^1.18.1"
+        "@types/express-session": "^1.18.2"
     },
     "scripts": {
         "lint": "eslint --fix",

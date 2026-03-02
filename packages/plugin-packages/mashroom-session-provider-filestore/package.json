@@ -18,8 +18,8 @@
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
         "@mashroom/mashroom-session": "2.9.4",
-        "@types/express-session": "^1.18.1",
-        "@types/session-file-store": "^1.2.5"
+        "@types/express-session": "^1.18.2",
+        "@types/session-file-store": "^1.2.6"
     },
     "scripts": {
         "lint": "eslint --fix",

@@ -1,5 +1,4 @@
 
-
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import {MeterProvider, MetricReader} from '@opentelemetry/sdk-metrics';
 import {exportOpenTelemetryMetrics, getPM2Metrics} from '../src/pm2-metric-exporter';
@@ -22,8 +21,9 @@ describe('pm2-metric-exporter', () => {
             protected async onForceFlush() {}
             protected async onShutdown() {}
         };
-        const meterProvider = new MeterProvider();
-        meterProvider.addMetricReader(reader);
+        const meterProvider = new MeterProvider({
+            readers: [reader],
+        });
         const meter = meterProvider.getMeter('test-meter');
 
         const fooCounter = meter.createCounter('foo', {

@@ -1,14 +1,21 @@
-import {Component, Inject, ChangeDetectorRef} from '@angular/core';
+import { Component, ChangeDetectorRef, inject } from '@angular/core';
 
-import type {MashroomPortalAppSetup, MashroomPortalClientServices, MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
+import type {
+    MashroomPortalAppSetup,
+    MashroomPortalClientServices,
+    MashroomPortalMessageBus,
+} from '@mashroom/mashroom-portal/type-definitions';
 
 @Component({
     selector: 'app-mashroom-portal-angular-demo',
     standalone: true,
     templateUrl: './app.component.html',
-    providers: []
+    providers: [],
 })
 export class AppComponent {
+    private _clientServices = inject<MashroomPortalClientServices>(
+        'client.services' as any,
+    );
 
     message: string;
     pingButtonLabel: string | undefined;
@@ -16,7 +23,11 @@ export class AppComponent {
     pings: number;
     messageBus: MashroomPortalMessageBus;
 
-    constructor(cdRef: ChangeDetectorRef, @Inject('app.setup') _appSetup: MashroomPortalAppSetup, @Inject('client.services') private _clientServices: MashroomPortalClientServices) {
+    constructor() {
+        const cdRef = inject(ChangeDetectorRef);
+        const _appSetup = inject<MashroomPortalAppSetup>('app.setup' as any);
+        const _clientServices = this._clientServices;
+
         this.resourcesBasePath = _appSetup.resourcesBasePath;
         this.message = _appSetup.appConfig.message;
         this.pingButtonLabel = _appSetup.appConfig.pingButtonLabel;
@@ -32,5 +43,4 @@ export class AppComponent {
     sendPing() {
         this.messageBus.publish('ping', {});
     }
-
 }

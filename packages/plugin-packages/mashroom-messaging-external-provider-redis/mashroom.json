@@ -16,6 +16,7 @@
                         "host": "localhost",
                         "port": "6379",
                         "maxRetriesPerRequest": 3,
+                        "enableReadyCheck": false,
                         "enableOfflineQueue": false
                     },
                     "cluster": false,

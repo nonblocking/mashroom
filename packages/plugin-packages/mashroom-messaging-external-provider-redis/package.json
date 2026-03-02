@@ -14,7 +14,7 @@
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "2.9.4",
-        "ioredis": "^5.6.1"
+        "ioredis": "^5.10.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",

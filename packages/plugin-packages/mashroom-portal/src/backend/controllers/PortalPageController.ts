@@ -35,7 +35,7 @@ export default class PortalPageController {
                 return;
             }
 
-            const pageId = req.params.pageId;
+            const pageId = req.params.pageId as string;
             const page: MashroomPortalPage | undefined | null = await portalService.getPage(pageId);
             if (!page) {
                 logger.warn(`Page with id ${pageId} not found`);
@@ -98,7 +98,7 @@ export default class PortalPageController {
                 return;
             }
 
-            const pageId = req.params.pageId;
+            const pageId = req.params.pageId as string;
             const page: MashroomPortalPage = req.body;
 
             if (!page) {
@@ -137,7 +137,7 @@ export default class PortalPageController {
                 return;
             }
 
-            const pageId = req.params.pageId;
+            const pageId = req.params.pageId as string;
 
             const existingPage = await portalService.getPage(pageId);
             if (!existingPage) {
@@ -169,7 +169,7 @@ export default class PortalPageController {
                 return;
             }
 
-            const pageId = req.params.pageId;
+            const pageId = req.params.pageId as string;
             const page = await portalService.getPage(pageId);
             if (!page) {
                 res.sendStatus(404);
@@ -244,7 +244,7 @@ export default class PortalPageController {
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
-            const pageId = req.params.pageId;
+            const pageId = req.params.pageId as string;
             const page = await portalService.getPage(pageId);
             if (!page) {
                 logger.warn(`Page with id ${pageId} not found`);
@@ -285,7 +285,7 @@ export default class PortalPageController {
                 return;
             }
 
-            const pageId = req.params.pageId;
+            const pageId = req.params.pageId as string;
             const data: MashroomCreatePagePortalAppInstance = req.body;
 
             const page = await portalService.getPage(pageId);
@@ -359,9 +359,9 @@ export default class PortalPageController {
                 return;
             }
 
-            const pageId = req.params.pageId;
-            const pluginName = req.params.pluginName;
-            const portalAppInstanceId = req.params.portalAppInstanceId;
+            const pageId = req.params.pageId as string;
+            const pluginName = req.params.pluginName as string;
+            const portalAppInstanceId = req.params.portalAppInstanceId as string;
             const data: MashroomUpdatePagePortalAppInstance = req.body;
 
             const page = await portalService.getPage(pageId);
@@ -415,9 +415,9 @@ export default class PortalPageController {
                 return;
             }
 
-            const pageId = req.params.pageId;
-            const pluginName = req.params.pluginName;
-            const portalAppInstanceId = req.params.portalAppInstanceId;
+            const pageId = req.params.pageId as string;
+            const pluginName = req.params.pluginName as string;
+            const portalAppInstanceId = req.params.portalAppInstanceId as string;
 
             const page = await portalService.getPage(pageId);
             if (!page) {
@@ -461,9 +461,9 @@ export default class PortalPageController {
                 return;
             }
 
-            const pageId = req.params.pageId;
-            const pluginName = req.params.pluginName;
-            const portalAppInstanceId = req.params.portalAppInstanceId;
+            const pageId = req.params.pageId as string;
+            const pluginName = req.params.pluginName as string;
+            const portalAppInstanceId = req.params.portalAppInstanceId as string;
 
             logger.info(`Updating permitted roles for Portal App ${pluginName} instance ${portalAppInstanceId} on page ${pageId}`);
 
@@ -508,9 +508,9 @@ export default class PortalPageController {
                 return;
             }
 
-            const pageId: string = req.params.pageId;
-            const pluginName: string = req.params.pluginName;
-            const portalAppInstanceId: string = req.params.portalAppInstanceId;
+            const pageId = req.params.pageId as string;
+            const pluginName = req.params.pluginName as string;
+            const portalAppInstanceId = req.params.portalAppInstanceId as string;
             const roles: Array<string> | undefined | null = req.body;
 
             logger.info(`Updating permitted roles for Portal App ${pluginName} instance ${portalAppInstanceId} on page ${pageId}`);

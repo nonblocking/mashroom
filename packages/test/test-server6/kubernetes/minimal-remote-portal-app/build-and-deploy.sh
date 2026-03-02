@@ -5,7 +5,7 @@ SCRIPT=`realpath $0`
 REPO_PATH=`dirname $SCRIPT`
 
 # Build
-VERSION=`node -p -e "require('$REPO_PATH/package.json').version"`
+export VERSION=`node -p -e "require('$REPO_PATH/package.json').version"`
 echo "Building and deploying version $VERSION"
 
 # Build container and push to registry

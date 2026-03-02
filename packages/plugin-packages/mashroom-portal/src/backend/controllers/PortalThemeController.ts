@@ -16,7 +16,7 @@ export default class PortalThemeController {
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
         try {
-            const themeName = req.params.themeName;
+            const themeName = req.params.themeName as string;
             const resourcePathSegments = req.params.resourcePath as unknown as Array<string>;
             const resourcePath = resourcePathSegments.join('/');
 

@@ -37,7 +37,7 @@ export default class MashroomApiPluginLoader implements MashroomPluginLoader {
         const wrapper = new ExpressRequestHandlerWrapper(plugin.name, apiPlugin);
 
         this._logger.info(`Adding ${plugin.type} Express plugin ${plugin.name} to path: ${pluginConfig.path}`);
-        this._expressApplication.use(pluginConfig.path, wrapper.handler);
+        this._expressApplication.use(pluginConfig.path, wrapper.handler());
 
         this._loadedPlugins.set(plugin.name, pluginConfig.path);
     }

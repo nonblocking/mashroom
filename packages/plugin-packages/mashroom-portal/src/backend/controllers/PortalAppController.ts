@@ -39,8 +39,8 @@ export default class PortalAppController {
         try {
             const sitePath = getSitePath(req);
             const pageId = req.params.pageId as string;
-            const pluginName = req.params.pluginName;
-            const portalAppInstanceId = req.params.portalAppInstanceId;
+            const pluginName = req.params.pluginName as string;
+            const portalAppInstanceId = req.params.portalAppInstanceId as string;
             const mashroomSecurityUser = getUser(req);
 
             if (!await isSitePathPermitted(req, sitePath)) {
@@ -108,7 +108,7 @@ export default class PortalAppController {
     async getPortalAppResource(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
-        const pluginName = req.params.pluginName;
+        const pluginName = req.params.pluginName as string;
         const resourcePathSegments = req.params.resourcePath as unknown as Array<string>;
         const resourcePath = resourcePathSegments.join('/');
 

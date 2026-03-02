@@ -39,8 +39,8 @@ See: https://www.keycloak.org/server/importExport
 
 ### Test External Messaging with Mosquitto
 
-To test the communication with Mashroom you can connect to Mosquitto on localhost:1883 (e.g. with http://mqtt-explorer.com)
-or via Websocket on localhost:9001 (e.g. with a web client like http://www.hivemq.com/demos/websocket-client)
+To test the communication with Mashroom you can connect to Mosquitto on localhost:1883 (e.g., with http://mqtt-explorer.com)
+or via Websocket on localhost:9001 (e.g., with a web client like http://www.hivemq.com/demos/websocket-client)
 
 Send a message from the Portal to an external system:
 

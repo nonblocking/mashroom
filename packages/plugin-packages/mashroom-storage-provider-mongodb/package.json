@@ -13,14 +13,14 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "mongodb": "^6.16.0"
+        "mongodb": "^7.1.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.9.4",
         "@mashroom/mashroom-storage": "2.9.4",
         "@mashroom/mashroom-utils": "2.9.4",
-        "@shelf/jest-mongodb": "^5.1.0"
+        "@shelf/jest-mongodb": "^6.0.2"
     },
     "jest": {
         "testEnvironment": "node",
@@ -48,7 +48,8 @@
     },
     "lavamoat": {
         "allowScripts": {
-            "@shelf/jest-mongodb>mongodb-memory-server": false
+            "@shelf/jest-mongodb>mongodb-memory-server": false,
+            "@shelf/jest-mongodb>@swc/jest>@swc/core": false
         }
     }
 }

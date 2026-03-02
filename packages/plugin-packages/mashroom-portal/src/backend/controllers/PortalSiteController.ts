@@ -60,7 +60,7 @@ export default class PortalSiteController {
                 return;
             }
 
-            const siteId = req.params.siteId;
+            const siteId = req.params.siteId as string;
             const site: MashroomPortalSite | undefined | null = await portalService.getSite(siteId);
             if (!site) {
                 logger.warn(`Site with id ${siteId} not found`);
@@ -137,7 +137,7 @@ export default class PortalSiteController {
                 return;
             }
 
-            const siteId = req.params.siteId;
+            const siteId = req.params.siteId as string;
             const body = req.body;
             const site: MashroomPortalSite = body;
 
@@ -177,7 +177,7 @@ export default class PortalSiteController {
                 return;
             }
 
-            const siteId = req.params.siteId;
+            const siteId = req.params.siteId as string;
 
             const existingSite = await portalService.getSite(siteId);
             if (!existingSite) {
@@ -209,7 +209,7 @@ export default class PortalSiteController {
                 return;
             }
 
-            const siteId = req.params.siteId;
+            const siteId = req.params.siteId as string;
 
             const site = await portalService.getSite(siteId);
             if (!site) {
@@ -243,7 +243,7 @@ export default class PortalSiteController {
                 return;
             }
 
-            const siteId = req.params.siteId;
+            const siteId = req.params.siteId as string;
             const body = req.body;
             const roles: Array<string> | undefined | null = body;
 
@@ -286,7 +286,7 @@ export default class PortalSiteController {
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
-            const siteId = req.params.siteId;
+            const siteId = req.params.siteId as string;
             const site: MashroomPortalSite | undefined | null = await portalService.getSite(siteId);
             if (!site) {
                 logger.warn(`Site with id ${siteId} not found`);

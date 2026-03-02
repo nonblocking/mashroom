@@ -14,7 +14,7 @@
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "2.9.4",
-        "mqtt": "^5.13.0"
+        "mqtt": "^5.15.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",

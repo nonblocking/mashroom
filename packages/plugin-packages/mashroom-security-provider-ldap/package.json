@@ -13,7 +13,7 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "ldapts": "^7.4.0"
+        "ldapts": "^8.1.7"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",

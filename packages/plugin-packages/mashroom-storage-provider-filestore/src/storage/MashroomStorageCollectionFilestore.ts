@@ -151,13 +151,12 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
     private _find(data: Array<MashroomStorageObject<T>>, withTotalCount: boolean, filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): MashroomStorageSearchResult<T> {
         if (filter || sort) {
             const query = new Query(filter || {});
-            let cursor = query.find(data);
             let totalCount;
             if (withTotalCount && (limit || skip)) {
-                totalCount = cursor.count();
+                totalCount = data.length;
             }
 
-            cursor = query.find(data);
+            let cursor = query.find(data);
             if (sort) {
                 const fixedSort: Record<string, number> = {};
                 Object.keys(sort).forEach((key) => {
