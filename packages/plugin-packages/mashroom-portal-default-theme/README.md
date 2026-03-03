@@ -5,8 +5,8 @@ Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend
 
 This plugin is the default theme for the [Mashroom Portal](../mashroom-portal).
 
-Currently, this is just a copy of (mashroom-portal-bootstrap-theme)[../mashroom-portal-bootstrap-theme].
+Currently, this is just a copy of the [mashroom-portal-bootstrap-theme](../mashroom-portal-bootstrap-theme).
 
 ## Usage
 
-See (mashroom-portal-bootstrap-theme)[../mashroom-portal-bootstrap-theme].
+See [mashroom-portal-bootstrap-theme](../mashroom-portal-bootstrap-theme).

@@ -102,6 +102,7 @@ describe('MashroomStorageCollectionFilestore', () => {
         const result2 = await storage.find(undefined, undefined, 3, { b: 'asc' });
         const result3 = await storage.find(undefined, 3, undefined, { b: 'desc' });
         const result4 = await storage.find({ 'x.m1': 'test' });
+        const result5 = await storage.find({ b: 1 }, 2);
 
         expect(result1).toBeTruthy();
         expect(result2).toBeTruthy();
@@ -118,6 +119,8 @@ describe('MashroomStorageCollectionFilestore', () => {
         expect(result3.result[0].b).toBe(2);
         expect(result4.result.length).toBe(1);
         expect(result4.totalCount).toBe(1);
+        expect(result5.result.length).toBe(2);
+        expect(result5.totalCount).toBe(3);
     });
 
     it('supports regex search', async () => {

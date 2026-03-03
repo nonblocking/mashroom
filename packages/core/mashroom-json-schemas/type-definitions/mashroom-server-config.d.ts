@@ -511,7 +511,59 @@ export interface Plugins {
   };
   "Mashroom Portal Default Theme"?: {
     /**
-     * The theme will try to operate like an SPA and loads new page content via AJAX and replaces the DOM (Default: true)
+     * The theme will try to operate like an SPA and loads new page content via fetch and replaces the DOM (Default: true)
+     */
+    spaMode?: boolean;
+    /**
+     * Possible values: true, false, "auto" (Default: "auto",)
+     */
+    darkMode?: boolean | string;
+    /**
+     * Custom CSS that can be used to overwrite CSS variables and to customize the theme (relative to the server config file, default: null)
+     */
+    styleFile?: string;
+    /**
+     * Optional logo image URL (Default: null)
+     */
+    logoImageUrl?: string;
+    /**
+     * Show or hide Portal App headers (Default: true)
+     */
+    showPortalAppHeaders?: boolean;
+    /**
+     * Show the environment (NODE_ENV) and version information in the header (Default: false)
+     */
+    showEnvAndVersions?: boolean;
+  };
+  "Mashroom Portal Bootstrap Theme"?: {
+    /**
+     * The theme will try to operate like an SPA and loads new page content via fetch and replaces the DOM (Default: true)
+     */
+    spaMode?: boolean;
+    /**
+     * Possible values: true, false, "auto" (Default: "auto",)
+     */
+    darkMode?: boolean | string;
+    /**
+     * Custom CSS that can be used to overwrite CSS variables and to customize the theme (relative to the server config file, default: null)
+     */
+    styleFile?: string;
+    /**
+     * Optional logo image URL (Default: null)
+     */
+    logoImageUrl?: string;
+    /**
+     * Show or hide Portal App headers (Default: true)
+     */
+    showPortalAppHeaders?: boolean;
+    /**
+     * Show the environment (NODE_ENV) and version information in the header (Default: false)
+     */
+    showEnvAndVersions?: boolean;
+  };
+  "Mashroom Portal Tailwind Theme"?: {
+    /**
+     * The theme will try to operate like an SPA and loads new page content via fetch and replaces the DOM (Default: true)
      */
     spaMode?: boolean;
     /**
