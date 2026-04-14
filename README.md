@@ -25,18 +25,17 @@ Such a plugin could be an *Express* web-app or an *SPA* or more generally all ki
 which is determined by the available plugin loaders.
 Plugin loaders itself are also just plugins, so it is possible to add any type of custom plugin type.
 
-![Mashroom Portal](screenshot-mashroom-portal.png)
-
-![Mashroom Portal](screenshot-mashroom-portal-dark.png)
-
 ### Key features
 
 #### Portal
 
-  * Registration of Single Page Applications (**Portal Apps**) written with any frontend framework
+  * Registration of Single Page Applications Microfrontends (**Portal Apps**) written with any frontend framework
     (basically, you just need to implement a startup function and provide some metadata)
   * Registration of *Portal Apps* on remote servers or in Kubernetes clusters
-  * Create static pages with registered *Portal Apps* as building blocks
+  * Registration of any [OpenMicrofrontends](https://open-microfrontends.org) compliant Microforntend as *Portal App*
+  * Support for *Portal Apps* shipped as *IIFE*, *ES modules* or *SystemJS modules*
+  * Support for sharing vendor libraries between *Portal Apps* (global libraries or Import Maps)
+  * Creation of static pages with registered *Portal Apps* as building blocks
   * Support for **dynamic cockpits** where Portal Apps are loaded (and unloaded) based on some user interaction or search results
   * Support for **Composite Apps** which can use any registered *Portal App* as building blocks
     (which again can serve as building blocks for other composite Apps)
@@ -45,7 +44,7 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
   * Support for **Hybrid Rendering** for both the Portal pages and *Portal Apps*
     (if it supports server-side rendering, the initial HTML can be incorporated
     into the initial HTML page. Navigating to another page dynamically replaces the *Portal Apps* in the content area)
-  * The *Portal App* config can be edited via *Admin Toolbar* or a custom Editor App which again is just a *Portal App*
+  * Editing the *Portal App* config via *Admin Toolbar* or a custom Editor App which again is just a *Portal App*
   * Client-side message bus for inter-app communication, which can be extended to server-side messaging
     (to communicate with Apps in other browsers or even in third party systems)
   * Arbitrary (custom) layouts for pages
@@ -53,10 +52,9 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
     (Themes can be written in any Express template language)
   * Support for multiple sites that can be mapped to virtual hosts
   * Proxying of REST API calls to avoid CORS problems (HTTP, SSE, WebSocket)
-  * Support for sharing vendor libraries between *Portal Apps* (global libraries or importMaps)
   * Delivering of Theme and Portal App resources via CDN
   * Admin Toolbar to create pages and place Apps via Drag'n'Drop
-  * **Hot reload** of *Portal Apps* in development mode
+  * **Hot reload** of (local) *Portal Apps* in development mode
 
 #### Core
 
@@ -84,6 +82,26 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
     npm start
 
 Open http://localhost:5050 in your browser. Users: john/john, admin/admin
+
+## Screenshots
+
+### A Portal page with multiple *Portal Apps* (Microfrontends)
+
+![Mashroom Portal](screenshots/mashroom-portal.png)
+
+![Mashroom Portal Dark Mode](screenshots/mashroom-portal-dark.png)
+
+### Add an App to a Portal Page
+
+![Mashroom Portal Add App](screenshots/mashroom-portal-add-app.gif)
+
+### Bootstrap-based (default) Theme with a Microfrontend using Bootstrap components
+
+![Mashroom Portal Bootstrap Theme](screenshots/mashroom-portal-bootstrap-theme.png)
+
+### Tailwind-based Theme with a Microfrontend using Shadcn components
+
+![Mashroom Portal Tailwind Theme](screenshots/mashroom-portal-tailwind-theme.png)
 
 ## Homepage
 
