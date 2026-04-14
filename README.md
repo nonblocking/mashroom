@@ -2,7 +2,6 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub CI](https://github.com/nonblocking/mashroom/actions/workflows/mashroom_ci_build.yml/badge.svg)](https://github.com/nonblocking/mashroom/actions/workflows/mashroom_ci_build.yml)
-[![Known Vulnerabilities](https://snyk.io/test/github/nonblocking/mashroom/badge.svg)](https://snyk.io/test/github/nonblocking/mashroom)
 
 ## About ##
 
