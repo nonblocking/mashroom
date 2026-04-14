@@ -107,6 +107,10 @@ Open http://localhost:5050 in your browser. Users: john/john, admin/admin
 
 [https://www.mashroom-server.com](https://www.mashroom-server.com)
 
+## Full Documentation
+
+[https://docs.mashroom-server.com](https://docs.mashroom-server.com)
+
 ## Blog
 
 [https://medium.com/mashroom-server](https://medium.com/mashroom-server)
@@ -133,8 +137,3 @@ Open http://localhost:5050 in your browser. Users: john/john, admin/admin
 ### Microfrontend Platform based on Mashroom and Kubernetes Demo
 
 [https://github.com/nonblocking/microfrontend-platform-kubernetes](https://github.com/nonblocking/microfrontend-platform-kubernetes)
-
-### Full Documentation
-
-[https://docs.mashroom-server.com](https://docs.mashroom-server.com)
-
