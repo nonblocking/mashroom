@@ -5,7 +5,7 @@ import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-defi
 const html = `
     <div class='mashroom-demo-pure-js-app'>
         <h4>Pure JS Demo App</h4>
-        <p>This is an App written with pure JS that uses ES modules</p>
+        <p>A Microfrontend written in pure JavaScript and shipped as ES modules</p>
         <div>
             <button>
                 Send Ping

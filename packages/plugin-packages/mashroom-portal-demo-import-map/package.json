@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-import-map",
-    "description": "Demo Microfrontends that shares external vendor modules via import map",
+    "description": "Demo Microfrontends that shares external vendor modules via Import Map",
     "homepage": "https://www.mashroom-server.com",
     "repository": {
         "type": "git",

@@ -22,12 +22,12 @@ const pluginDefinition: MashroomPlugins = {
             defaultConfig: {
                 title: 'Demo Pure JS App',
                 description: {
-                    en: 'A pure JS Microfrontend that uses ES modules',
-                    de: 'Ein pures JS Microfrontend das ES modules verwendet'
+                    en: 'A Microfrontend written in pure JavaScript and shipped as ES modules',
+                    de: 'Ein Microfrontend in purem JavaScript geschrieben das als ES Module ausgeliefert wird'
                 },
                 category: 'Demo',
                 appConfig: {
-                    message: 'This is pure JS Microfrontend that communicates with other Microfrontends on the page via message bus',
+                    message: 'A Microfrontend written in pure JavaScript and shipped as ES modules that communicates with other Microfrontends on the page via message bus',
                     pingButtonLabel: 'Send Ping'
                 }
             }

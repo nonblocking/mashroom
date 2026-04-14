@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-pure-js-app",
-    "description": "A pure JS Microfrontend that uses ES modules",
+    "description": "A pure JS Microfrontend shipped as ES modules",
     "homepage": "https://www.mashroom-server.com",
     "repository": {
         "type": "git",

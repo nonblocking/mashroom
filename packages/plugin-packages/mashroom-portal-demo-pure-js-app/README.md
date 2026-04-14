@@ -6,7 +6,7 @@ Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend
 This is a pure JS Microfrontend that can be developed and run standalone, but can also
 act as a building block in the [Mashroom Portal](../mashroom-portal).
 
-It doesn't use a bundler but just uses ES modules. It also exports the bootstrap function, rather than exposing it as a global variable
+It doesn't use a bundler but just ES modules. It also exports the bootstrap function, rather than exposing it as a global variable
 (which is necessary if you bundle a Microfrontend to IIFE).
 
 You should not use this approach for a production App, because cache busting of imported ES modules doesn't work.

@@ -11,6 +11,7 @@ const sharedImportMap = {
 };
 
 const pluginDefinition: MashroomPlugins = {
+    devModeBuildScript: 'build',
     plugins: [
         {
             name: 'Mashroom Portal Demo Import Map 1',
@@ -29,7 +30,7 @@ const pluginDefinition: MashroomPlugins = {
             defaultConfig: {
                 title: 'Demo Import Map App 1',
                 description: {
-                    en: 'A demo Microfrontend that shares external vendor modules via import map',
+                    en: 'A demo Microfrontend that shares external vendor modules via Import Map',
                     de: 'Ein Demo Microfrontend das externe Module via Import Map teilt'
                 },
                 category: 'Demo'
@@ -52,7 +53,7 @@ const pluginDefinition: MashroomPlugins = {
             defaultConfig: {
                 title: 'Demo Import Map App 2',
                 description: {
-                    en: 'A demo Microfrontend that shares external vendor modules via import map',
+                    en: 'A demo Microfrontend that shares external vendor modules via Import Map',
                     de: 'Ein Demo Microfrontend das externe Module via Import Map teilt'
                 },
                 category: 'Demo'
