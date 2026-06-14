@@ -1,0 +1,49 @@
+{
+    "name": "@mashroom/mashroom-mcp-server",
+    "description": "Mashroom MCP Server",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**",
+        "mashroom.json"
+    ],
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.29.0",
+        "zod": "^4.3.6"
+    },
+    "devDependencies": {
+        "@mashroom/mashroom": "2.9.4",
+        "@mashroom/mashroom-portal": "2.9.4",
+        "@mashroom/mashroom-i18n": "2.9.4"
+    },
+    "jest": {
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts",
+        "transform": {
+            "^.+\\.ts$": "ts-jest"
+        },
+        "reporters": [
+            "default",
+            "jest-junit"
+        ]
+    },
+    "jest-junit": {
+        "outputDirectory": "./test-reports"
+    },
+    "scripts": {
+        "lint": "eslint --fix",
+        "type-check": "tsc --noEmit",
+        "test": "jest",
+        "build": "babel src -d dist --extensions \".ts\"",
+        "dev": "nodemon --watch src --ext ts --exec \"npm run build && node dist/dev-server.js\"",
+        "inspector": "npx @modelcontextprotocol/inspector"
+    }
+}

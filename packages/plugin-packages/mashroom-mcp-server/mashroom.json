@@ -1,0 +1,18 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom MCP Server",
+            "type": "api",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "requires": [
+                "Mashroom Portal Services",
+                "Mashroom Internationalization Services"
+            ],
+            "defaultConfig": {
+                "path": "/mcp"
+            }
+        }
+    ]
+}

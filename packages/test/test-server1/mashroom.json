@@ -47,7 +47,8 @@
         "Mashroom Http Proxy Add User Headers Interceptor",
         "Mashroom Http Proxy Add Access Token Interceptor",
         "Mashroom CDN Services",
-        "Mashroom Robots Middleware"
+        "Mashroom Robots Middleware",
+        "Mashroom CSRF Middleware"
     ],
     "plugins": {
         "Mashroom VHost Path Mapper Middleware": {
