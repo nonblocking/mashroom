@@ -319,7 +319,7 @@ export interface MashroomPortalTheme {
 
 export interface MashroomPortalLayout {
     /**
-     * Name of the layout
+     * Name of the layout (plugin name + layout ID)
      */
     readonly name: string;
 
@@ -334,7 +334,7 @@ export interface MashroomPortalLayout {
     readonly lastReloadTs: number;
 
     /**
-     * The layout name
+     * The layout ID
      */
     readonly layoutId: string;
 
