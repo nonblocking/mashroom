@@ -6,6 +6,7 @@
         "type": "git",
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
+    "type": "module",
     "license": "MIT",
     "version": "1.0.0",
     "sideEffects": false,

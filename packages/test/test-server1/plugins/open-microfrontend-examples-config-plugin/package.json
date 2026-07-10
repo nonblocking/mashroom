@@ -2,6 +2,7 @@
     "name": "open-microfrontends-with-security-and-ssr-config-plugin",
     "description": "Plugin with required configurations for the OpenMicrofrontends examples at https://github.com/Open-Microfrontends/open-microfrontends-examples which requires security for server routes",
     "version": "1.0.0",
+    "type": "module",
     "private": true,
     "scripts": {
         "type-check": "tsc --noEmit"

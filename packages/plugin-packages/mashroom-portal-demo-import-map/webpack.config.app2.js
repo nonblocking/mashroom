@@ -1,8 +1,8 @@
 
-module.exports = {
-    entry: `${__dirname  }/src/app2`,
+export default {
+    entry: `${import.meta.dirname}/src/app2`,
     output: {
-        path: `${__dirname  }/dist`,
+        path: `${import.meta.dirname}/dist`,
         filename: 'index2.js',
         libraryTarget: 'system',
     },
