@@ -108,7 +108,9 @@ Open http://localhost:5050 in your browser. Users: john/john, admin/admin
 
 ## Full Documentation
 
-[https://docs.mashroom-server.com](https://docs.mashroom-server.com)
+Latest: [https://docs.mashroom-server.com](https://docs.mashroom-server.com)
+
+Mashroom 2 Documentation: [https://www.mashroom-server.com/documentation](https://www.mashroom-server.com/documentation)
 
 ## Blog
 
