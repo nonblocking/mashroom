@@ -3,6 +3,7 @@
 
 ## [unreleased v3]
 
+ * Added an MCP server that allows Coding Agents to add new (remote) Microfrontends and to place in on pages
  * Added a [Shadcn Demo Microfrontend](packages/plugin-packages/mashroom-portal-demo-react-shadcn-app)
  * Added a new [Tailwind 4 based Portal Theme](packages/plugin-packages/mashroom-portal-tailwind-theme)
  * Added a [React Bootstrap Demo Microfrontend](packages/plugin-packages/mashroom-portal-demo-react-bootstrap-app)
