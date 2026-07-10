@@ -1,4 +1,6 @@
 
+import {htmlUtils} from '@mashroom/mashroom-utils';
+
 import type {Request} from 'express';
 
 export default (content: string, req: Request) => {
@@ -383,7 +385,7 @@ export default (content: string, req: Request) => {
                             <li class="menu-item ${req.path === '/apis' ? 'active' : ''}"><a href="/mashroom/admin/apis">APIs</a></li>
                             <li class="menu-item ${req.path === '/server-info' ? 'active' : ''}"><a href="/mashroom/admin/server-info">Server Info</a></li>
                             ${extraMenuEntry.map(({menuTitle, path}) => `
-                                  <li class="menu-item ${req.path === `/ext${path}` ? 'active' : ''}"><a href="/mashroom/admin/ext${path}">${menuTitle}</a></li>
+                                  <li class="menu-item ${req.path === `/ext${path}` ? 'active' : ''}"><a href="/mashroom/admin/ext${path}">${htmlUtils.escapeHtml(menuTitle)}</a></li>
                             `).join('')}
                             <li class="menu-item"><a href="https://docs.mashroom-server.com" target="_blank">Documentation</a></li>
                         </ul>

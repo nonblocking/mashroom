@@ -1,4 +1,5 @@
 
+import {htmlUtils} from '@mashroom/mashroom-utils';
 import infoTemplate from './template';
 
 import type {Request, Response} from 'express';
@@ -26,8 +27,8 @@ const webappsList = (pluginContext: MashroomPluginContext) => {
         if (p.config && p.config.path) {
             rows.push(`
                 <tr>
-                    <td>${p.name}</td>
-                    <td><a href="${p.config.path}" target="_blank">${p.config.path}</a></td>
+                    <td>${htmlUtils.escapeHtml(p.name)}</td>
+                    <td><a href="${p.config.path}" target="_blank">${htmlUtils.escapeHtml(p.config.path)}</a></td>
                 </tr>
             `);
         }

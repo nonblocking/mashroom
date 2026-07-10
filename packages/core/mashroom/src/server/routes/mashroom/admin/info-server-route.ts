@@ -46,7 +46,7 @@ const overview = async (req: Request, clusterDetails: string) => {
         <table>
             <tr>
                 <th>Server Name</th>
-                <td>${serverConfig.name}</td>
+                <td>${htmlUtils.escapeHtml(serverConfig.name)}</td>
             </tr>
             <tr>
                 <th>Server Uptime</th>
