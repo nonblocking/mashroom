@@ -23,7 +23,7 @@ export default (req: Request) => {
         {
             capabilities: {
                 logging: {},
-            }
+            },
         }
     );
 

@@ -11,6 +11,10 @@ If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mash
 
 The MCP server will be available under *http://localhost:5050/mcp*.
 
+> [!WARNING]
+> The MCP server currently has no security whatsoever, so don't install in on production servers.
+> Also, the route /mcp must be accessible without authentication.
+
 Check out the documentation of your coding agent how to register an MCP server:
 
  * Claude Code: https://code.claude.com/docs/en/mcp-quickstart
