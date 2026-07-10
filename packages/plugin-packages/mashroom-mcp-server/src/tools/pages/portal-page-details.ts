@@ -34,8 +34,8 @@ export default (req: Request) => async ({ pageId }: { pageId: string }): Promise
         const layout = portalService.getLayouts().find((p) => p.name === layoutName);
         if (layout) {
             try {
-                const layoutTemplate = await readFile(layout.layoutPath, 'utf-8');
-                layoutTemplate.matchAll(/ id=["'](.+)["']/g).forEach((match) => layoutAreaIds.push(match[1]));
+                const layoutTemplate = await readFile(layout.layoutPath, { encoding: 'utf-8' });
+                Array.from(layoutTemplate.matchAll(/ id=["'](.+)["']/g)).forEach((match) => layoutAreaIds.push(match[1]));
             } catch (e) {
                 logger.warn(`Error reading layout file: ${layout.layoutPath}`, e);
             }
