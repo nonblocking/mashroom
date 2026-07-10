@@ -1,10 +1,11 @@
 import {readFile} from 'fs/promises';
-import {serializeI18NString} from '../utils';
-import type {MashroomPluginContext} from '@mashroom/mashroom/type-definitions';
+import {determineServerUrl, determineSiteAndPageRef, serializeI18NString} from '../utils';
+import type {Request} from 'express';
 import type {CallToolResult} from '@modelcontextprotocol/sdk/types';
 import type {MashroomPortalService} from '@mashroom/mashroom-portal/type-definitions';
 
-export default (pluginContext: MashroomPluginContext) => async ({ pageId }: { pageId: string }): Promise<CallToolResult> => {
+export default (req: Request) => async ({ pageId }: { pageId: string }): Promise<CallToolResult> => {
+    const {pluginContext} = req;
     const {services, loggerFactory} = pluginContext;
     const logger = loggerFactory('mashroom.mcp');
     const portalService = services.portal!.service as MashroomPortalService;
@@ -23,16 +24,9 @@ export default (pluginContext: MashroomPluginContext) => async ({ pageId }: { pa
         };
     }
 
-    const sites = await portalService.getSites();
-    let pageRef;
-    let site;
-    for (const s of sites) {
-        pageRef = await portalService.findPageRefByPageId(s, page.pageId);
-        if (pageRef) {
-            site = s;
-            break;
-        }
-    }
+    const { site, pageRef } = await determineSiteAndPageRef(pageId, pluginContext);
+    const serverUrl = determineServerUrl(req);
+    const pageUrl = `${serverUrl}${site?.path}${pageRef?.friendlyUrl}`;
 
     const layoutName = page.layout ?? site?.defaultLayout;
     const layoutAreaIds: Array<string> = [];
@@ -59,15 +53,16 @@ export default (pluginContext: MashroomPluginContext) => async ({ pageId }: { pa
             {
                 type: 'text',
                 text: `
-                    Page "${pageId}" Details:
+Page "${pageId}" Details:
 
-                    Title: ${serializeI18NString(pageRef?.title, pluginContext)}
-                    Description: ${page.description}
-                    FriendlyUrl: ${pageRef?.friendlyUrl ?? '(none)'}
-                    Layout: ${layoutName ?? '(none)'}
-                    Layout Area IDs: ${layoutAreaIds.join(', ')}
-                    Apps on the Page:
-                        ${appLines.join('\n')}
+Title: ${serializeI18NString(pageRef?.title, pluginContext)}
+Description: ${page.description}
+FriendlyUrl: ${pageRef?.friendlyUrl ?? '(none)'}
+Full URL: ${pageUrl}
+Layout: ${layoutName ?? '(none)'}
+Layout Area IDs: ${layoutAreaIds.join(', ')}
+Apps on the Page:
+    ${appLines.join('\n')}
                 `,
             },
         ],

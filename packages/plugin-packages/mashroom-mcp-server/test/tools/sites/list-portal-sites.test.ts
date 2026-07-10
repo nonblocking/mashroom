@@ -24,9 +24,16 @@ const site2: MashroomPortalSite = {
 describe('list-portal-sites', () => {
 
     it('returns all sites',  async () => {
-        const context: any = {
+        const pluginContext: any = {
             loggerFactory: () => console,
             services: {
+                core: {
+                    pluginService: {
+                        getPlugins: () => {
+                            return [];
+                        },
+                    }
+                },
                 portal: {
                     service: {
                         getSites: async () => {
@@ -43,11 +50,17 @@ describe('list-portal-sites', () => {
             }
         };
 
-        const result = await listPortalSites(context)();
+        const req: any = {
+            host: 'localhost:1234',
+            headers: {},
+            pluginContext,
+        };
+
+        const result = await listPortalSites(req)();
 
         expect(result.content).toEqual([{
             type: 'text',
-            text: `\n                    Sites (2):\n\n                    1. Site ID: 1, Base Path: /web, Title: Default Site (translations: de: Standard-Site), Number pages: 0, Default Theme: (none), Default Layout: (none)\n2. Site ID: 2, Base Path: /second, Title: Second Site, Number pages: 2, Default Theme: Theme 2, Default Layout: Layout 2\n                `,
+            text: '\nSites (2):\n\n1. Site ID: 1, Path: /web, Full URL: http://localhost:1234/portal/web, Title: Default Site (Translations: de: Standard-Site), Number pages: 0, Default Theme: (none), Default Layout: (none)\n2. Site ID: 2, Path: /second, Full URL: http://localhost:1234/portal/second, Title: Second Site, Number pages: 2, Default Theme: Theme 2, Default Layout: Layout 2\n                ',
         }]);
     });
 });

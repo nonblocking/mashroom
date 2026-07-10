@@ -51,6 +51,17 @@
                 "menuTitle": "Remote Plugin Packages",
                 "path": "/remote-plugin-packages"
             }
+        },
+        {
+            "name": "Mashroom Remote Package Scanner Services",
+            "type": "services",
+            "namespace": "remotePackageScanner",
+            "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
+            "requires": [
+                "Mashroom Remote Package Scanner"
+            ],
+            "defaultConfig": {
+            }
         }
     ]
 }

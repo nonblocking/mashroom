@@ -14,7 +14,7 @@ router.post('/', async (req: Request, res: Response) => {
     logger.debug('Received MCP request:', req.body);
 
     try {
-        const server = mcpServer(req.pluginContext);
+        const server = mcpServer(req);
 
         const transport = new StreamableHTTPServerTransport({
             sessionIdGenerator: undefined,

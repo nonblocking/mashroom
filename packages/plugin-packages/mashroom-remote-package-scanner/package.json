@@ -10,6 +10,7 @@
     "version": "1.0.0",
     "files": [
         "dist/**",
+        "type-definitions/*",
         "public/**",
         "views/**",
         "mashroom.json"

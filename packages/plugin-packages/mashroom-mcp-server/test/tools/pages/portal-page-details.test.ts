@@ -52,9 +52,16 @@ const layout: Partial<MashroomPortalLayout> = {
 describe('portal-page-details', () => {
 
     it('returns the page details',  async () => {
-        const context: any = {
+        const pluginContext: any = {
             loggerFactory: () => console,
             services: {
+                core: {
+                    pluginService: {
+                        getPlugins: () => {
+                            return [];
+                        },
+                    }
+                },
                 portal: {
                     service: {
                         getSites: async () => {
@@ -80,11 +87,17 @@ describe('portal-page-details', () => {
             }
         };
 
-        const result = await portalPageDetails(context)({ pageId: '1'});
+        const req: any = {
+            host: 'localhost:1234',
+            headers: {},
+            pluginContext,
+        };
+
+        const result = await portalPageDetails(req)({ pageId: '1'});
 
         expect(result.content).toEqual([{
             type: 'text',
-            text: `\n                    Page "1" Details:\n\n                    Title: Page 1 (translations: de: Seite 1)\n                    Description: undefined\n                    FriendlyUrl: /page1\n                    Layout: Layout 2\n                    Layout Area IDs: app-area1, app-area2\n                    Apps on the Page:\n                        1. Name: App 1, Instance ID: 22, Area ID: area1\n1. Name: App 2, Instance ID: 3, Area ID: area1\n2. Name: App 55, Instance ID: 123123123, Area ID: area2\n                `,
+            text: `\nPage "1" Details:\n\nTitle: Page 1 (Translations: de: Seite 1)\nDescription: undefined\nFriendlyUrl: /page1\nFull URL: http://localhost:1234/portal/web/page1\nLayout: Layout 2\nLayout Area IDs: app-area1, app-area2\nApps on the Page:\n    1. Name: App 1, Instance ID: 22, Area ID: area1\n1. Name: App 2, Instance ID: 3, Area ID: area1\n2. Name: App 55, Instance ID: 123123123, Area ID: area2\n                `,
         }]);
     });
 });

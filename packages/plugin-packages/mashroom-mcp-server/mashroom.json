@@ -7,6 +7,7 @@
             "type": "api",
             "bootstrap": "./dist/mashroom-bootstrap.js",
             "requires": [
+                "Mashroom Security Services",
                 "Mashroom Portal Services",
                 "Mashroom Internationalization Services"
             ],

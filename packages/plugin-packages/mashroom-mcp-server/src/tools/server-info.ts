@@ -17,7 +17,17 @@ export default (pluginContext: MashroomPluginContext) => async (): Promise<CallT
             {
                 type: 'text',
                 text: `
-                    Mashroom Server Info:
+                    Mashroom Server is a Microfrontend Integration Platform.
+
+                    Mashroom Portal is the component that can be used to build web pages consisting of multiple Microfrontends.
+
+                    The Microfrontends can be developed in any framework and can run remotely on a different server.
+
+                    Mashroom Portal is organized in Sites which can have multiple Pages which build a tree structure.
+
+                    Every Page has a configurable Layout with multiple areas where Microfrontends can be placed.
+
+                    Details about this Mashroom Server:
 
                     Server Name: ${serverConfig.name}
                     Server Version: ${serverInfo.version}

@@ -1,8 +1,9 @@
 import {serializeI18NString} from '../utils';
-import type {MashroomPluginContext} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
 import type {CallToolResult} from '@modelcontextprotocol/sdk/types';
 
-export default (pluginContext: MashroomPluginContext) => async (): Promise<CallToolResult> => {
+export default (req: Request) => async (): Promise<CallToolResult> => {
+    const {pluginContext} = req;
     const {services, loggerFactory} = pluginContext;
     const logger = loggerFactory('mashroom.mcp');
     const pluginService = services.core.pluginService;
@@ -34,9 +35,9 @@ export default (pluginContext: MashroomPluginContext) => async (): Promise<CallT
             {
                 type: 'text',
                 text: `
-                    Registered Portal Apps (${lines.length}):
+Registered Portal Apps (${lines.length}):
 
-                    ${lines.join('\n')}
+${lines.join('\n')}
                 `,
             },
         ],

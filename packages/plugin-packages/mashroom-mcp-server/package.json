@@ -10,6 +10,7 @@
     "version": "1.0.0",
     "files": [
         "dist/**",
+        "examples/**",
         "mashroom.json"
     ],
     "dependencies": {
@@ -19,7 +20,8 @@
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
         "@mashroom/mashroom-portal": "2.9.4",
-        "@mashroom/mashroom-i18n": "2.9.4"
+        "@mashroom/mashroom-i18n": "2.9.4",
+        "@mashroom/mashroom-remote-package-scanner": "1.0.0"
     },
     "jest": {
         "testEnvironment": "node",
