@@ -1,8 +1,8 @@
 
 import {statSync, existsSync, type BigIntStats} from 'fs';
 import {readFile, writeFile} from 'fs/promises';
+import {randomUUID} from 'node:crypto';
 import {lock as lockFile} from 'proper-lockfile';
-import {nanoid} from 'nanoid';
 import {Query} from 'mingo';
 import ConcurrentAccessError from '../errors/ConcurrentAccessError';
 
@@ -302,6 +302,6 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
     }
 
     private _generateId(): string {
-        return nanoid(8);
+        return randomUUID();
     }
 }

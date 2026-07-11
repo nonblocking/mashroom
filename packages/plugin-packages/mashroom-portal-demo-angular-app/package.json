@@ -1,48 +1,42 @@
 {
-    "name": "@mashroom/mashroom-portal-demo-angular-app",
-    "description": "A simple Angular based Microfrontend that can be used in the Mashroom Portal",
-    "homepage": "https://www.mashroom-server.com",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/nonblocking/mashroom.git"
-    },
-    "license": "MIT",
-    "version": "2.9.4",
-    "files": [
-        "dist/**",
-        "mashroom.json"
-    ],
-    "devDependencies": {
-        "@mashroom/mashroom-portal": "2.9.4",
-        "@angular-devkit/build-angular": "^21.2.0",
-        "@angular-eslint/eslint-plugin": "^21.2.0",
-        "@angular-eslint/eslint-plugin-template": "^21.2.0",
-        "@angular/cli": "^21.2.0",
-        "@angular/common": "^21.2.0",
-        "@angular/compiler": "^21.2.0",
-        "@angular/compiler-cli": "^21.2.0",
-        "@angular/core": "^21.2.0",
-        "@angular/language-service": "^21.2.0",
-        "@angular/platform-browser": "^21.2.0",
-        "@angular/platform-browser-dynamic": "^21.2.0"
-    },
-    "scripts": {
-        "dev": "ng serve",
-        "build": "ng build --configuration production && cpy ./screenshot.png dist",
-        "lint": "eslint --fix",
-        "type-check": "tsc --noEmit"
-    },
-    "lavamoat": {
-        "allowScripts": {
-            "@angular-devkit/build-angular>esbuild": false,
-            "@angular-devkit/build-angular>piscina>nice-napi": false,
-            "@angular-devkit/build-angular>vite>esbuild": false,
-            "@angular-devkit/build-angular>@angular/build>lmdb": false,
-            "@angular-devkit/build-angular>@angular/build>lmdb>msgpackr>msgpackr-extract": false,
-            "@angular-eslint/builder>nx": false,
-            "@angular-devkit/build-angular>@angular/build>vite>esbuild": false,
-            "@angular-devkit/build-angular>sass>@parcel/watcher": false,
-            "@angular-devkit/build-angular>jest>@jest/core>jest-resolve>unrs-resolver": false
-        }
+  "name": "@mashroom/mashroom-portal-demo-angular-app",
+  "description": "A simple Angular based Microfrontend that can be used in the Mashroom Portal",
+  "homepage": "https://www.mashroom-server.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nonblocking/mashroom.git"
+  },
+  "license": "MIT",
+  "version": "2.9.4",
+  "files": [
+    "dist/**",
+    "mashroom.json"
+  ],
+  "devDependencies": {
+    "@mashroom/mashroom-portal": "2.9.4",
+    "@angular-devkit/build-angular": "^22.0.6",
+    "@angular/cli": "^22.0.6",
+    "@angular/common": "^22.0.6",
+    "@angular/compiler": "^22.0.6",
+    "@angular/compiler-cli": "^22.0.6",
+    "@angular/core": "^22.0.6",
+    "@angular/language-service": "^22.0.6",
+    "@angular/platform-browser": "^22.0.6",
+    "angular-eslint": "^22.0.0"
+  },
+  "scripts": {
+    "dev": "ng serve",
+    "build": "ng build --configuration production && cpy ./screenshot.png dist/browser",
+    "lint": "eslint --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "@angular-devkit/build-angular>esbuild": false,
+      "@angular-devkit/build-angular>@angular/build>lmdb": false,
+      "@angular-devkit/build-angular>@angular/build>lmdb>msgpackr>msgpackr-extract": false,
+      "@angular-devkit/build-angular>@angular/build>vite>esbuild": false,
+      "@angular-devkit/build-angular>sass>@parcel/watcher": false
     }
+  }
 }

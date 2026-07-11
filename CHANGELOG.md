@@ -3,6 +3,7 @@
 
 ## [unreleased v3]
 
+ * Dropped support for Node.js 20.x
  * Added an MCP server that allows Coding Agents to add new (remote) Microfrontends and to place in on pages
  * Added a [Shadcn Demo Microfrontend](packages/plugin-packages/mashroom-portal-demo-react-shadcn-app)
  * Added a new [Tailwind 4 based Portal Theme](packages/plugin-packages/mashroom-portal-tailwind-theme)

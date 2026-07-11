@@ -19,7 +19,7 @@
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.9.4",
-        "@types/express-session": "^1.18.2"
+        "@types/express-session": "^1.19.0"
     },
     "scripts": {
         "lint": "eslint --fix",

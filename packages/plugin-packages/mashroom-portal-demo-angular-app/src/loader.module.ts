@@ -24,6 +24,7 @@ export class LoaderModule implements DoBootstrap {
     private _appRef = inject(ApplicationRef);
     private _injector = inject(Injector);
 
+    // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
     ngDoBootstrap() {
         // Nothing to do because this is just a dummy module
     }

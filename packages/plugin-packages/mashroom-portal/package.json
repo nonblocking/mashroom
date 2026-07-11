@@ -15,9 +15,8 @@
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "2.9.4",
-        "body-parser": "^2.2.2",
-        "express-sse-ts": "^1.0.2",
-        "nanoid": "^3.3.11"
+        "body-parser": "^2.3.0",
+        "express-sse-ts": "^1.0.2"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",

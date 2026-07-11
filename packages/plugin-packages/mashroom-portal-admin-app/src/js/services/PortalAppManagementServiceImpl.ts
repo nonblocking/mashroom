@@ -1,5 +1,4 @@
 
-import {nanoid} from 'nanoid';
 import {setSelectedPortalApp, setShowModal} from '../store/actions';
 import {
     CSS_CLASS_MASHROOM_PORTAL_APP_AREA,
@@ -334,7 +333,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
             },
         };
 
-        const editorAreaId = nanoid(6);
+        const editorAreaId = crypto.randomUUID();
         const editorWrapper = document.createElement('div');
         editorWrapper.className = 'mashroom-portal-app-config-editor';
         editorWrapper.id = editorAreaId;

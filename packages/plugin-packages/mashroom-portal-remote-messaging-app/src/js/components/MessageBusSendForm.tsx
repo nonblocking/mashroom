@@ -1,6 +1,5 @@
 
 import React, {useCallback} from 'react';
-import {nanoid} from 'nanoid';
 import {
     Form,
     TextField,
@@ -60,7 +59,7 @@ export default ({messageBus}: Props) => {
         const {topic, message} = values;
         const jsonMessage = JSON.parse(message);
         const remoteTopic = `${messageBus.getRemotePrefix()}${topic}`;
-        const id = nanoid(8);
+        const id = crypto.randomUUID();
 
         const publishedMessage: PublishedMessage = {
             id,

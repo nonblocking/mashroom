@@ -5,6 +5,7 @@
         "moduleResolution": "nodenext",
         "sourceMap": true,
         "strict": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "types": ["node", "jest"]
     }
 }

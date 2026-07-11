@@ -9,11 +9,11 @@
             "projectType": "application",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
+                    "builder": "@angular-devkit/build-angular:application",
                     "options": {
                         "outputPath": "dist",
                         "index": "src/index.html",
-                        "main": "src/main.ts",
+                        "browser": "src/main.ts",
                         "tsConfig": "src/tsconfig.app.json",
                         "assets": [
                             "src/assets",
@@ -29,12 +29,9 @@
                             "sourceMap": true,
                             "namedChunks": false,
                             "aot": true,
-                            "extractLicenses": true,
-                            "vendorChunk": false,
-                            "buildOptimizer": true
+                            "extractLicenses": true
                         },
                         "development": {
-                            "buildOptimizer": false,
                             "optimization": false,
                             "sourceMap": true,
                             "namedChunks": true

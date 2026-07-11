@@ -1,4 +1,4 @@
-import {nanoid} from 'nanoid';
+
 import {
     SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX,
     WINDOW_VAR_PORTAL_API_PATH,
@@ -770,7 +770,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
     private _createNewAppInstance(appSetup: MashroomPortalAppSetup | undefined, pluginName: string, instanceId: string | undefined | null,
                                   portalAppAreaId: string, position: number | undefined | null, modal: boolean): LoadedPortalAppInternal {
-        const {appId, title, editorConfig, pluginMissing} = appSetup || {appId: nanoid(8)};
+        const {appId, title, editorConfig, pluginMissing} = appSetup || {appId: crypto.randomUUID()};
         const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} =
             this._appendAppWrapper(appId, pluginName, title, portalAppAreaId, position);
         const loadedAppInternal: LoadedPortalAppInternal = {

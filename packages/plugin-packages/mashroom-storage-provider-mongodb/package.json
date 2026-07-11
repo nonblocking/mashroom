@@ -13,7 +13,7 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "mongodb": "^7.1.0"
+        "mongodb": "^7.5.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",

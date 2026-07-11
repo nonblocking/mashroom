@@ -8,7 +8,6 @@
             "clientBootstrap": "startAngularDemoApp",
             "resources": {
                 "js": [
-                    "runtime.js",
                     "main.js"
                 ],
                 "css": [
@@ -19,7 +18,7 @@
                 "screenshot.png"
             ],
             "local": {
-                "resourcesRoot": "./dist"
+                "resourcesRoot": "./dist/browser"
             },
             "defaultConfig": {
                 "title": "Demo Angular App",

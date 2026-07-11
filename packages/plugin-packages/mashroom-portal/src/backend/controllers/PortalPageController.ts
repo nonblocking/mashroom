@@ -1,7 +1,7 @@
 
+import {randomUUID} from 'node:crypto';
 import {findPortalAppInstanceOnPage} from '../utils/model-utils';
 import {getPortalAppResourceKey, isAdmin} from '../utils/security-utils';
-import {createPageId, createAppInstanceId} from '../utils/id-utils';
 
 import type {Request, Response} from 'express';
 import type {
@@ -69,7 +69,7 @@ export default class PortalPageController {
                 return;
             }
 
-            const pageId = createPageId();
+            const pageId = randomUUID();
             page = {
                 ...page,
                 pageId,
@@ -304,7 +304,7 @@ export default class PortalPageController {
 
             const appConfig = {...portalApp.defaultAppConfig || {}, ...data.appConfig || {}};
 
-            const instanceId = createAppInstanceId();
+            const instanceId = randomUUID();
             const instance = {
                 pluginName: data.pluginName,
                 instanceId

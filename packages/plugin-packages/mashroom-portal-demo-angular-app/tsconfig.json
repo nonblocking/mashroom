@@ -12,6 +12,8 @@
         "lib": [
             "ES2022",
             "dom"
-        ]
+        ],
+        "types": ["node", "jest"],
+        "ignoreDeprecations": "6.0"
     }
 }

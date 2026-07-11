@@ -1,4 +1,5 @@
 
+import {randomUUID} from 'node:crypto';
 import {
     PORTAL_APP_RESOURCES_BASE_PATH,
     PORTAL_APP_RESOURCES_SHARED_PATH,
@@ -6,7 +7,6 @@ import {
 } from '../constants';
 import {getFrontendApiBasePath, getFrontendResourcesBasePath} from './path-utils';
 import {calculatePermissions} from './security-utils';
-import {createAppId} from './id-utils';
 import {getVersionHash} from './cache-utils';
 import {getConfigPluginWithRewriteImportMap} from './config-plugin-utils';
 
@@ -105,7 +105,7 @@ export const createPortalAppSetup = async (portalApp: MashroomPortalApp,
     const appConfig = {...portalApp.defaultAppConfig, ...portalAppInstance?.appConfig ?? {}, ...overrideAppConfig ?? {}};
 
     const portalAppSetup: MashroomPortalAppSetup = {
-        appId: portalAppInstance?.instanceId || createAppId(),
+        appId: portalAppInstance?.instanceId || randomUUID(),
         pluginName: portalApp.name,
         title: portalApp.title ? i18nService.translate(req, portalApp.title) : null,
         version: portalApp.version,
@@ -136,7 +136,7 @@ export const createPortalAppSetupForMissingPlugin = async (pluginName: string, i
     const user = await toPortalAppUser(mashroomSecurityUser, req);
 
     const portalAppSetup: MashroomPortalAppSetup = {
-        appId: createAppId(),
+        appId: randomUUID(),
         pluginName,
         pluginMissing: true,
         title: pluginName,

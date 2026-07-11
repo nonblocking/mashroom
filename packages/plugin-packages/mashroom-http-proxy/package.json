@@ -23,7 +23,7 @@
         "@mashroom/mashroom-utils": "2.9.4",
         "@types/http-proxy": "1.17.17",
         "@types/ws": "^8.18.1",
-        "ws": "^8.19.0"
+        "ws": "^8.21.0"
     },
     "jest": {
         "testEnvironment": "node",

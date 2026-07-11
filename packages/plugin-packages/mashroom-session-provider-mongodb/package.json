@@ -14,13 +14,13 @@
     ],
     "dependencies": {
         "connect-mongo": "^6.0.0",
-        "mongodb": "^7.1.0"
+        "mongodb": "^7.5.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.9.4",
         "@mashroom/mashroom-session": "2.9.4",
-        "@types/express-session": "^1.18.2"
+        "@types/express-session": "^1.19.0"
     },
     "scripts": {
         "lint": "eslint --fix",

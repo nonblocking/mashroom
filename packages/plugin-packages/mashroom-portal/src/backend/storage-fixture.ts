@@ -1,6 +1,6 @@
 
+import {randomUUID} from 'node:crypto';
 import {PAGES_COLLECTION, PORTAL_APP_INSTANCES_COLLECTION, SITES_COLLECTION} from './constants';
-import {createAppInstanceId} from './utils/id-utils';
 
 import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection, MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
@@ -30,19 +30,19 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
 
     const welcomeAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Welcome Portal App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
     };
 
     const reactDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo React App 2',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
         appConfig: {
         },
     };
 
     const reactDemoAppInstance2: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo React App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
         appConfig: {
             message: 'This simple React based Microfrontend was launched with a different...',
         },
@@ -50,7 +50,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
 
     const reactDemoAppInstance3: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo React App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
         appConfig: {
             message: '...configuration than this instance of the same Microfrontend',
         },
@@ -58,7 +58,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
 
     const reactDemoAppInstance4: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo React App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
         appConfig: {
             message: 'This React Microfrontend is part of a tabbed container formed by the Mashroom Portal Tabify App',
         },
@@ -66,48 +66,48 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
 
     const angularDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo Angular App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
         appConfig: {
         },
     };
 
     const compositeDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo Composite App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
         appConfig: {
         },
     };
 
     const loadDynamicallyDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo Load Dynamically App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
     };
 
     const restProxyDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo Rest Proxy App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
     };
 
     const tabifyAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Tabify App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
     };
 
     const remoteDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo Hybrid Rendering Remote App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
         appConfig: {
         },
     };
 
     const sandboxAppInstance: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Sandbox App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
     };
 
     const galleryAppInstance: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal App Gallery App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
     };
 
     const pageHomeEmpty: MashroomPortalPage = {

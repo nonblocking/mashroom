@@ -14,7 +14,7 @@
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "2.9.4",
-        "rhea": "^3.0.4"
+        "rhea": "^3.0.5"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",

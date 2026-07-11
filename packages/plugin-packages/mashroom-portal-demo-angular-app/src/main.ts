@@ -1,5 +1,5 @@
 import {enableProdMode} from '@angular/core';
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import {platformBrowser} from '@angular/platform-browser';
 
 import {LoaderModule} from './loader.module';
 import {AppComponent} from './app/app.component';
@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = async (hostElement, portalAppSetup, portalClientServices) => {
 
-    const loaderModule = await platformBrowserDynamic().bootstrapModule(LoaderModule, {
+    const loaderModule = await platformBrowser().bootstrapModule(LoaderModule, {
         ngZone: 'noop'
     });
 
@@ -25,4 +25,4 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = async (hostElement, 
     };
 };
 
-window['startAngularDemoApp'] = bootstrap;
+(window as any)['startAngularDemoApp'] = bootstrap;

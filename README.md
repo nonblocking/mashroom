@@ -3,6 +3,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub CI](https://github.com/nonblocking/mashroom/actions/workflows/mashroom_ci_build.yml/badge.svg)](https://github.com/nonblocking/mashroom/actions/workflows/mashroom_ci_build.yml)
 
+> [!WARNING]
+> This branch contains the upcoming 3.0 release which is not stable yet.
+> The current stable release is [2.9](https://github.com/nonblocking/mashroom/tree/v2_maintainance).
+
 ## About ##
 
 *Mashroom Server* is a *Node.js* based **Microfrontend Integration Platform**. It supports the integration of *Express* web-apps on the
@@ -54,6 +58,7 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
   * Delivering of Theme and Portal App resources via CDN
   * Admin Toolbar to create pages and place Apps via Drag'n'Drop
   * **Hot reload** of (local) *Portal Apps* in development mode
+  * MCP server that allows coding agents to register and place *Portal Apps* on pages
 
 #### Core
 
@@ -75,12 +80,7 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
 
 ## Quick Start
 
-    git clone https://github.com/nonblocking/mashroom-portal-quickstart
-    cd mashroom-portal-quickstart
-    npm run setup
-    npm start
-
-Open http://localhost:5050 in your browser. Users: john/john, admin/admin
+**TODO**
 
 ## Screenshots
 
@@ -108,9 +108,7 @@ Open http://localhost:5050 in your browser. Users: john/john, admin/admin
 
 ## Full Documentation
 
-Latest: [https://docs.mashroom-server.com](https://docs.mashroom-server.com)
-
-Mashroom 2 Documentation: [https://www.mashroom-server.com/documentation](https://www.mashroom-server.com/documentation)
+[https://docs.mashroom-server.com](https://docs.mashroom-server.com)
 
 ## Blog
 
@@ -121,6 +119,10 @@ Mashroom 2 Documentation: [https://www.mashroom-server.com/documentation](https:
 [https://www.youtube.com/@mashroomserver](https://www.youtube.com/@mashroomserver)
 
 ## Development Resources
+
+### Templates
+
+**TODO**
 
 ### Plugin Examples
 

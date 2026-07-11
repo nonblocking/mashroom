@@ -3,6 +3,7 @@ import {ServerResponse} from 'http';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import context from '../context';
 
+import type {WebSocket} from 'ws';
 import type {Socket} from 'net';
 import type {Request} from 'express';
 import type {
@@ -46,12 +47,12 @@ const handle = async (message: IncomingMessageWithContext, socket: Socket, head:
         return;
     }
 
-    const connectPath = message.url.substr(context.basePath.length);
+    const connectPath = message.url.substring(context.basePath.length);
 
-    context.server.getServer().handleUpgrade(message, socket, head, (ws) => {
+    context.server.getServer().handleUpgrade(message, socket, head, (webSocket: WebSocket) => {
         if (user) {
             const loggerContext = {...logger.getContext(), ...loggingUtils.userContext(user)};
-            context.server.createClient(ws, connectPath, user, loggerContext);
+            context.server.createClient(webSocket, connectPath, user, loggerContext);
         }
     });
 };

@@ -1,5 +1,4 @@
 import React, {useRef, useCallback, useEffect, useMemo} from 'react';
-import {nanoid} from 'nanoid';
 import { CircularProgress } from '@mashroom/mashroom-portal-ui-commons';
 import {addMessagePublishedByApp, setHostWidth as setHostWidthAction, setTopicsSubscribedByApp} from '../store/actions';
 import useStore from '../store/useStore';
@@ -13,8 +12,8 @@ export default () => {
     const {width: hostWidth} = useStore((state) => state.host);
     const dispatch = useStore((state) => state.dispatch);
     const setHostWidth = (hostWidth: string) => dispatch(setHostWidthAction(hostWidth));
-    const hostElementId = useMemo(() => `mashroom-sandbox-app-host-elem_${nanoid(8)}`, []);
-    const hiddenHostElementId = useMemo(() => `mashroom-sandbox-app-host-elem_${nanoid(8)}`, []);
+    const hostElementId = useMemo(() => `mashroom-sandbox-app-host-elem_${crypto.randomUUID()}`, []);
+    const hiddenHostElementId = useMemo(() => `mashroom-sandbox-app-host-elem_${crypto.randomUUID()}`, []);
     const messageBusPortalAppUnderTest = useMemo(() => {
         const messageBus = getMessageBusPortalAppUnderTest();
         messageBus.onMessageSent((topic, data) => {

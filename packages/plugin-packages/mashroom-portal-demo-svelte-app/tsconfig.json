@@ -2,7 +2,7 @@
     "$schema": "https://json.schemastore.org/tsconfig",
     "compilerOptions": {
         "target": "esnext",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "verbatimModuleSyntax": true,
         "isolatedModules": true,
         "declaration": true,
@@ -16,6 +16,7 @@
         "resolveJsonModule": true,
         "types": [
             "node",
+            "jest",
             "svelte"
         ]
     }

@@ -23,15 +23,11 @@
         "@mashroom/mashroom": "2.9.4",
         "@mashroom/mashroom-portal": "2.9.4",
         "@tsconfig/svelte": "^5.0.8",
-        "svelte": "^5.53.6",
-        "svelte-check": "^4.4.4",
+        "svelte": "^5.56.4",
+        "svelte-check": "^4.7.2",
         "svelte-loader": "^3.2.4"
     },
     "lavamoat": {
-        "allowScripts": {
-            "svelte-preprocess": false,
-            "svelte-check>svelte-preprocess": false,
-            "svelte-preprocess>sass>@parcel/watcher": false
-        }
+        "allowScripts": {}
     }
 }

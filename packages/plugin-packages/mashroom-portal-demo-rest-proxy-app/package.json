@@ -15,11 +15,11 @@
     ],
     "devDependencies": {
         "@mashroom/mashroom-portal": "2.9.4",
-        "@types/react": "^19.2.14",
+        "@types/react": "^19.2.17",
         "@types/react-dom": "^19.2.3",
-        "react": "^19.2.4",
-        "react-dom": "^19.2.4",
-        "react-i18next": "^16.5.4"
+        "react": "^19.2.7",
+        "react-dom": "^19.2.7",
+        "react-i18next": "^17.0.9"
     },
     "scripts": {
         "lint": "eslint --fix",

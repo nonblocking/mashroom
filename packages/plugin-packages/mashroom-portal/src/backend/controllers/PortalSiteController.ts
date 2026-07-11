@@ -1,7 +1,7 @@
 
+import {randomUUID} from 'node:crypto';
 import {isAdmin, isSitePermitted} from '../utils/security-utils';
 import {getPortalPath} from '../utils/path-utils';
-import {createPageId, createSiteId} from '../utils/id-utils';
 import SitePagesTraverser from '../utils/SitePagesTraverser';
 
 import type {Request, Response} from 'express';
@@ -95,13 +95,13 @@ export default class PortalSiteController {
                 return;
             }
 
-            const siteId = createSiteId();
+            const siteId = randomUUID();
             (site as Writable<MashroomPortalSite>).siteId = siteId;
 
             // Add a page if none is given
             if (!site.pages) {
                 const page: MashroomPortalPage = {
-                    pageId: createPageId()
+                    pageId: randomUUID()
                 };
                 await portalService.insertPage(page);
                 site = {
