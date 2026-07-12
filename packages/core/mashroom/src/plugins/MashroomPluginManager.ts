@@ -226,6 +226,8 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
 
         if (potentialPackage) {
             this._logger.debug(`Updating potential package URL: ${url}`);
+            potentialPackage.updateRetries = 0;
+            potentialPackage.scannerHints = scannerHints;
         } else {
             this._logger.debug(`Adding new potential package URL: ${url}`);
             potentialPackage = {
@@ -277,7 +279,7 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         try {
             buildPackageDefinitionResult = await this._buildPackageDefinition(potentialPackage.url, potentialPackage.scannerHints);
         } catch (e: any) {
-            // Building the package definition failed, this might be a temporary problem; we just keep all plugins
+            // Building the package definition failed; this might be a temporary problem; we just keep all plugins
             let message = e.message;
             if (e.name === 'DefinitionBuilderError') {
                 const dbe = e as DefinitionBuilderError;
@@ -289,7 +291,7 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
             potentialPackage.updateRetries ++;
             potentialPackage.status = 'processed';
             potentialPackage.processedOnce = true;
-            this._logger.error(`Plugin package definition validation failed for ${potentialPackage.url}. Error: ${message}`);
+            this._logger.error(`Building plugin package definition failed for ${potentialPackage.url}. Attempt #${potentialPackage.updateRetries}. Error: ${message}`);
             return;
         }
 
