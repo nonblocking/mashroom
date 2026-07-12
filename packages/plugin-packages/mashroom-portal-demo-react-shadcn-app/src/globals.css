@@ -4,5 +4,15 @@
     @tailwind utilities;
 }
 
-/* Do NOT @import theme.css, because it must be provided by the Microfrontend host/shell */
-@reference "@mashroom/mashroom-portal-tailwind-theme/theme.css";
+/*
+  Do NOT @import theme.css, because it must be provided by the Theme plugin.
+
+  In your Microfrontend use
+
+  @reference "@mashroom/mashroom-portal-tailwind-theme/theme.css";
+
+  but since this is Microfrontend is part of the Mashroom monorepo and should work in dev mode we
+  reference it from the src folder
+*/
+@reference "../../mashroom-portal-tailwind-theme/src/frontend/style/theme.css";
+
