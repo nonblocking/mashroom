@@ -21,7 +21,7 @@ You can override the default config in your server config file like this:
 ```json
 {
     "plugins": {
-        "Mashroom Portal Default Theme": {
+        "Mashroom Portal Bootstrap Theme": {
             "spaMode": true,
             "darkMode": "auto",
             "styleFile": null,
