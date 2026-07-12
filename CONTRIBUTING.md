@@ -3,7 +3,7 @@
 
 If you are interested in making *Mashroom Server* better, you can submit a pull request.
 
-To setup a development environment Node.js >= 20 is required.
+To set up a development environment, Node.js >= 22 is required.
 
 After cloning the repository run
 
