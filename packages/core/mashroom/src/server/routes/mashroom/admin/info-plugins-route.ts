@@ -59,7 +59,7 @@ const pluginTable = (pluginContext: MashroomPluginContext) => {
                     <span class="hidden">${plugin.pluginPackage.pluginPackageUrl.protocol !== 'file:' ? 'remote' : ''}</span>
                 </td>
                 <td style="${statusStyle}">${capitalize(plugin.status)}</td>
-                <td>${htmlUtils.escapeHtml(plugin.errorMessage || '')}</td>
+                <td style="overflow-wrap: anywhere;">${htmlUtils.escapeHtml(plugin.errorMessage || '')}</td>
                 <td>${lastReload}</td>
                 <td>
                    <script type="text/javascript">
