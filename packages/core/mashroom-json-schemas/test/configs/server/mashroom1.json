@@ -122,7 +122,7 @@
         "Mashroom Portal WebApp": {
             "path": "/portal",
             "adminApp": "Mashroom Portal Admin App",
-            "defaultTheme": "Mashroom Portal Default Theme",
+            "defaultTheme": "Mashroom Portal Bootstrap Theme",
             "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
             "authenticationExpiration": {
                 "warnBeforeExpirationSec": 60,
@@ -142,7 +142,7 @@
                 "inlineStyles": true
             }
         },
-        "Mashroom Portal Default Theme": {
+        "Mashroom Portal Bootstrap Theme": {
             "showEnvAndVersions": true
         },
         "Mashroom Portal Remote App Background Job": {

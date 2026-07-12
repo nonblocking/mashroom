@@ -399,7 +399,7 @@ export interface Plugins {
      */
     adminApp?: string | null;
     /**
-     * The default theme if none is selected in the site or page configuration (Default: Mashroom Portal Default Theme)
+     * The default theme if none is selected in the site or page configuration (Default: Mashroom Portal Bootstrap Theme)
      */
     defaultTheme?: string;
     /**
@@ -508,32 +508,6 @@ export interface Plugins {
      * Add some demo pages if the configuration storage is empty (Default: true)
      */
     addDemoPages?: boolean;
-  };
-  "Mashroom Portal Default Theme"?: {
-    /**
-     * The theme will try to operate like an SPA and loads new page content via fetch and replaces the DOM (Default: true)
-     */
-    spaMode?: boolean;
-    /**
-     * Possible values: true, false, "auto" (Default: "auto",)
-     */
-    darkMode?: boolean | string;
-    /**
-     * Custom CSS that can be used to overwrite CSS variables and to customize the theme (relative to the server config file, default: null)
-     */
-    styleFile?: string;
-    /**
-     * Optional logo image URL (Default: null)
-     */
-    logoImageUrl?: string;
-    /**
-     * Show or hide Portal App headers (Default: true)
-     */
-    showPortalAppHeaders?: boolean;
-    /**
-     * Show the environment (NODE_ENV) and version information in the header (Default: false)
-     */
-    showEnvAndVersions?: boolean;
   };
   "Mashroom Portal Bootstrap Theme"?: {
     /**

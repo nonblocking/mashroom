@@ -61,7 +61,7 @@
         },
         "Mashroom Portal WebApp": {
             "adminApp": null,
-            "defaultTheme": "Mashroom Portal Default Theme",
+            "defaultTheme": "Mashroom Portal Bootstrap Theme",
             "ignoreMissingAppsOnPages": false,
             "ssrConfig": {
                 "ssrEnable": true,
@@ -70,7 +70,7 @@
                 "cacheTTLSec": 300
             }
         },
-        "Mashroom Portal Default Theme": {
+        "Mashroom Portal Bootstrap Theme": {
             "showEnvAndVersions": true,
             "spaMode": true
         },

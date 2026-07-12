@@ -1,7 +1,7 @@
 
 # Test Server 8
 
-A test server which runs in dev mode and requires the following external services:
+A test server that runs in dev mode and requires the following external services:
 
  * [Redis](https://redis.io) as an external message broker (PubSub)
  * [MongoDB](https://www.mongodb.com) for session storage

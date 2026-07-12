@@ -11,7 +11,7 @@
     "files": [
         "dist/**",
         "views/**",
-        "mashroom.json"
+      "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom-portal-bootstrap-theme": "1.0.0"

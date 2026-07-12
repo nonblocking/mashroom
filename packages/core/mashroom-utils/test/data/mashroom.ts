@@ -15,7 +15,7 @@ const serverConfig: MashroomServerConfig = {
         },
         'Mashroom Portal WebApp': {
             adminApp: 'Mashroom Portal Admin App',
-            defaultTheme: 'Mashroom Portal Default Theme',
+            defaultTheme: 'Mashroom Portal Bootstrap Theme',
             authenticationExpiration: {
                 warnBeforeExpirationSec: 60,
                 autoExtend: false,

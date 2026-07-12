@@ -15,7 +15,7 @@
             "defaultConfig": {
                 "path": "/portal",
                 "adminApp": "Mashroom Portal Admin App",
-                "defaultTheme": "Mashroom Portal Default Theme",
+                "defaultTheme": "Mashroom Portal Bootstrap Theme",
                 "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
                 "authenticationExpiration": {
                     "warnBeforeExpirationSec": 60,

@@ -38,7 +38,7 @@ The plugin allows the following configuration properties:
         "Mashroom Portal WebApp": {
             "path": "/portal",
             "adminApp": "Mashroom Portal Admin App",
-            "defaultTheme": "Mashroom Portal Default Theme",
+            "defaultTheme": "Mashroom Portal Bootstrap Theme",
             "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
             "authenticationExpiration": {
               "warnBeforeExpirationSec": 60,
@@ -73,7 +73,7 @@ The plugin allows the following configuration properties:
 
  * _path_: The portal base path (Default: /portal)
  * _adminApp_: The admin to use (Default: Mashroom Portal Admin App)
- * _defaultTheme_: The default theme if none is selected in the site or page configuration (Default: Mashroom Portal Default Theme)
+ * _defaultTheme_: The default theme if none is selected in the site or page configuration (Default: Mashroom Portal Bootstrap Theme)
  * _defaultLayout_: The default layout if none is selected in the site or page configuration (Default: Mashroom Portal Default Layouts 1 Column)
  * _authenticationExpiration_:
    * _warnBeforeExpirationSec_: The time when the Portal should start to warn that the authentication is about to expire.

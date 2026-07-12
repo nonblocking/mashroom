@@ -64,8 +64,8 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
         },
     };
 
-    const angularDemoAppInstance1: MashroomPortalAppInstance = {
-        pluginName: 'Mashroom Portal Demo Angular App',
+    const vueDemoAppInstance1: MashroomPortalAppInstance = {
+        pluginName: 'Mashroom Portal Demo Vue App',
         instanceId: randomUUID(),
         appConfig: {
         },
@@ -131,8 +131,8 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
                 instanceId: reactDemoAppInstance1.instanceId,
             }],
             'app-area3': [{
-                pluginName: angularDemoAppInstance1.pluginName,
-                instanceId: angularDemoAppInstance1.instanceId,
+                pluginName: vueDemoAppInstance1.pluginName,
+                instanceId: vueDemoAppInstance1.instanceId,
             }],
         },
     };
@@ -339,7 +339,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
              await portalAppInstancesCollection.insertOne(reactDemoAppInstance2);
              await portalAppInstancesCollection.insertOne(reactDemoAppInstance3);
              await portalAppInstancesCollection.insertOne(reactDemoAppInstance4);
-             await portalAppInstancesCollection.insertOne(angularDemoAppInstance1);
+             await portalAppInstancesCollection.insertOne(vueDemoAppInstance1);
              await portalAppInstancesCollection.insertOne(compositeDemoAppInstance1);
              await portalAppInstancesCollection.insertOne(loadDynamicallyDemoAppInstance1);
              await portalAppInstancesCollection.insertOne(restProxyDemoAppInstance1);

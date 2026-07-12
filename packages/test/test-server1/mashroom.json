@@ -161,7 +161,7 @@
         },
         "Mashroom Portal WebApp": {
             "adminApp": "Mashroom Portal Admin App",
-            "defaultTheme": "Mashroom Portal Default Theme",
+            "defaultTheme": "Mashroom Portal Bootstrap Theme",
             "authenticationExpiration": {
                 "warnBeforeExpirationSec": 60,
                 "autoExtend": false,
@@ -183,18 +183,12 @@
                 "cacheTTLSec": 300
             }
         },
-        "Mashroom Portal Default Theme": {
+        "Mashroom Portal Bootstrap Theme": {
             "showEnvAndVersions": true,
             "showPortalAppHeaders": false,
             "spaMode": true,
             "darkMode": "auto",
             "styleFile": "./defaultThemeOverrides.css"
-        },
-        "Mashroom Portal Bootstrap Theme": {
-            "showEnvAndVersions": true,
-            "showPortalAppHeaders": false,
-            "spaMode": true,
-            "darkMode": "auto"
         },
         "Mashroom Portal Tailwind Theme": {
             "showEnvAndVersions": true,
