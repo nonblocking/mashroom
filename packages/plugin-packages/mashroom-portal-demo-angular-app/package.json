@@ -13,7 +13,7 @@
     "mashroom.json"
   ],
   "devDependencies": {
-    "@angular-devkit/build-angular": "^22.0.6",
+    "@angular/build": "^22.0.6",
     "@angular/cli": "^22.0.6",
     "@angular/common": "^22.0.6",
     "@angular/compiler": "^22.0.6",
