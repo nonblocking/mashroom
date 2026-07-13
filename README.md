@@ -4,8 +4,8 @@
 [![GitHub CI](https://github.com/nonblocking/mashroom/actions/workflows/mashroom_ci_build.yml/badge.svg)](https://github.com/nonblocking/mashroom/actions/workflows/mashroom_ci_build.yml)
 
 > [!WARNING]
-> This branch contains the upcoming 3.0 release which is not stable yet.
-> The current stable release is [2.9](https://github.com/nonblocking/mashroom/tree/v2_maintainance).
+> This branch contains the upcoming 3.0 release which is not production ready yet.
+> The current stable branch is [2.x](https://github.com/nonblocking/mashroom/tree/v2_maintainance).
 
 ## About ##
 
@@ -101,6 +101,18 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
 ### Tailwind-based Theme with a Microfrontend using Shadcn components
 
 ![Mashroom Portal Tailwind Theme](screenshots/mashroom-portal-tailwind-theme.png)
+
+### Registering and adding Apps via Code Agent
+
+![Mashroom MCP](screenshots/mashroom-portal-mcp.png)
+
+### Admin UI
+
+![Admin UI](screenshots/mashroom-admin-ui.png)
+
+### Kubernetes Integration
+
+![Kubernetes Integration](screenshots/mashroom-admin-ui-k8s.png)
 
 ## Homepage
 
