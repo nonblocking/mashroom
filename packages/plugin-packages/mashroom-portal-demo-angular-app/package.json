@@ -7,13 +7,12 @@
     "url": "git+https://github.com/nonblocking/mashroom.git"
   },
   "license": "MIT",
-  "version": "2.9.4",
+  "version": "3.0.0-alpha.0",
   "files": [
     "dist/**",
     "mashroom.json"
   ],
   "devDependencies": {
-    "@mashroom/mashroom-portal": "2.9.4",
     "@angular-devkit/build-angular": "^22.0.6",
     "@angular/cli": "^22.0.6",
     "@angular/common": "^22.0.6",
@@ -22,6 +21,7 @@
     "@angular/core": "^22.0.6",
     "@angular/language-service": "^22.0.6",
     "@angular/platform-browser": "^22.0.6",
+    "@mashroom/mashroom-portal": "3.0.0-alpha.0",
     "angular-eslint": "^22.0.0"
   },
   "scripts": {

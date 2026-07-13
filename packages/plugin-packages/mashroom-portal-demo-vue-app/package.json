@@ -7,7 +7,7 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.9.4",
+    "version": "3.0.0-alpha.0",
     "sideEffects": false,
     "files": [
         "dist/**",
@@ -17,7 +17,7 @@
         "vue": "^3.5.39"
     },
     "devDependencies": {
-        "@mashroom/mashroom-portal": "2.9.4",
+        "@mashroom/mashroom-portal": "3.0.0-alpha.0",
         "@vue/eslint-config-typescript": "^14.9.0",
         "eslint-plugin-vue": "^10.9.2",
         "vue-eslint-parser": "^10.4.1",

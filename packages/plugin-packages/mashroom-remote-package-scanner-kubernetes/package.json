@@ -7,7 +7,7 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "3.0.0-alpha.0",
     "files": [
         "dist/**",
         "public/**",
@@ -21,9 +21,9 @@
         "semver": "^7.8.5"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.9.4",
-        "@mashroom/mashroom-monitoring-metrics-collector": "2.9.4",
-        "@mashroom/mashroom-utils": "2.9.4",
+        "@mashroom/mashroom": "3.0.0-alpha.0",
+        "@mashroom/mashroom-monitoring-metrics-collector": "3.0.0-alpha.0",
+        "@mashroom/mashroom-utils": "3.0.0-alpha.0",
         "@types/semver": "^7.7.1"
     },
     "jest": {

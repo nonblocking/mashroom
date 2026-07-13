@@ -7,15 +7,15 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "3.0.0-alpha.0",
     "files": [
         "dist/**",
         "mashroom.json"
     ],
     "devDependencies": {
-        "@open-microfrontends/types": "^1.0.0",
-        "@mashroom/mashroom": "2.9.4",
-        "@mashroom/mashroom-utils": "2.9.4"
+        "@mashroom/mashroom": "3.0.0-alpha.0",
+        "@mashroom/mashroom-utils": "3.0.0-alpha.0",
+        "@open-microfrontends/types": "^1.0.0"
     },
     "jest": {
         "testEnvironment": "node",

@@ -7,7 +7,7 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.9.4",
+    "version": "3.0.0-alpha.0",
     "files": [
         "dist/**",
         "assets/**",
@@ -20,12 +20,12 @@
         "handlebars": "^4.7.9"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.9.4",
-        "@mashroom/mashroom-browser-cache": "2.9.4",
-        "@mashroom/mashroom-csrf-protection": "2.9.4",
-        "@mashroom/mashroom-i18n": "2.9.4",
-        "@mashroom/mashroom-security": "2.9.4",
-        "@mashroom/mashroom-vhost-path-mapper": "2.9.4",
+        "@mashroom/mashroom": "3.0.0-alpha.0",
+        "@mashroom/mashroom-browser-cache": "3.0.0-alpha.0",
+        "@mashroom/mashroom-csrf-protection": "3.0.0-alpha.0",
+        "@mashroom/mashroom-i18n": "3.0.0-alpha.0",
+        "@mashroom/mashroom-security": "3.0.0-alpha.0",
+        "@mashroom/mashroom-vhost-path-mapper": "3.0.0-alpha.0",
         "@types/express-session": "^1.19.0"
     },
     "scripts": {
