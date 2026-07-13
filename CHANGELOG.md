@@ -3,6 +3,9 @@
 
 ## [unreleased v3]
 
+
+## 3.0.0-alpha.0 (July 13, 2026)
+
  * Dropped support for Node.js 20.x
  * Added an MCP server that allows Coding Agents to add new (remote) Microfrontends and to place in on pages
  * Added a [Shadcn Demo Microfrontend](packages/plugin-packages/mashroom-portal-demo-react-shadcn-app)
