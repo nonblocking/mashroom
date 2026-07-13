@@ -1,9 +1,9 @@
 name: CI Build
 on:
   push:
-    branches: [ master, release/*, v3 ]
+    branches: [ master, release/* ]
   pull_request:
-    branches: [ master, release/*, v3 ]
+    branches: [ master, release/* ]
 jobs:
   build:
     runs-on: ubuntu-latest

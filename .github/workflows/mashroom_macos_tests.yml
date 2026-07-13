@@ -1,7 +1,7 @@
 name: Unit Tests MacOS
 on:
   push:
-    branches: [ master, release/*, v3 ]
+    branches: [ master, release/* ]
 jobs:
   build:
     runs-on: macos-latest

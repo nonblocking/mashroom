@@ -1,7 +1,7 @@
 name: Unit Tests Windows
 on:
   push:
-    branches: [ master, release/*, v3 ]
+    branches: [ master, release/* ]
 jobs:
   build:
     runs-on: windows-latest
