@@ -7,12 +7,12 @@
 ## 3.0.0-alpha.0 (July 13, 2026)
 
  * Dropped support for Node.js 20.x
- * Added an MCP server that allows Coding Agents to add new (remote) Microfrontends and to place in on pages
+ * Added an MCP server that allows Code Agents to add new (remote) Microfrontends and to place in on pages
  * Added a [Shadcn Demo Microfrontend](packages/plugin-packages/mashroom-portal-demo-react-shadcn-app)
  * Added a new [Tailwind 4 based Portal Theme](packages/plugin-packages/mashroom-portal-tailwind-theme)
  * Added a [React Bootstrap Demo Microfrontend](packages/plugin-packages/mashroom-portal-demo-react-bootstrap-app)
- * Added a new [Boostrap 5 based Portal Theme](packages/plugin-packages/mashroom-portal-bootstrap-theme) which is also the Default Theme now.
-   It uses the default Boostrap customizing and exposes all Bootstrap components.
+ * Added a new [Bootstrap 5 based Portal Theme](packages/plugin-packages/mashroom-portal-bootstrap-theme) which is also the Default Theme now.
+   It uses the default Bootstrap customizing and exposes all Bootstrap components.
    So, Microfrontends can use libraries like [react-bootstrap](https://react-bootstrap.netlify.app) or [bootstrap-vue-next](https://bootstrap-vue-next.github.io/bootstrap-vue-next).
  * Portal: Added a new plugin type *portal-app-config*.
    This plugin can be used to (re-)configure one or many Portal Apps and to adapt:
@@ -124,7 +124,7 @@
    {
      "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-remote-package-scanner.json",
      "remotePackageUrls": [
-     "https://demo-ssr-remote-app.mashroom-server.com"
+       "https://demo-ssr-remote-app.mashroom-server.com"
      ]
    }
    ```
@@ -170,7 +170,7 @@
 
 ## 2.9.0 (June 23, 2025)
 
- * Portal: The Portal throws an error now if an App has a boostrap function name that is already used by another one
+ * Portal: The Portal throws an error now if an App has a bootstrap function name that is already used by another one
    (this prevents Apps from overriding each other)
  * Replaced node-fetch by native (Node.js) fetch implementation
  * Added support for using TypeScript config files with Node.js 24 (see *packages/test/test-server7* for a demo)
