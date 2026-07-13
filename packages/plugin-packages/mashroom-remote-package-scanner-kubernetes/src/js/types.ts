@@ -7,9 +7,9 @@ export type KUBERNETES_WATCH_EVENTS = 'ADDED' | 'MODIFIED' | 'DELETED';
 export type KubernetesWatchCallback<RES> = (event: KUBERNETES_WATCH_EVENTS, apiObj: RES) => void;
 
 export interface KubernetesConnector {
-    watchNamespaces(labelSelector: string, cb: KubernetesWatchCallback<V1Namespace>): Promise<AbortController>;
-    watchServices(namespace: string, labelSelector: string | undefined, cb: KubernetesWatchCallback<V1Service>): Promise<AbortController>;
-    watchPods(namespace: string, cb: KubernetesWatchCallback<V1Pod>): Promise<AbortController>;
+    watchNamespaces(labelSelector: string, cb: KubernetesWatchCallback<V1Namespace>): Promise<KubernetesWatcher>;
+    watchServices(namespace: string, labelSelector: string | undefined, cb: KubernetesWatchCallback<V1Service>): Promise<KubernetesWatcher>;
+    watchPods(namespace: string, cb: KubernetesWatchCallback<V1Pod>): Promise<KubernetesWatcher>;
 }
 
 export type KubernetesWatcher = {

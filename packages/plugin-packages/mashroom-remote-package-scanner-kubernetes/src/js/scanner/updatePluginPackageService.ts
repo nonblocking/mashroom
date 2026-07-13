@@ -33,30 +33,26 @@ export default (service: KubernetesService, previousUrl: URL | undefined, logger
     } else {
         const urlChange = previousUrl && previousUrl.toString() !== service.url.toString();
         const highestImageVersion = containers.sort((p1, p2) => semver.gt(p1.imageVersion, p2.imageVersion) ? -1 : 1)[0].imageVersion;
-        let updatePluginPackage = false;
-        if (service.runningPods === 0) {
-            updatePluginPackage = true;
-            logger.info(`Remote plugin package updated because running Pods found for Kubernetes Service: ${service.name}`);
-        } else if (service.imageVersion !== highestImageVersion) {
-            updatePluginPackage = true;
-            logger.info(`Remote plugin package updated because image version changed for Kubernetes Service: ${service.name}. Image version: ${service.imageVersion} -> ${highestImageVersion}`);
+
+        if (service.imageVersion !== highestImageVersion) {
+            logger.info(`Image version changed for Kubernetes Service: ${service.name}. Image version: ${service.imageVersion} -> ${highestImageVersion}`);
         } else if (urlChange) {
-            updatePluginPackage = true;
-            logger.info(`Remote plugin package updated because URL changed for Kubernetes Service: ${service.name}. URL: ${previousUrl} -> ${service.url}`);
+            logger.info(`URL changed for Kubernetes Service: ${service.name}. URL: ${previousUrl} -> ${service.url}`);
         }
 
-        if (updatePluginPackage) {
-            if (urlChange) {
-                context.scannerCallback?.removePackageUrl(previousUrl);
-            }
-            context.scannerCallback?.addOrUpdatePackageUrl(service.url, {
-                packageName: service.name,
-                packageVersion: highestImageVersion,
-                ...service.annotations,
-            });
-            service.lastModified = Date.now();
+        if (urlChange) {
+            context.scannerCallback?.removePackageUrl(previousUrl);
         }
 
+        // Add or update the remote package in any case, which is the safest approach
+        // (even if the number of Pods didn't change)
+        context.scannerCallback?.addOrUpdatePackageUrl(service.url, {
+            packageName: service.name,
+            packageVersion: highestImageVersion,
+            ...service.annotations,
+        });
+
+        service.lastModified = Date.now();
         service.runningPods = pods.length;
         service.imageVersion = highestImageVersion;
         service.error = null;

@@ -9,8 +9,8 @@ export default (logger: MashroomLogger): KubernetesWatchCallback<V1Pod> => (even
         return;
     }
 
-    // IMPORTANT: we consider only running Pods
-    if (pod.status?.phase !== 'Running') {
+    // IMPORTANT: we consider only Pods which are running and where all containers are ready
+    if (pod.status?.phase !== 'Running' || pod.status?.containerStatuses?.find((cs) => !cs.ready)) {
         event = 'DELETED';
     }
 

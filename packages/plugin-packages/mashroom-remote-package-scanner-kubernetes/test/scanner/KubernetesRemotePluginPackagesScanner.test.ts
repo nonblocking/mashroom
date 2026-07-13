@@ -157,28 +157,30 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
             }
         });
         mockKubernetesConnector.watchPods.mockImplementation(async (namespace, cb) => {
-            cb('ADDED', {
-                metadata: {
-                    uid: '1',
-                    name: 'pod1',
-                    namespace: 'dev-namespace2',
-                    labels: {
-                        app: 'my-remote-app',
-                    }
-                },
-                spec: {
-                    containers: [{
-                        name: 'foo',
-                        image: 'foo:1.0.0',
-                        ports: [{
-                            containerPort: 8080
+            if (namespace === 'dev-namespace2') {
+                cb('ADDED', {
+                    metadata: {
+                        uid: '1',
+                        name: 'pod1',
+                        namespace: 'dev-namespace2',
+                        labels: {
+                            app: 'my-remote-app',
+                        }
+                    },
+                    spec: {
+                        containers: [{
+                            name: 'foo',
+                            image: 'foo:1.0.0',
+                            ports: [{
+                                containerPort: 8080
+                            }]
                         }]
-                    }]
-                },
-                status: {
-                    phase: 'Running'
-                }
-            });
+                    },
+                    status: {
+                        phase: 'Running'
+                    }
+                });
+            }
         });
 
         const scanner = new KubernetesRemotePluginPackagesScanner(['environment=development'], null, undefined, '.*',

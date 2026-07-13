@@ -50,7 +50,7 @@
                 <th>Name</th>
                 <th>Namespace</th>
                 <th>URL</th>
-                <th>Pods</th>
+                <th>Valid Pods</th>
                 <th>Image Version</th>
                 <th>Last Modified</th>
                 <th>Status</th>
@@ -66,18 +66,16 @@
                     <td>{{this.lastModified}}</td>
                     <td class="{{this.statusClass}}">{{this.status}}</td>
                     <td>
-                        <ul class="portal-apps">
-                            {{#if this.portalApps}}
-                                <div>
-                                    {{#each this.portalApps}}
-                                        {{#if @index}}, {{/if}}<a href="javascript:void(0)" onclick="openPlugin('{{this}}')">{{this}}</a>
-                                    {{/each}}
-                                </div>
-                            {{/if}}
-                            {{#if this.errors}}
-                                <div class="error">{{this.errors}}</div>
-                            {{/if}}
-                        </ul>
+                        {{#if this.portalApps}}
+                            <div>
+                                {{#each this.portalApps}}
+                                    {{#if @index}}, {{/if}}<a href="javascript:void(0)" onclick="openPlugin('{{this}}')">{{this}}</a>
+                                {{/each}}
+                            </div>
+                        {{/if}}
+                        {{#if this.errors}}
+                            <div class="error">{{this.errors}}</div>
+                        {{/if}}
                     </td>
                 </tr>
             {{/each}}

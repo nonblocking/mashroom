@@ -1,9 +1,13 @@
 import type {V1Namespace, V1Pod, V1Service} from '@kubernetes/client-node';
-import type {KubernetesConnector as KubernetesConnectorType, KubernetesWatchCallback} from '../types';
+import type {
+    KubernetesConnector as KubernetesConnectorType,
+    KubernetesWatchCallback,
+    KubernetesWatcher
+} from '../types';
 
 export default class KubernetesConnector implements KubernetesConnectorType {
 
-    async watchNamespaces(labelSelector: string, cb: KubernetesWatchCallback<V1Namespace>): Promise<AbortController> {
+    async watchNamespaces(labelSelector: string, cb: KubernetesWatchCallback<V1Namespace>): Promise<KubernetesWatcher> {
         if (labelSelector === 'environment=development') {
             cb('ADDED', {
                 metadata: {
@@ -42,7 +46,7 @@ export default class KubernetesConnector implements KubernetesConnectorType {
         return new AbortController();
     }
 
-    async watchServices(namespace: string, labelSelector: string | undefined, cb: KubernetesWatchCallback<V1Service>): Promise<AbortController> {
+    async watchServices(namespace: string, labelSelector: string | undefined, cb: KubernetesWatchCallback<V1Service>): Promise<KubernetesWatcher> {
         if (namespace === 'dev-namespace1') {
             throw new Error('Permission denied');
         } else if (namespace === 'dev-namespace2' || labelSelector === 'environment=dev') {
@@ -123,7 +127,7 @@ export default class KubernetesConnector implements KubernetesConnectorType {
         return new AbortController();
     }
 
-    async watchPods(namespace: string, cb: KubernetesWatchCallback<V1Pod>): Promise<AbortController> {
+    async watchPods(namespace: string, cb: KubernetesWatchCallback<V1Pod>): Promise<KubernetesWatcher> {
 
         return new AbortController();
     }
