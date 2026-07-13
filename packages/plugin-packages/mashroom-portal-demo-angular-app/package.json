@@ -32,11 +32,11 @@
   },
   "lavamoat": {
     "allowScripts": {
-      "@angular-devkit/build-angular>esbuild": false,
-      "@angular-devkit/build-angular>@angular/build>lmdb": false,
-      "@angular-devkit/build-angular>@angular/build>lmdb>msgpackr>msgpackr-extract": false,
-      "@angular-devkit/build-angular>@angular/build>vite>esbuild": false,
-      "@angular-devkit/build-angular>sass>@parcel/watcher": false
+      "@angular/build>esbuild": false,
+      "@angular/build>lmdb": false,
+      "@angular/build>lmdb>msgpackr>msgpackr-extract": false,
+      "@angular/build>sass>@parcel/watcher": false,
+      "@angular/build>vite>esbuild": false
     }
   }
 }
