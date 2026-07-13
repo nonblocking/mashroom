@@ -1,5 +1,5 @@
 
-import UAParser from 'ua-parser-js';
+import {UAParser} from 'ua-parser-js';
 import type {IncomingMessage} from 'http';
 
 export type UserAgent = {
@@ -9,7 +9,7 @@ export type UserAgent = {
         readonly major: string | undefined;
     };
     readonly os: {
-        readonly name: 'AIX' | 'Amiga OS' | 'Android' | 'Arch' | 'Bada' |  'BeOS' | 'BlackBerry' | 'CentOS' | 'Chromium OS' | 'Contiki' | 'Fedora' | 'Firefox OS' | 'FreeBSD' | 'Debian' | 'DragonFly' | 'Gentoo' | 'GNU' | 'Haiku' | 'Hurd' | 'iOS' | 'Joli' | 'Linpus' | 'Linux' | 'Mac OS' | 'Mageia' | 'Mandriva' | 'MeeGo' | 'Minix' | 'Mint' | 'Morph OS' | 'NetBSD' | 'Nintendo' | 'OpenBSD' | 'OpenVMS' | 'OS/2' | 'Palm' | 'PCLinuxOS' | 'Plan9' | 'Playstation' | 'QNX' | 'RedHat' | 'RIM Tablet OS' | 'RISC OS' | 'Sailfish' | 'Series40' | 'Slackware' | 'Solaris' | 'SUSE' | 'Symbian' | 'Tizen' | 'Ubuntu' | 'UNIX' | 'VectorLinux' | 'WebOS' | 'Zenwalk' | string | undefined;
+        readonly name: 'AIX' | 'Amiga OS' | 'Android' | 'Arch' | 'Bada' |  'BeOS' | 'BlackBerry' | 'CentOS' | 'Chromium OS' | 'Contiki' | 'Fedora' | 'Firefox OS' | 'FreeBSD' | 'Debian' | 'DragonFly' | 'Gentoo' | 'GNU' | 'Haiku' | 'Hurd' | 'iOS' | 'Joli' | 'Linpus' | 'Linux' | 'macOS' | 'Mageia' | 'Mandriva' | 'MeeGo' | 'Minix' | 'Mint' | 'Morph OS' | 'NetBSD' | 'Nintendo' | 'OpenBSD' | 'OpenVMS' | 'OS/2' | 'Palm' | 'PCLinuxOS' | 'Plan9' | 'Playstation' | 'QNX' | 'RedHat' | 'RIM Tablet OS' | 'RISC OS' | 'Sailfish' | 'Series40' | 'Slackware' | 'Solaris' | 'SUSE' | 'Symbian' | 'Tizen' | 'Ubuntu' | 'UNIX' | 'VectorLinux' | 'WebOS' | 'Zenwalk' | string | undefined;
         readonly version: string | undefined;
     };
 }

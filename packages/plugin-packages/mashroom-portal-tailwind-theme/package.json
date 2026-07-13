@@ -1,0 +1,42 @@
+{
+    "name": "@mashroom/mashroom-portal-tailwind-theme",
+    "description": "Tailwind based Portal Theme",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**",
+        "views/**",
+        "mashroom.json"
+    ],
+    "exports": {
+        "./theme.css": "./dist/theme.css"
+    },
+    "dependencies": {
+        "express-handlebars": "^9.0.1",
+        "handlebars": "^4.7.9"
+    },
+    "devDependencies": {
+        "@mashroom/mashroom": "2.9.4",
+        "@mashroom/mashroom-portal": "2.9.4",
+        "@fortawesome/fontawesome-free": "^7.3.0",
+        "tailwindcss": "^4.3.2",
+        "tailwind-bootstrap-grid": "^7.0.0"
+    },
+    "scripts": {
+        "lint": "eslint --fix",
+        "type-check": "tsc --noEmit",
+        "dev": "nodemon --watch src --watch views -e ts,css,handlebars --exec \"npm run build && node dist/dev-server.js\"",
+        "build:backend": "babel src/backend -d dist --extensions .ts",
+        "build:frontend": "webpack --mode production",
+        "build:copy-assets": "cpy \"src/assets/*\" dist/public/assets && cpy \"../../../node_modules/@fortawesome/fontawesome-free/**\" dist/public/fontawesome && cpy \"src/frontend/style/theme.css\" dist --flat",
+        "build": "npm run build:backend && npm run build:frontend && npm run build:copy-assets"
+    },
+    "lavamoat": {
+        "allowScripts": {}
+    }
+}

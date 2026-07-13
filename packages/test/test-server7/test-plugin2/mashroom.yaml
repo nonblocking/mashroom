@@ -1,0 +1,7 @@
+plugins:
+-   name: Test Webapp Plugin written in ES6 with YAML config
+    type: web-app
+    bootstrap: ./bootstrap.js
+    defaultConfig:
+        path: /test-webapp-es6-yaml-config
+        name: World

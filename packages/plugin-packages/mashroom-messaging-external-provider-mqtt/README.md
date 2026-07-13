@@ -3,14 +3,14 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin allows to use a MQTT server as external messaging provider for server side messaging.
-This enables cluster support for server side messaging and also allows communication with 3rd party systems.
+This plugin allows using a MQTT server as an external provider for the [mashroom-messaging](../mashroom-messaging) plugin.
+This enables cluster support for server side messaging and also allows communication with third party systems.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-messaging-external-provider-mqtt** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-messaging-external-provider-mqtt** as *dependency*.
 
-To activate this provider configure the _Mashroom Messaging_ plugin like this:
+To activate this provider configure the [mashroom-messaging](../mashroom-messaging) plugin like this:
 
 ```json
 {
@@ -22,7 +22,7 @@ To activate this provider configure the _Mashroom Messaging_ plugin like this:
 }
 ```
 
-And configure this plugin like this in the Mashroom config file:
+And configure this plugin like this in the server config file:
 
 ```json
 {
@@ -40,7 +40,7 @@ And configure this plugin like this in the Mashroom config file:
 }
 ```
 
- * _internalTopic_: The base topic the server should use for internal messages. E.g. if the value is *mashroom/test*
+ * _internalTopic_: The base topic the server should use for internal messages. E.g., if the value is *mashroom/test*
     all messages published internally are prefixed with *mashroom/test* before published to MQTT and at the same time
     this provider listens to *mashroom/test/#* for messages (Default: mashroom)
  * _mqttConnectUrl_: MQTT connect URL (Default: mqtt://localhost:1883)
@@ -48,4 +48,4 @@ And configure this plugin like this in the Mashroom config file:
  * _mqttQoS_: Quality of service level (0, 1, or 2) (Default: 1)
  * _mqttUser_: Optional MQTT username (Default: null)
  * _mqttPassword_: Optional MQTT password (Default: null)
- * _rejectUnauthorized_: If you use mqtts or wss with a self-signed certificate set it to false (Default: true)
+ * _rejectUnauthorized_: If you use mqtts or wss with a self-signed certificate, set it to false (Default: true)

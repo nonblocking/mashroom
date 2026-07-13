@@ -70,7 +70,7 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
         if (this._isExternalTopic(topic)) {
             throw new Error('It is not permitted to subscribe to external topics');
         }
-        if (this._isTopicOfDifferentUser(topic, user) || !this._isTopicPermitted(topic, user)) {
+        if (this._isTopicOfDifferentUser(topic, user) || !await this._isTopicPermitted(topic, user)) {
             throw new Error(`User is not permitted to subscribe to ${topic}`);
         }
 
@@ -98,7 +98,7 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
         if (!this._isValidTopic(topic, false)) {
             throw new Error(`Invalid topic (must not start or end with /, no wildcards allowed): ${topic}`);
         }
-        if (!this._isTopicPermitted(topic, user)) {
+        if (!await this._isTopicPermitted(topic, user)) {
             throw new Error(`User is not permitted to publish to ${topic}`);
         }
 
@@ -129,18 +129,18 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
         return `${this._userPrivateBaseTopic}/${safeUserName}`;
     }
 
-    private _handleMessage(topic: string, message: any): void {
+    private async _handleMessage(topic: string, message: any) {
         this._logger.debug(`Received message for topic ${topic}:`, message);
 
-        this._subscriptions.forEach((wrapper) => {
+        for (const wrapper of this._subscriptions) {
             if (messagingUtils.topicMatcher(wrapper.topic, topic)) {
-                if (this._isTopicOfDifferentUser(topic, wrapper.user) || !this._isTopicPermitted(topic, wrapper.user)) {
+                if (this._isTopicOfDifferentUser(topic, wrapper.user) || !await this._isTopicPermitted(topic, wrapper.user)) {
                     return;
                 }
                 this._logger.debug(`Delivering message to subscription handler: Topic ${wrapper.topic}, User: ${wrapper.user.username}`);
                 wrapper.callback(message, topic);
             }
-        });
+        }
     }
 
     private _isValidTopic(topic: string, allowWildcards: boolean): boolean {
@@ -173,8 +173,8 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
         return false;
     }
 
-    private _isTopicPermitted(topic: string, user: MashroomSecurityUser): boolean {
-        if (!this._aclChecker.allowed(topic, user)) {
+    private async _isTopicPermitted(topic: string, user: MashroomSecurityUser): Promise<boolean> {
+        if (!await this._aclChecker.allowed(topic, user)) {
             this._logger.error(`Topic not permitted for authenticated user ${user.username}: ${topic}`);
             return false;
         }

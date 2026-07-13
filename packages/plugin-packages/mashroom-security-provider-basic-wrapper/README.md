@@ -8,9 +8,9 @@ This can be useful when you need to access some APIs on the server from an exter
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-security-provider-basic-wrapper** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-security-provider-basic-wrapper** as *dependency*.
 
-To activate this provider configure the _Mashroom Security_ plugin like this:
+To activate this provider configure the [Mashroom Security](../mashroom-security) plugin like this:
 
 ```json
 {
@@ -22,7 +22,7 @@ To activate this provider configure the _Mashroom Security_ plugin like this:
 }
 ```
 
-And configure this plugin like this in the Mashroom config file:
+And configure this plugin like this in the server config file:
 
 ```json
 {
@@ -36,7 +36,7 @@ And configure this plugin like this in the Mashroom config file:
 }
 ```
 
- * _targetSecurityProvider_: The actual security provider that is used to login (Default: Mashroom Security Simple Provider)
+ * _targetSecurityProvider_: The actual security provider used to log in (Default: Mashroom Security Simple Provider)
  * _onlyPreemptive_: Only use BASIC if it is sent preemptively if true. Otherwise, the plugin will send HTTP 401 and *WWW-Authenticate*
    which will trigger the Browser's login popup (Default: true)
  * _realm_: The realm name that should be used if _onlyPreemptive_ is false (Default: mashroom)

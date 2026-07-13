@@ -9,48 +9,22 @@
     "license": "MIT",
     "version": "2.9.4",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
-        "connect-redis": "^8.0.1",
-        "express": "^4.19.2",
-        "ioredis": "^5.6.1"
+        "connect-redis": "^8.1.0",
+        "ioredis": "^5.11.1"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.9.4",
         "@mashroom/mashroom-session": "2.9.4",
-        "@types/express": "^4.17.21",
-        "@types/express-session": "^1.18.1"
+        "@types/express-session": "^1.19.0"
     },
     "scripts": {
         "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Session Redis Provider",
-                "type": "session-store-provider",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "client": {
-                        "redisOptions": {
-                            "host": "localhost",
-                            "port": "6379",
-                            "maxRetriesPerRequest": 3,
-                            "enableOfflineQueue": false
-                        },
-                        "cluster": false,
-                        "clusterNodes": null,
-                        "clusterOptions": null
-                    },
-                    "prefix": "mashroom:sess:",
-                    "ttl": 86400
-                }
-            }
-        ]
     }
 }

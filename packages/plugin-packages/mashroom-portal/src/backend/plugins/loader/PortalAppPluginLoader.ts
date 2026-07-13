@@ -1,5 +1,6 @@
 
-import {resolve} from 'path';
+import {isAbsolute, resolve} from 'path';
+import {fileURLToPath, URL} from 'url';
 import {PluginConfigurationError} from '@mashroom/mashroom-utils';
 
 import type {
@@ -12,6 +13,10 @@ import type {
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalApp} from '../../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/internal';
+
+const removeTrailingSlash = (str: string) => {
+    return str.endsWith('/') ? str.slice(0, -1) : str;
+};
 
 export default class PortalAppPluginLoader implements MashroomPluginLoader {
 
@@ -35,6 +40,10 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         const version = plugin.type === 'portal-app2' ? 2 : 1;
         this._logger.debug(`Detected plugin config version for portal-app ${plugin.name}: ${version}`);
 
+        if (version === 1) {
+            this._logger.warn(`Plugin ${plugin.name} is using the legacy 'portal-app' type. Please convert to type 'portal-app2'.`);
+        }
+
         const clientBootstrap = version == 2 ? plugin.pluginDefinition.clientBootstrap : plugin.pluginDefinition.bootstrap;
         if (!clientBootstrap) {
             if (version === 2) {
@@ -49,7 +58,22 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No resources defined`);
         }
 
+        if (resourcesDef.moduleSystem && !['node' ,'ESM', 'SystemJS'].includes(resourcesDef.moduleSystem)) {
+            throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: Invalid moduleSystem: ${resourcesDef.moduleSystem}`);
+        }
+        if (resourcesDef.importMap && resourcesDef.moduleSystem !== 'SystemJS') {
+            throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: importMap only supported for moduleSystem SystemJS`);
+        }
+
+        let moduleSystem = resourcesDef.moduleSystem ?? 'none';
+        if (resourcesDef.js.find((res: string) => res.endsWith('.mjs'))) {
+            moduleSystem = 'ESM';
+        }
         const resources = {
+            moduleSystem,
+            importMap: resourcesDef.importMap ? {
+                imports: resourcesDef.importMap.imports ?? [],
+            } : undefined,
             js: resourcesDef.js,
             css: resourcesDef.css,
         };
@@ -69,17 +93,28 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
 
         const screenshots = plugin.pluginDefinition.screenshots;
 
-        // We consider only local resources
-        let resourcesRootUri = version == 2 ? plugin.pluginDefinition.local?.resourcesRoot : config.resourcesRoot;
-        if (!resourcesRootUri.startsWith('/')) {
-            // Process relative file path
-            resourcesRootUri = resolve(plugin.pluginPackage.pluginPackagePath, resourcesRootUri);
-        }
-        if (resourcesRootUri.indexOf('://') === -1) {
-            if (resourcesRootUri.startsWith('/')) {
-                resourcesRootUri = `file://${resourcesRootUri}`;
+        // Find out where the resources are
+        let resourcesRootUrl;
+        if (plugin.pluginPackage.pluginPackageUrl.protocol === 'file:') {
+            // Local
+            const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageUrl);
+            resourcesRootUrl = version == 2 ? (plugin.pluginDefinition.local?.resourcesRoot ?? './dist') : config.resourcesRoot;
+            if (!isAbsolute(resourcesRootUrl)) {
+                // Process relative file path
+                resourcesRootUrl = resolve(pluginPackagePath, resourcesRootUrl);
             } else {
-                resourcesRootUri = `file:///${resourcesRootUri}`;
+                // Required for windows, don't remove
+                resourcesRootUrl = resolve(resourcesRootUrl);
+            }
+            resourcesRootUrl = `file://${resourcesRootUrl}`;
+        } else {
+            // Remote
+            let packageUrl = removeTrailingSlash(plugin.pluginPackage.pluginPackageUrl.toString());
+            if (version === 2) {
+                resourcesRootUrl = `${packageUrl}${plugin.pluginDefinition.remote?.resourcesRoot || ''}`;
+                resourcesRootUrl = removeTrailingSlash(resourcesRootUrl);
+            } else {
+                resourcesRootUrl = packageUrl;
             }
         }
 
@@ -89,6 +124,51 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         const description = config.description || plugin.description;
 
         const proxies = version === 2 ? config.proxies : config.restProxies;
+        // Check and fix proxies
+        if (proxies) {
+            for (const proxyName in proxies) {
+                if (proxyName in proxies) {
+                    const {targetUri, targetPath, ...otherProps} = proxies[proxyName];
+                    let fixedTargetUri = targetUri;
+                    if (plugin.pluginPackage.pluginPackageUrl.protocol === 'file:') {
+                        if (!fixedTargetUri) {
+                            if (targetPath) {
+                                throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No targetUri defined for proxy ${proxyName}. And targetPath can only be used for remote plugins!`);
+                            } else {
+                                throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No targetUri defined for proxy ${proxyName}`);
+                            }
+                        }
+                    } else {
+                        // For remote Apps targetPath might be set, or the targetUri could be relative, or the targetUri could be localhost (which can be interpreted as relative as well)
+                        let packageUrl = removeTrailingSlash(plugin.pluginPackage.pluginPackageUrl.toString());
+                        if (targetPath) {
+                            if (!targetPath.startsWith('/')) {
+                                throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: targetPath must start with a slash!`);
+                            }
+                            fixedTargetUri = packageUrl + targetPath;
+                        } else if (targetUri.startsWith('/')) {
+                            fixedTargetUri = packageUrl + targetUri;
+                        } else {
+                            try {
+                                const parsedUri = new URL(targetUri);
+                                if (parsedUri.hostname === 'localhost') {
+                                    fixedTargetUri = packageUrl + (parsedUri.pathname && parsedUri.pathname !== '/' ? parsedUri.pathname : '');
+                                }
+                            } catch {
+                                // Ignore
+                            }
+                        }
+                        if (!fixedTargetUri) {
+                            throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No targetUri defined for proxy ${proxyName}`);
+                        }
+                        proxies[proxyName] = {
+                            targetUri: fixedTargetUri,
+                            ...otherProps,
+                        };
+                    }
+                }
+            }
+        }
 
         const defaultAppConfig = {...plugin.pluginDefinition.defaultConfig?.appConfig || {}, ...config.appConfig || {}};
 
@@ -99,11 +179,21 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         }
 
         let ssrBootstrap;
+        let ssrInitialHtmlUrl;
         let cachingConfig;
         let editorConfig;
         if (version === 2) {
-            const relativeSSRBootstrap = plugin.pluginDefinition.local?.ssrBootstrap;
-            ssrBootstrap = relativeSSRBootstrap && resolve(plugin.pluginPackage.pluginPackagePath, relativeSSRBootstrap);
+            if (plugin.pluginPackage.pluginPackageUrl.protocol === 'file:' && plugin.pluginDefinition.local?.ssrBootstrap) {
+                const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageUrl);
+                const relativeSSRBootstrap = plugin.pluginDefinition.local.ssrBootstrap;
+                ssrBootstrap = relativeSSRBootstrap && resolve(pluginPackagePath, relativeSSRBootstrap);
+            } else if (plugin.pluginDefinition.remote?.ssrInitialHtmlPath) {
+                let packageUrl = removeTrailingSlash(plugin.pluginPackage.pluginPackageUrl.toString());
+                ssrInitialHtmlUrl = `${packageUrl}${plugin.pluginDefinition.remote.ssrInitialHtmlPath}`;
+                if (ssrInitialHtmlUrl.endsWith('/')) {
+                    ssrInitialHtmlUrl = ssrInitialHtmlUrl.slice(0, -1);
+                }
+            }
             cachingConfig = config.caching;
             editorConfig = config.editor;
         }
@@ -120,12 +210,13 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             category,
             metaInfo: config.metaInfo,
             lastReloadTs: plugin.lastReloadTs || Date.now(),
+            packageUrl: plugin.pluginPackage.pluginPackageUrl,
             remoteApp: false,
             clientBootstrap,
             screenshots,
             ssrBootstrap,
-            ssrInitialHtmlUri: undefined,
-            resourcesRootUri,
+            ssrInitialHtmlUrl,
+            resourcesRootUrl,
             cachingConfig,
             editorConfig,
             sharedResources,
@@ -136,12 +227,12 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             defaultAppConfig
         };
 
-        this._logger.info('Registering portal app:', JSON.stringify({portalApp}));
+        this._logger.info('Registering Portal App:', JSON.stringify({portalApp}));
         this._registry.registerPortalApp(portalApp);
     }
 
     async unload(plugin: MashroomPlugin): Promise<void> {
-        this._logger.info(`Unregistering portal app: ${plugin.name}`);
+        this._logger.info(`Unregistering Portal App: ${plugin.name}`);
         this._registry.unregisterPortalApp(plugin.name);
     }
 }

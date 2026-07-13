@@ -1,0 +1,16 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Browser Cache Services",
+            "type": "services",
+            "namespace": "browserCache",
+            "bootstrap": "./dist/mashroom-bootstrap-services.js",
+            "defaultConfig": {
+                "disabled": false,
+                "maxAgeSec": 31536000
+            }
+        }
+    ]
+}

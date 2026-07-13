@@ -22,9 +22,10 @@ import {
     PORTAL_APP_RESOURCES_SHARED_PATH,
     PORTAL_APP_REST_PROXY_BASE_PATH,
     PORTAL_JS_FILE,
+    SYSTEMJS_JS_FILE,
     PORTAL_INTERNAL_PATH,
     PORTAL_THEME_RESOURCES_BASE_PATH,
-    PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH
+    PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH,
 } from './constants';
 import {getPortalPushPluginUpdatesRoute} from './push-plugin-updates';
 
@@ -72,7 +73,7 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
     restApi.get('/pages/:pageId/content', portalPageRenderController.getPortalPageContent.bind(portalPageRenderController));
     restApi.get('/pages/:pageId/portal-app-instances', portalPageController.getPortalAppInstances.bind(portalPageController));
     restApi.post('/pages/:pageId/portal-app-instances', portalPageController.addPortalApp.bind(portalPageController));
-    restApi.get('/pages/:pageId/portal-app-instances/:pluginName/:portalAppInstanceId?', portalAppController.getPortalAppSetup.bind(portalAppController));
+    restApi.get('/pages/:pageId/portal-app-instances/:pluginName{/:portalAppInstanceId}', portalAppController.getPortalAppSetup.bind(portalAppController));
     restApi.put('/pages/:pageId/portal-app-instances/:pluginName/:portalAppInstanceId', portalPageController.updatePortalApp.bind(portalPageController));
     restApi.delete('/pages/:pageId/portal-app-instances/:pluginName/:portalAppInstanceId', portalPageController.removePortalApp.bind(portalPageController));
     restApi.get('/pages/:pageId/portal-app-instances/:pluginName/:portalAppInstanceId/permittedRoles', portalPageController.getPortalAppPermittedRoles.bind(portalPageController));
@@ -116,6 +117,8 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
     // Client API resources
 
     internalRoutes.get(`/${PORTAL_JS_FILE}`, portalResourcesController.getPortalClient.bind(portalResourcesController));
+    internalRoutes.get(`/${PORTAL_JS_FILE}.map`, portalResourcesController.getPortalClientMap.bind(portalResourcesController));
+    internalRoutes.get(`/${SYSTEMJS_JS_FILE}`, portalResourcesController.getSystemJS.bind(portalResourcesController));
 
     // Portal theme resources
 
@@ -124,7 +127,7 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
     });
     internalRoutes.use(PORTAL_THEME_RESOURCES_BASE_PATH, portalThemeResourcesRoutes);
 
-    portalThemeResourcesRoutes.get(`/:themeName/*`, portalThemeController.getPortalThemeResource.bind(portalThemeController));
+    portalThemeResourcesRoutes.get('/:themeName/*"resourcePath"', portalThemeController.getPortalThemeResource.bind(portalThemeController));
 
     // Page enhancement resources
 
@@ -132,7 +135,7 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
         mergeParams: true,
     });
     internalRoutes.use(PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH, portalPageEnhancementRoutes);
-    portalPageEnhancementRoutes.get('/:pluginName/*', portalPageEnhancementController.getPortalPageResource.bind(portalPageEnhancementController));
+    portalPageEnhancementRoutes.get('/:pluginName/*"resourcePath"', portalPageEnhancementController.getPortalPageResource.bind(portalPageEnhancementController));
 
     // Portal app resources
 
@@ -141,8 +144,8 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
     });
     internalRoutes.use(PORTAL_APP_RESOURCES_BASE_PATH, portalAppResourcesRoutes);
 
-    portalAppResourcesRoutes.get(`${PORTAL_APP_RESOURCES_SHARED_PATH}/*`, portalAppController.getSharedPortalAppResource.bind(portalAppController));
-    portalAppResourcesRoutes.get('/:pluginName/*', portalAppController.getPortalAppResource.bind(portalAppController));
+    portalAppResourcesRoutes.get(`${PORTAL_APP_RESOURCES_SHARED_PATH}/*"typeAndResourcePath"`, portalAppController.getSharedPortalAppResource.bind(portalAppController));
+    portalAppResourcesRoutes.get('/:pluginName/*"resourcePath"', portalAppController.getPortalAppResource.bind(portalAppController));
 
     // Proxy
 
@@ -151,15 +154,15 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
     });
     internalRoutes.use(PORTAL_APP_REST_PROXY_BASE_PATH, proxyRoutes);
 
-    proxyRoutes.all(`/*`, portalHttpProxyController.forward.bind(portalHttpProxyController));
+    proxyRoutes.all('/*"path"', portalHttpProxyController.forward.bind(portalHttpProxyController));
 
     // Page route (main)
 
-    siteRoutes.get('*', portalPageRenderController.renderPortalPage.bind(portalPageRenderController));
+    siteRoutes.get('*"path"', portalPageRenderController.renderPortalPage.bind(portalPageRenderController));
 
     // Index
 
-    portalWebapp.get('*', portalIndexController.index.bind(portalPageRenderController));
+    portalWebapp.get('*"path"', portalIndexController.index.bind(portalPageRenderController));
 
     return portalWebapp;
 };

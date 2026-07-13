@@ -1,4 +1,5 @@
 
+import {htmlUtils} from '@mashroom/mashroom-utils';
 import infoTemplate from './template';
 
 import type {Request, Response} from 'express';
@@ -26,7 +27,7 @@ const serviceRows = (pluginContext: MashroomPluginContext) => {
     return serviceNames(pluginContext).map((serviceName) => {
         return `
             <tr>
-                <td>${serviceName.namespace}.${serviceName.serviceName}</td>
+                <td>${serviceName.namespace}.${htmlUtils.escapeHtml(serviceName.serviceName)}</td>
                 <td>
                     <ul>
                         ${methods(serviceName.namespace, serviceName.serviceName, pluginContext).map((m) => `<li>${m}</li>`).join('')}

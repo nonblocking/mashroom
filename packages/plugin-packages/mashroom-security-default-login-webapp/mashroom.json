@@ -1,0 +1,23 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Security Default Login Webapp",
+            "type": "web-app",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "requires": [
+                "Mashroom Security Services",
+                "Mashroom Internationalization Services",
+                "Mashroom Browser Cache Services"
+            ],
+            "defaultConfig": {
+                "path": "/login",
+                "pageTitle": null,
+                "loginFormTitle": null,
+                "darkMode": "auto",
+                "styleFile": null
+            }
+        }
+    ]
+}

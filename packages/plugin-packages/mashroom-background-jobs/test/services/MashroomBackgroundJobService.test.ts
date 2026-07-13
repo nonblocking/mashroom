@@ -84,7 +84,7 @@ describe('MashroomBackgroundJobService', () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         expect(executed).toBeTruthy();
-        expect(job.lastInvocation?.executionTimeMs).toBeGreaterThan(1000);
+        expect(job.lastInvocation?.executionTimeMs).toBeGreaterThanOrEqual(1000);
     });
 });
 

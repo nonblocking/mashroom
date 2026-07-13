@@ -11,13 +11,13 @@
     "files": [
         "dist/**",
         "assets/**",
-        "views/**"
+        "views/**",
+        "mashroom.json"
     ],
     "dependencies": {
-        "body-parser": "^2.2.0",
-        "express": "^4.21.2",
-        "express-handlebars": "^7.1.3",
-        "handlebars": "^4.7.8"
+        "body-parser": "^2.3.0",
+        "express-handlebars": "^9.0.1",
+        "handlebars": "^4.7.9"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
@@ -26,35 +26,12 @@
         "@mashroom/mashroom-i18n": "2.9.4",
         "@mashroom/mashroom-security": "2.9.4",
         "@mashroom/mashroom-vhost-path-mapper": "2.9.4",
-        "@types/express": "^4.17.21",
-        "@types/express-session": "^1.18.1"
+        "@types/express-session": "^1.19.0"
     },
     "scripts": {
         "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/dev-server.js\"",
         "build": "babel src/js --extensions \".ts\" -d dist && sass --style compressed --no-source-map src/sass/style.scss dist/style.css"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Security Default Login Webapp",
-                "type": "web-app",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "requires": [
-                    "Mashroom Security Services",
-                    "Mashroom Internationalization Services",
-                    "Mashroom Browser Cache Services"
-                ],
-                "defaultConfig": {
-                    "path": "/login",
-                    "pageTitle": null,
-                    "loginFormTitle": null,
-                    "darkMode": "auto",
-                    "styleFile": null
-                }
-            }
-        ]
     }
 }

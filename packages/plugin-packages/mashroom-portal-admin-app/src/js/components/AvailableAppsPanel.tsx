@@ -1,10 +1,9 @@
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import { CircularProgress, ErrorMessage, escapeForRegExp, escapeForHtml } from '@mashroom/mashroom-portal-ui-commons';
-import {useSelector} from 'react-redux';
+import useStore from '../store/useStore';
 
 import type {DragEvent} from 'react';
-import type {State} from '../types';
 import type { MashroomAvailablePortalApp } from '@mashroom/mashroom-portal/type-definitions';
 
 type AppsGroupedByCategory = Array<{
@@ -29,7 +28,7 @@ const CATEGORY_HIDDEN = 'hidden';
 
 export default ({onDragStart, onDragEnd, filter}: Props) => {
     const {t} = useTranslation();
-    const availableApps = useSelector((state: State) => state.availableApps);
+    const availableApps = useStore((state) => state.availableApps);
 
     const handleDragStart = useCallback((event: DragEvent, name: string): void => {
         console.debug('Drag start: ', name);

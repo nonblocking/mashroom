@@ -1,0 +1,21 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Default Theme",
+            "type": "portal-theme",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "resourcesRoot": "./dist/public",
+            "views": "./views",
+            "defaultConfig": {
+                "spaMode": true,
+                "darkMode": "auto",
+                "styleFile": null,
+                "logoImageUrl": null,
+                "showPortalAppHeaders": true,
+                "showEnvAndVersions": false
+            }
+        }
+    ]
+}

@@ -24,7 +24,7 @@ export default class MashroomStorageProviderLoader implements MashroomPluginLoad
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
-        const bootstrap: MashroomStoragePluginBootstrapFunction = plugin.requireBootstrap();
+        const bootstrap: MashroomStoragePluginBootstrapFunction = await plugin.loadBootstrap();
         const storageProvider = await bootstrap(plugin.name, config, contextHolder);
         this._logger.info(`Registering storage provider: ${plugin.name}`);
         this._storageRegistry.registerStorage(plugin.name, storageProvider);

@@ -52,6 +52,28 @@
         "PortalAppResources": {
             "type": "object",
             "properties": {
+                "moduleSystem": {
+                    "type": "string",
+                    "enum": [
+                        "none",
+                        "ESM",
+                        "SystemJS"
+                    ],
+                    "description": "The module system the JS resources are using (Default: none)"
+                },
+                "importMap": {
+                    "type": "object",
+                    "description": "An optional import map that will be used to resolve imports. Currently ONLY supported for moduleSystem SystemJS!",
+                    "properties": {
+                        "imports": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "required": ["imports"]
+                },
                 "js": {
                     "type": "array",
                     "items": {
@@ -79,7 +101,7 @@
             "properties": {
                 "resourcesRoot": {
                     "$ref": "#/definitions/PackageRelativePath",
-                    "description": "The root path for APP resources such as JavaScript files and images. Needs to be relative within the package."
+                    "description": "The root path for APP resources such as JavaScript files and images. Needs to be relative within the package. (Default: ./dist)"
                 },
                 "ssrBootstrap": {
                     "$ref": "#/definitions/PackageRelativePath",
@@ -96,7 +118,7 @@
             "properties": {
                 "resourcesRoot": {
                     "$ref": "#/definitions/WebAppPathOrRoot",
-                    "description": "The root path for App resources such as JavaScript files and images"
+                    "description": "The root path for App resources such as JavaScript files and images (Default: /)"
                 },
                 "ssrInitialHtmlPath": {
                     "$ref": "#/definitions/WebAppPath",
@@ -265,6 +287,92 @@
             ],
             "additionalProperties": false
         },
+        "MashroomPluginPackageScannerPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "plugin-package-scanner"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackageRelativePath",
+                    "description": "Script that exports MashroomPluginLoaderPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "name",
+                "type",
+                "bootstrap"
+            ],
+            "additionalProperties": false
+        },
+        "MashroomPluginPackageDefinitionBuilderPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "plugin-package-definition-builder"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackageRelativePath",
+                    "description": "Script that exports MashroomPluginLoaderPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "order": {
+                            "type": "integer",
+                            "description": "The order of the builder plugin - the higher it is the later it will be executed (Default: 1000)"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "name",
+                "type",
+                "bootstrap"
+            ],
+            "additionalProperties": false
+        },
         "MashroomWebAppPluginDefinition": {
             "type": "object",
             "properties": {
@@ -398,8 +506,8 @@
                     "type": "object",
                     "properties": {
                         "order": {
-                            "type": "number",
-                            "description": "The weight of the middleware in the stack - the higher it is the later it will be executed (Default: 1000)"
+                            "type": "integer",
+                            "description": "The order of the middleware in the stack - the higher it is the later it will be executed (Default: 1000)"
                         }
                     }
                 }
@@ -551,9 +659,9 @@
                             "type": "string",
                             "description": "The height of the iframe that will contain the target webapp (Default: 80vh)"
                         },
-                        "weight": {
+                        "order": {
                             "type": "integer",
-                            "description": "The weight of the menu entry, the higher the number the lower will be menu entry be (Default: 100)"
+                            "description": "The order of the menu entry, the higher the number the lower the menu entry will be (Default: 1000)"
                         }
                     },
                     "required": [
@@ -691,7 +799,7 @@
                     "properties": {
                         "order": {
                             "type": "integer",
-                            "description": "The weight of the middleware in the stack - the higher it is the **later** it will be executed (Default: 1000)"
+                            "description": "The order of the proxy interceptor plugin - the higher it is the **later** it will be executed (Default: 1000)"
                         }
                     }
                 }
@@ -744,140 +852,6 @@
             ],
             "additionalProperties": false
         },
-        "MashroomPortalAppV1PluginDefinition": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "requires": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "Required plugins"
-                },
-                "type": {
-                    "const": "portal-app"
-                },
-                "title": {
-                    "$ref": "#/definitions/I18NString",
-                    "description": "Optional human readable title of the App. Can be a string or an object with translations."
-                },
-                "category": {
-                    "type": "string",
-                    "description": "An optional category to group the Apps in the Admin App"
-                },
-                "tags": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "A list of tags that can also be used in the search (in the Admin App)"
-                },
-                "resources": {
-                    "$ref": "#/definitions/PortalAppResources",
-                    "description": "Javascript and CSS resources that must be loaded before the bootstrap method is invoked."
-                },
-                "sharedResources": {
-                    "$ref": "#/definitions/PortalAppResources",
-                    "description": "Optional. Same as resources but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it."
-                },
-                "screenshots": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "pattern": "^[^/].*\\.(png|jpg|jpeg|gif|svg)$"
-                    },
-                    "description": "Optional some screenshots of the App. The screenshots paths are relative to resourcesRoot"
-                },
-                "bootstrap": {
-                    "$ref": "#/definitions/JavaScriptIdentifier",
-                    "description": "A global function that implements MashroomPortalAppPluginBootstrapFunction and starts the App within the given host element"
-                },
-                "defaultConfig": {
-                    "type": "object",
-                    "properties": {
-                        "resourcesRoot": {
-                            "$ref": "#/definitions/PackageRelativePath",
-                            "description": "The root path for APP resources such as JavaScript files and images."
-                        },
-                        "defaultRestrictViewToRoles": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            },
-                            "description": "Optional default list of roles that have the VIEW permission if not set via Admin App."
-                        },
-                        "rolePermissions": {
-                            "type": "object",
-                            "patternProperties": {
-                                "^[a-zA-Z_]\\w+$": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                }
-                            },
-                            "additionalProperties": false,
-                            "description": "Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App"
-                        },
-                        "restProxies": {
-                            "type": "object",
-                            "patternProperties": {
-                                "^[a-zA-Z_]\\w+$": {
-                                    "type": "object",
-                                    "properties": {
-                                        "targetUri": {
-                                            "$ref": "#/definitions/HttpOrWebSocketUrl",
-                                            "description": " The API target URI (HTTP, HTTPS or WebSocket)"
-                                        },
-                                        "sendPermissionsHeader": {
-                                            "type": "boolean",
-                                            "description": "Optional. Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)"
-                                        },
-                                        "restrictToRoles": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string"
-                                            },
-                                            "description": "Optional list of roles that are permitted to access the proxy"
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "required": [
-                                        "targetUri"
-                                    ]
-                                }
-                            }
-                        },
-                        "metaInfo": {
-                            "type": "object",
-                            "description": "Optional meta info that could be used to lookup for Apps with specific features or capabilities"
-                        },
-                        "appConfig": {
-                            "type": "object",
-                            "description": "The default configuration that will be passed to the App. Can be adapted in the Admin App"
-                        }
-                    },
-                    "additionalProperties": false,
-                    "required": [
-                        "resourcesRoot"
-                    ]
-                }
-            },
-            "required": [
-                "name",
-                "type",
-                "resources",
-                "bootstrap",
-                "defaultConfig"
-            ],
-            "additionalProperties": false
-        },
         "MashroomPortalAppV2PluginDefinition": {
             "type": "object",
             "properties": {
@@ -916,11 +890,11 @@
                 },
                 "local": {
                     "$ref": "#/definitions/PortalAppLocalConfig",
-                    "description": "Basic configuration if the App is deployed locally."
+                    "description": "Configuration if the App is deployed locally."
                 },
                 "remote": {
                     "$ref": "#/definitions/PortalAppRemoteConfig",
-                    "description": "Optional configuration if the App is accessed remotely."
+                    "description": "Configuration if the App is accessed remotely."
                 },
                 "defaultConfig": {
                     "type": "object",
@@ -976,28 +950,53 @@
                             "type": "object",
                             "patternProperties": {
                                 "^[a-zA-Z_]\\w+$": {
-                                    "type": "object",
-                                    "properties": {
-                                        "targetUri": {
-                                            "$ref": "#/definitions/HttpOrWebSocketUrl",
-                                            "description": " The API target URI (HTTP, HTTPS or WebSocket)"
-                                        },
-                                        "sendPermissionsHeader": {
-                                            "type": "boolean",
-                                            "description": "Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)"
-                                        },
-                                        "restrictToRoles": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string"
+                                    "oneOf": [{
+                                        "type": "object",
+                                        "properties": {
+                                            "targetUri": {
+                                                "$ref": "#/definitions/HttpOrWebSocketUrl",
+                                                "description": " The API target URI (HTTP, HTTPS or WebSocket)"
                                             },
-                                            "description": "Optional list of roles that are permitted to access the proxy"
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "required": [
-                                        "targetUri"
-                                    ]
+                                            "sendPermissionsHeader": {
+                                                "type": "boolean",
+                                                "description": "Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)"
+                                            },
+                                            "restrictToRoles": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "description": "Optional list of roles that are permitted to access the proxy"
+                                            }
+                                        },
+                                        "additionalProperties": false,
+                                        "required": [
+                                            "targetUri"
+                                        ]
+                                    }, {
+                                        "type": "object",
+                                        "properties": {
+                                            "targetPath": {
+                                                "$ref": "#/definitions/WebAppPath",
+                                                "description": "Path to an API that runs on the remote server that hosts this plugin (BFF)"
+                                            },
+                                            "sendPermissionsHeader": {
+                                                "type": "boolean",
+                                                "description": "Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)"
+                                            },
+                                            "restrictToRoles": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "description": "Optional list of roles that are permitted to access the proxy"
+                                            }
+                                        },
+                                        "additionalProperties": false,
+                                        "required": [
+                                            "targetPath"
+                                        ]
+                                    }]
                                 }
                             }
                         },
@@ -1017,8 +1016,7 @@
                 "name",
                 "type",
                 "resources",
-                "clientBootstrap",
-                "local"
+                "clientBootstrap"
             ],
             "additionalProperties": false
         },
@@ -1115,52 +1113,6 @@
             ],
             "additionalProperties": false
         },
-        "MashroomPortalAppRegistryPluginDefinition": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "tags": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "requires": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "Required plugins"
-                },
-                "type": {
-                    "const": "portal-app-registry"
-                },
-                "bootstrap": {
-                    "$ref": "#/definitions/PackageRelativePath",
-                    "description": "Script that exports MashroomPortalAppRegistryBootstrapFunction"
-                },
-                "defaultConfig": {
-                    "type": "object",
-                    "properties": {
-                        "priority": {
-                            "type": "integer",
-                            "description": "Priority of this registry if a portal-app with the same name is registered multiple times (Default: 1)"
-                        }
-                    }
-                }
-            },
-            "required": [
-                "name",
-                "type",
-                "bootstrap"
-            ],
-            "additionalProperties": false
-        },
         "MashroomPortalPageEnhancementPluginDefinition": {
             "type": "object",
             "properties": {
@@ -1201,9 +1153,9 @@
                 "defaultConfig": {
                     "type": "object",
                     "properties": {
-                        "priority": {
+                        "order": {
                             "type": "integer",
-                            "description": "The weight of the resources- the higher it is the **later** they will be added to the page (Default: 1000)"
+                            "description": "The order of the resources - the higher it is the **later** they will be added to the page (Default: 1000)"
                         }
                     }
                 }
@@ -1212,8 +1164,7 @@
                 "name",
                 "type",
                 "resourcesRoot",
-                "pageResources",
-                "defaultConfig"
+                "pageResources"
             ],
             "additionalProperties": false
         },
@@ -1263,6 +1214,52 @@
             "required": [
                 "name",
                 "type"
+            ],
+            "additionalProperties": false
+        },
+        "MashroomPortalAppConfigPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "portal-app-config"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackageRelativePath",
+                    "description": "Optional script that exports MashroomPortalAppConfigPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "order": {
+                            "type": "integer",
+                            "description": "The order of the config plugin - the higher the less likely it will considered (Default: 1000)"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "name",
+                "type",
+                "bootstrap"
             ],
             "additionalProperties": false
         },
@@ -1391,7 +1388,7 @@
                 "properties": {
                     "type": {
                         "type": "string",
-                        "pattern": "(plugin-loader|web-app|api|middleware|static|services|admin-ui-integration|background-job|external-messaging-provider|http-proxy-interceptor|memory-cache-provider|portal-app|portal-app2|portal-theme|portal-layouts|portal-app-registry|portal-page-enhancement|portal-app-enhancement|security-provider|session-store-provider|storage-provider)"
+                        "pattern": "(plugin-loader|plugin-package-scanner|plugin-package-definition-builder|web-app|api|middleware|static|services|admin-ui-integration|background-job|external-messaging-provider|http-proxy-interceptor|memory-cache-provider|portal-app|portal-app2|portal-theme|portal-layouts|portal-page-enhancement|portal-app-enhancement|security-provider|session-store-provider|storage-provider)"
                     }
                 }
             },
@@ -1439,6 +1436,12 @@
                     "$ref": "#/definitions/MashroomPluginLoaderPluginDefinition"
                 },
                 {
+                    "$ref": "#/definitions/MashroomPluginPackageScannerPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomPluginPackageDefinitionBuilderPluginDefinition"
+                },
+                {
                     "$ref": "#/definitions/MashroomWebAppPluginDefinition"
                 },
                 {
@@ -1469,9 +1472,6 @@
                     "$ref": "#/definitions/MashroomMemoryCacheProviderPluginDefinition"
                 },
                 {
-                    "$ref": "#/definitions/MashroomPortalAppV1PluginDefinition"
-                },
-                {
                     "$ref": "#/definitions/MashroomPortalAppV2PluginDefinition"
                 },
                 {
@@ -1481,13 +1481,13 @@
                     "$ref": "#/definitions/MashroomPortalLayoutsPluginDefinition"
                 },
                 {
-                    "$ref": "#/definitions/MashroomPortalAppRegistryPluginDefinition"
-                },
-                {
                     "$ref": "#/definitions/MashroomPortalPageEnhancementPluginDefinition"
                 },
                 {
                     "$ref": "#/definitions/MashroomPortalAppEnhancementPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomPortalAppConfigPluginDefinition"
                 },
                 {
                     "$ref": "#/definitions/MashroomSecurityProviderPluginDefinition"
@@ -1508,6 +1508,11 @@
     "properties": {
         "devModeBuildScript": {
             "type": "string"
+        },
+        "buildManifestPath": {
+            "type": "string",
+            "pattern": "^/[a-zA-Z0-9-_/]*\\.json$",
+            "description": "An optional path to a build manifest that contains a 'version' or 'timestamp' property. Only for remote packages."
         },
         "plugins": {
             "type": "array",

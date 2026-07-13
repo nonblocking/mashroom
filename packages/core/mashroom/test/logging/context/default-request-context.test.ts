@@ -24,7 +24,7 @@ describe('default_request_context', () => {
             clientIP: '127.0.0.1',
             browser: 'Chrome',
             browserVersion: '73.0.3683.103',
-            os: 'Mac OS',
+            os: 'macOS',
         });
     });
 

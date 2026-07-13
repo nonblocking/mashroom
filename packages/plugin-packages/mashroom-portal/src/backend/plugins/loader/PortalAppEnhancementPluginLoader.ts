@@ -32,8 +32,8 @@ export default class PortalAppEnhancementPluginLoader implements MashroomPluginL
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         let enhancementPlugin;
         if (plugin.pluginDefinition.bootstrap) {
-            const bootstrap: MashroomPortalAppEnhancementPluginBootstrapFunction = plugin.requireBootstrap();
-            enhancementPlugin = bootstrap && await bootstrap(plugin.name, config, contextHolder);
+            const bootstrap: MashroomPortalAppEnhancementPluginBootstrapFunction = await plugin.loadBootstrap();
+            enhancementPlugin = bootstrap && bootstrap(plugin.name, config, contextHolder);
         }
 
         const portalCustomClientServices = plugin.pluginDefinition.portalCustomClientServices || {};
@@ -46,12 +46,12 @@ export default class PortalAppEnhancementPluginLoader implements MashroomPluginL
         };
 
 
-        this._logger.info('Registering portal app enhancement:', JSON.stringify({enhancement}));
+        this._logger.info('Registering Portal App enhancement:', JSON.stringify({enhancement}));
         this._registry.registerPortalAppEnhancement(enhancement);
     }
 
     async unload(plugin: MashroomPlugin): Promise<void> {
-        this._logger.info(`Unregistering portal app enhancement: ${plugin.name}`);
+        this._logger.info(`Unregistering Portal App enhancement: ${plugin.name}`);
         this._registry.unregisterPortalAppEnhancement(plugin.name);
     }
 }

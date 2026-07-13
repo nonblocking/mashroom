@@ -1,0 +1,53 @@
+{
+    "name": "@mashroom/mashroom-remote-package-scanner-kubernetes",
+    "description": "A Mashroom Portal plugin that scans for remote plugin packages in a Kubernetes cluster",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**",
+        "public/**",
+        "views/**",
+        "mashroom.json"
+    ],
+    "dependencies": {
+        "@kubernetes/client-node": "^1.4.0",
+        "express-handlebars": "^9.0.1",
+        "handlebars": "^4.7.9",
+        "semver": "^7.8.5"
+    },
+    "devDependencies": {
+        "@mashroom/mashroom": "2.9.4",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.9.4",
+        "@mashroom/mashroom-utils": "2.9.4",
+        "@types/semver": "^7.7.1"
+    },
+    "jest": {
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts",
+        "transform": {
+            "^.+\\.ts$": "ts-jest"
+        },
+        "reporters": [
+            "default",
+            "jest-junit"
+        ]
+    },
+    "jest-junit": {
+        "outputDirectory": "./test-reports"
+    },
+    "scripts": {
+        "lint": "eslint --fix",
+        "type-check": "tsc --noEmit",
+        "test": "jest",
+        "build": "babel src/js --extensions \".ts\" -d dist && sass --style compressed src/sass/style.scss public/style.css",
+        "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/webapp/dev-server.js\""
+    }
+}

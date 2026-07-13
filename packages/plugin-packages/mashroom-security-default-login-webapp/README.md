@@ -7,9 +7,9 @@ This plugin adds a default login webapp which can be used for security providers
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-security-default-login-webapp** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-security-default-login-webapp** as *dependency*.
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your server config file like this:
 
 ```json
 {
@@ -29,4 +29,4 @@ You can override the default config in your Mashroom config file like this:
  * _pageTitle_: A custom page title, can be the actual title or a message key (i18n) (Default is the server name)
  * _loginFormTitle_: A custom title for the login form, can be the actual title or a message key (i18n) (Default: _login_)
  * _darkMode_: Possible values: *true*, *false*, *"auto"* (Default: "auto")
- * _styleFile_: Custom CSS that will be loaded instead of the built-in style (relative to Mashroom config file, default: null)
+ * _styleFile_: Custom CSS that will be loaded instead of the built-in style (relative to the server config file, default: null)

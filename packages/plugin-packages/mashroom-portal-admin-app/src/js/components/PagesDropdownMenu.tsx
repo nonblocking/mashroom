@@ -3,14 +3,13 @@ import {
     CircularProgress,
     DropdownMenu,
     ErrorMessage,
-    setShowModal,
 } from '@mashroom/mashroom-portal-ui-commons';
-import {useDispatch, useSelector} from 'react-redux';
 import { DIALOG_NAME_PAGE_CONFIGURE, DIALOG_NAME_PAGE_DELETE } from '../constants';
-import {setSelectedPage} from '../store/actions';
+import {setSelectedPage, setShowModal} from '../store/actions';
 import {DependencyContext} from '../DependencyContext';
+import useStore from '../store/useStore';
 
-import type {FlatPage, State} from '../types';
+import type {FlatPage} from '../types';
 
 const padWithSpaces = (nr: number) => {
     const items = [];
@@ -22,8 +21,8 @@ const padWithSpaces = (nr: number) => {
 
 export default () => {
     const closeDropDownRef = useRef<(() => void) | undefined>(undefined);
-    const {pages} = useSelector((state: State) => state);
-    const dispatch = useDispatch();
+    const pages = useStore((state) => state.pages);
+    const dispatch = useStore((state) => state.dispatch);
     const showModal = (name: string) => dispatch(setShowModal(name, true));
     const initConfigurePage = (pageId: string) => dispatch(setSelectedPage(pageId));
     const {dataLoadingService, portalSiteService} = useContext(DependencyContext);

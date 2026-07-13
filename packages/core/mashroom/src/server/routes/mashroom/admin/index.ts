@@ -22,6 +22,6 @@ router.get('/webapps', infoWebAppsRoute);
 router.get('/apis', infoApisRoute);
 router.get('/services', infoServicesRoute);
 router.get('/server-info', infoServer);
-router.get('/ext/*', infoExternalAdminApp);
+router.get('/ext/*"extension"', infoExternalAdminApp);
 
 export default router;

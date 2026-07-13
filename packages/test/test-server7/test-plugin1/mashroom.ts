@@ -4,11 +4,11 @@ import type {MashroomPlugins} from '@mashroom/mashroom-json-schemas/type-definit
 const pluginDefinition: MashroomPlugins = {
     plugins: [
         {
-            name: 'Test Webapp Plugin with TS config',
+            name: 'Test Webapp Plugin written in TS and with a TS config',
             type: 'web-app',
             bootstrap: './bootstrap.ts',
             defaultConfig: {
-                path: '/test-webapp-ts-config',
+                path: '/test-webapp-ts',
                 name: 'World'
             }
         }

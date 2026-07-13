@@ -1,0 +1,39 @@
+{
+    "name": "@mashroom/mashroom-portal-bootstrap-theme",
+    "description": "Bootstrap based Portal Theme",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**",
+        "views/**",
+        "mashroom.json"
+    ],
+    "dependencies": {
+        "express-handlebars": "^9.0.1",
+        "handlebars": "^4.7.9"
+    },
+    "devDependencies": {
+        "@mashroom/mashroom": "2.9.4",
+        "@mashroom/mashroom-portal": "2.9.4",
+        "@fortawesome/fontawesome-free": "^7.3.0",
+        "bootstrap": "^5.3.8"
+    },
+    "scripts": {
+        "lint": "eslint --fix",
+        "type-check": "tsc --noEmit",
+        "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/dev-server.js\"",
+        "build:backend": "babel src/backend -d dist --extensions .ts",
+        "build:frontend": "webpack --mode production",
+        "build:style": "sass --quiet --style compressed --no-source-map --load-path=./node_modules --load-path=../../../node_modules src/frontend/style/portal.scss:dist/public/portal.css src/frontend/style/fonts.scss:dist/public/fonts.css src/frontend/style/admin.scss:dist/public/admin.css",
+        "build:copy-assets": "cpy \"src/assets/**\" dist/public/assets && cpy \"../../../node_modules/@fortawesome/fontawesome-free/**\" dist/public/fontawesome",
+        "build": "npm run build:backend && npm run build:frontend && npm run build:style && npm run build:copy-assets"
+    },
+    "lavamoat": {
+        "allowScripts": {}
+    }
+}

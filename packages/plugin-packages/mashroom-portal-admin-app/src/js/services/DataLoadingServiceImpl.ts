@@ -11,10 +11,12 @@ import {
     setPagesLoading,
     setAvailableThemes,
     setAvailableLayouts,
-    setAvailableAppsLoading, setAvailableAppsError, setAvailableApps
+    setAvailableAppsLoading,
+    setAvailableAppsError,
+    setAvailableApps
 } from '../store/actions';
-import store from '../store/store';
 import {flattenPageTree} from './model-utils';
+import type {Dispatch} from '../store/useStore';
 
 import type {
     MashroomPortalAdminService,
@@ -22,7 +24,7 @@ import type {
     MashroomPortalSiteService,
     MashroomPortalAppService
 } from '@mashroom/mashroom-portal/type-definitions';
-import type {Store, DataLoadingService} from '../types';
+import type {DataLoadingService} from '../types';
 
 export default class DataLoadingServiceImpl implements DataLoadingService {
 
@@ -30,8 +32,7 @@ export default class DataLoadingServiceImpl implements DataLoadingService {
     portalSiteService: MashroomPortalSiteService;
     portalAppService: MashroomPortalAppService;
     portalAdminService: MashroomPortalAdminService;
-    store: Store;
-
+    dispatch: Dispatch;
     siteLinksLoaded: boolean | undefined;
     pageTreeLoaded: boolean | undefined;
     availableAppsLoaded: boolean | undefined;
@@ -39,8 +40,8 @@ export default class DataLoadingServiceImpl implements DataLoadingService {
     availableThemesLoaded: boolean | undefined;
     availableLayoutsLoaded: boolean | undefined;
 
-    constructor(store: Store, portalUserService: MashroomPortalUserService, portalSiteService: MashroomPortalSiteService, portalAppService: MashroomPortalAppService, portalAdminService: MashroomPortalAdminService) {
-        this.store = store;
+    constructor(dispatch: Dispatch, portalUserService: MashroomPortalUserService, portalSiteService: MashroomPortalSiteService, portalAppService: MashroomPortalAppService, portalAdminService: MashroomPortalAdminService) {
+        this.dispatch = dispatch;
         this.portalUserService = portalUserService;
         this.portalSiteService = portalSiteService;
         this.portalAppService = portalAppService;
@@ -52,15 +53,15 @@ export default class DataLoadingServiceImpl implements DataLoadingService {
             return Promise.resolve();
         }
 
-        this.store.dispatch(setSitesLoading(true));
+        this.dispatch(setSitesLoading(true));
         try {
             const sites = await this.portalSiteService.getSites();
-            this.store.dispatch(setSites(sites));
-            this.store.dispatch(setSitesLoading(false));
+            this.dispatch(setSites(sites));
+            this.dispatch(setSitesLoading(false));
         } catch (error) {
             console.error('Loading site links failed', error);
-            this.store.dispatch(setSitesLoading(false));
-            this.store.dispatch(setSitesError(true));
+            this.dispatch(setSitesLoading(false));
+            this.dispatch(setSitesError(true));
             return Promise.reject(error);
         }
     }
@@ -70,17 +71,17 @@ export default class DataLoadingServiceImpl implements DataLoadingService {
             return Promise.resolve();
         }
 
-        this.store.dispatch(setPagesLoading(true));
+        this.dispatch(setPagesLoading(true));
         try {
             const pageTree = await this.portalSiteService.getPageTree(this.portalAdminService.getCurrentSiteId());
             const flattened = flattenPageTree(pageTree);
-            this.store.dispatch(setPages(pageTree));
-            this.store.dispatch(setPagesFlattened(flattened));
-            this.store.dispatch(setPagesLoading(false));
+            this.dispatch(setPages(pageTree));
+            this.dispatch(setPagesFlattened(flattened));
+            this.dispatch(setPagesLoading(false));
         } catch (error) {
             console.error('Loading page tree failed', error);
-            this.store.dispatch(setPagesLoading(false));
-            this.store.dispatch(setPagesError(true));
+            this.dispatch(setPagesLoading(false));
+            this.dispatch(setPagesError(true));
             return Promise.reject(error);
         }
     }
@@ -90,17 +91,17 @@ export default class DataLoadingServiceImpl implements DataLoadingService {
             return Promise.resolve();
         }
 
-        this.store.dispatch(setAvailableAppsLoading(true));
+        this.dispatch(setAvailableAppsLoading(true));
         try {
             const availableApps = await this.portalAppService.getAvailableApps();
             console.info('Received available local apps:', availableApps);
-            this.store.dispatch(setAvailableAppsLoading(false));
-            this.store.dispatch(setAvailableAppsError(false));
-            this.store.dispatch(setAvailableApps(availableApps));
+            this.dispatch(setAvailableAppsLoading(false));
+            this.dispatch(setAvailableAppsError(false));
+            this.dispatch(setAvailableApps(availableApps));
         } catch (error) {
             console.error('Loading available local apps failed', error);
-            this.store.dispatch(setAvailableAppsLoading(false));
-            this.store.dispatch(setAvailableAppsError(true));
+            this.dispatch(setAvailableAppsLoading(false));
+            this.dispatch(setAvailableAppsError(true));
             return Promise.reject(error);
         }
     }
@@ -113,12 +114,12 @@ export default class DataLoadingServiceImpl implements DataLoadingService {
         const promises = [];
         promises.push(this.portalUserService.getAvailableLanguages().then(
             (availableLanguages) => {
-                store.dispatch(setAvailableLanguages(availableLanguages));
+                this.dispatch(setAvailableLanguages(availableLanguages));
             }
         ));
         promises.push(this.portalUserService.getDefaultLanguage().then(
             (defaultLanguage) => {
-                store.dispatch(setDefaultLanguage(defaultLanguage));
+                this.dispatch(setDefaultLanguage(defaultLanguage));
             }
         ));
 
@@ -131,7 +132,7 @@ export default class DataLoadingServiceImpl implements DataLoadingService {
         }
 
         const themes = await this.portalAdminService.getAvailableThemes();
-        store.dispatch(setAvailableThemes(themes));
+        this.dispatch(setAvailableThemes(themes));
     }
 
     async loadAvailableLayouts(force = false) {
@@ -140,7 +141,7 @@ export default class DataLoadingServiceImpl implements DataLoadingService {
         }
 
         const layouts = await this.portalAdminService.getAvailableLayouts();
-        store.dispatch(setAvailableLayouts(layouts));
+        this.dispatch(setAvailableLayouts(layouts));
     }
 
 }

@@ -20,12 +20,12 @@
             "defaultConfig": {
                 "title": "Demo SolidJS App",
                 "description": {
-                    "en": "A simple SolidJS SPA",
-                    "de": "Ein einfacher SolidJS SPA"
+                    "en": "A simple SolidJS Microfrontend",
+                    "de": "Ein einfaches SolidJS Microfrontend"
                 },
                 "category": "Demo",
                 "appConfig": {
-                    "message": "This is simple SolidJS based SPA that communicates with other Apps on the page via message bus",
+                    "message": "This is simple SolidJS based Microfrontend that communicates with other Microfrontends on the page via message bus",
                     "pingButtonLabel": "Send Ping"
                 }
             }

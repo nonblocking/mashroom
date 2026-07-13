@@ -1,0 +1,43 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "buildManifestPath": "/package.json",
+    "plugins": [
+        {
+            "name": "Mashroom Welcome Portal App",
+            "type": "portal-app2",
+            "clientBootstrap": "startWelcomeApp",
+            "resources": {
+                "moduleSystem": "SystemJS",
+                "importMap": {
+                    "imports": {
+                        "react": "https://ga.system.jspm.io/npm:react@19.1.1/index.js",
+                        "react-dom": "https://ga.system.jspm.io/npm:react-dom@19.1.1/index.js",
+                        "react-dom/client": "https://ga.system.jspm.io/npm:react-dom@19.1.1/client.js",
+                        "scheduler": "https://ga.system.jspm.io/npm:scheduler@0.26.0/index.js",
+                        "process": "https://ga.system.jspm.io/npm:process@0.11.10/browser.js"
+                    }
+                },
+                "js": [
+                    "welcome-app.js"
+                ],
+                "css": [
+                    "welcome-app.css"
+                ]
+            },
+            "local": {
+                "resourcesRoot": "./dist/frontend"
+            },
+            "remote": {
+                "resourcesRoot": "/public"
+            },
+            "defaultConfig": {
+                "title": {
+                    "en": "Welcome Portal App",
+                    "de": "Willkommen Portal App"
+                },
+                "category": "Demo"
+            }
+        }
+    ]
+}

@@ -39,7 +39,7 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
             let writeBuffer: Array<() => void> = [];
 
             const doWrite = (args: Array<any>, exec: () => void) => {
-                if (res.statusCode >= 400 && !errorChecked && !isNotJsonResponse(res)) {
+                if (!res.headersSent && res.statusCode >= 400 && !errorChecked && !isNotJsonResponse(res)) {
                     errorChecked = true;
                     errorPageSendPending = true;
 

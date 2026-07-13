@@ -1,0 +1,31 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Session Middleware",
+            "type": "middleware",
+            "bootstrap": "./dist/middleware/mashroom-bootstrap-middleware.js",
+            "defaultConfig": {
+                "order": -100,
+                "provider": "memory",
+                "session": {
+                    "secret": "pS2tZRCp5e3uU7RM",
+                    "resave": false,
+                    "saveUninitialized": false,
+                    "cookie": {
+                        "httpOnly": true,
+                        "secure": false,
+                        "sameSite": false
+                    }
+                }
+            }
+        },
+        {
+            "name": "Mashroom Session Store Provider Loader",
+            "type": "plugin-loader",
+            "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-plugin-loader.js",
+            "loads": "session-store-provider"
+        }
+    ]
+}

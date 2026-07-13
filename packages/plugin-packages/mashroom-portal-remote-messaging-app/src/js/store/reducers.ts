@@ -1,5 +1,4 @@
 
-import {mashroomPortalCommonsCombineReducers} from '@mashroom/mashroom-portal-ui-commons';
 import type {
     SetPrivateUserTopicsSubscriptionAction,
     SetGlobalNotificationsSubscriptionAction,
@@ -8,10 +7,9 @@ import type {
     AddReceivedMessageAction
 } from './actions';
 
-import type {Reducer} from 'redux';
 import type {State, PublishedMessages, ReceivedMessages, Subscription,} from '../types';
 
-const privateUserTopicsSubscription: Reducer<Subscription, SetPrivateUserTopicsSubscriptionAction> = (state , action) => {
+const privateUserTopicsSubscription = (state: Subscription, action: SetPrivateUserTopicsSubscriptionAction): Subscription => {
     if (typeof (state) === 'undefined') {
         return {
             topic: '',
@@ -28,7 +26,7 @@ const privateUserTopicsSubscription: Reducer<Subscription, SetPrivateUserTopicsS
     }
 };
 
-const globalNotificationsSubscription: Reducer<Subscription, SetGlobalNotificationsSubscriptionAction> = (state , action) => {
+const globalNotificationsSubscription = (state: Subscription, action: SetGlobalNotificationsSubscriptionAction): Subscription => {
     if (typeof (state) === 'undefined') {
         return {
             topic: '',
@@ -45,7 +43,7 @@ const globalNotificationsSubscription: Reducer<Subscription, SetGlobalNotificati
     }
 };
 
-const publishedMessages: Reducer<PublishedMessages, AddPublishedMessageAction | UpdatedPublishedMessageStatusAction> = (state, action) => {
+const publishedMessages = (state: PublishedMessages, action: AddPublishedMessageAction | UpdatedPublishedMessageStatusAction): PublishedMessages => {
     if (typeof (state) === 'undefined') {
         return [];
     }
@@ -70,7 +68,7 @@ const publishedMessages: Reducer<PublishedMessages, AddPublishedMessageAction | 
     }
 };
 
-const receivedMessages: Reducer<ReceivedMessages, AddReceivedMessageAction> = (state, action): ReceivedMessages => {
+const receivedMessages = (state: ReceivedMessages, action: AddReceivedMessageAction): ReceivedMessages => {
     if (typeof (state) === 'undefined') {
         return [];
     }
@@ -84,9 +82,11 @@ const receivedMessages: Reducer<ReceivedMessages, AddReceivedMessageAction> = (s
     }
 };
 
-export default mashroomPortalCommonsCombineReducers<State>({
-    privateUserTopicsSubscription,
-    globalNotificationsSubscription,
-    publishedMessages,
-    receivedMessages
-});
+export default (state: State, action: any): State => {
+    return {
+        privateUserTopicsSubscription: privateUserTopicsSubscription(state.privateUserTopicsSubscription, action),
+        globalNotificationsSubscription: globalNotificationsSubscription(state.globalNotificationsSubscription, action),
+        publishedMessages: publishedMessages(state.publishedMessages, action),
+        receivedMessages: receivedMessages(state.receivedMessages, action),
+    };
+};

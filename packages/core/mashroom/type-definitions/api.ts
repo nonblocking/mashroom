@@ -3,6 +3,7 @@ import type {Request, Response, Application, RequestHandler, Router} from 'expre
 import type {IncomingMessage} from 'http';
 import type {Socket} from 'net';
 import type {TlsOptions} from 'tls';
+import type {URL} from 'url';
 
 // Extend Express Request
 declare global {
@@ -17,11 +18,6 @@ export type IncomingMessageWithContext = IncomingMessage & {
     pluginContext: MashroomPluginContext;
     session?: any;
 }
-
-export type ExpressRequestWithContext = Request & {
-    pluginContext: MashroomPluginContext;
-    session?: any;
-};
 
 export type I18NString =
     | string
@@ -75,21 +71,11 @@ export type PluginPackageFolder = {
     readonly devMode?: boolean;
 };
 
-export type MashroomPluginPackageEventName = 'ready' | 'error' | 'removed';
-export type MashroomPluginPackageEvent = {
-    readonly pluginsAdded?: Array<MashroomPluginDefinition>;
-    readonly pluginsUpdated?: Array<MashroomPluginDefinition>;
-    readonly pluginsRemoved?: Array<MashroomPluginDefinition>;
-    readonly errorMessage?: string;
-    readonly pluginPackage: MashroomPluginPackage;
-};
-
 export type MashroomPluginPackageStatus =
     | 'pending'
     | 'building'
     | 'ready'
     | 'error';
-export type MashroomPluginPackagePath = string;
 
 /**
  * Plugin package definition within package.json
@@ -98,36 +84,52 @@ export type MashroomPluginPackageDefinition = {
     /**
      * The build script name for dev mode
      */
-    devModeBuildScript?: string;
+    readonly devModeBuildScript?: string;
+
+    /**
+     * An optional path to a build manifest that contains a 'version' or 'timestamp' property.
+     * Only for remote packages.
+     */
+    readonly buildManifestPath?: string;
 
     /**
      * The plugins in the package
      */
-    plugins: Array<MashroomPluginDefinition>;
+    readonly plugins: Array<MashroomPluginDefinition>;
 };
+
+/**
+ * Metadata regarding a plugin package.
+ * Typically, the stuff which is found in package.json
+ */
+export type MashroomPluginPackageMeta = {
+    readonly name: string;
+    readonly version: string;
+    readonly description: string | undefined | null;
+    readonly homepage: string | undefined | null;
+    readonly author: string | undefined | null;
+    readonly license: string | undefined | null;
+}
 
 /**
  * A Mashroom plugin package
  */
-export interface MashroomPluginPackage
-    extends MashroomEventEmitter<
-        MashroomPluginPackageEventName,
-        MashroomPluginPackageEvent
-        > {
+export interface MashroomPluginPackage {
     /**
-     * The package name (npm package name)
+     * The package name (e.g., npm package name)
      */
     readonly name: string;
 
     /**
-     * The package description (npm package description)
-     */
-    readonly description: string;
-
-    /**
      * The package version
+     * Mandatory because this can be used for cache busting in the frontend.
      */
     readonly version: string;
+
+    /**
+     * The package description (e.g., npm package description)
+     */
+    readonly description: string | null | undefined;
 
     /**
      * Homepage (npm package homepage)
@@ -145,9 +147,14 @@ export interface MashroomPluginPackage
     readonly license: string | null | undefined;
 
     /**
-     * The absolute path of the package
+     * Package URL
      */
-    readonly pluginPackagePath: MashroomPluginPackagePath;
+    readonly pluginPackageUrl: URL;
+
+    /**
+     * @deprecated This will be empty for URLs not pointing to the local file system, use pluginPackageUrl
+     */
+    readonly pluginPackagePath: string;
 
     /**
      * The script name (within the package.json script section) that shall be used to build the package in dev mode
@@ -258,7 +265,14 @@ export interface MashroomPlugin {
     readonly pluginDefinition: MashroomPluginDefinition;
 
     /**
-     * Returns the bootstrap required from file system (after clearing the module cache).
+     * Loads the bootstrap
+     */
+    loadBootstrap(): Promise<any>;
+
+    /**
+     * Loads the bootstrap via require()
+     *
+     * @deprecated Use loadBootstrap instead, since it also supports load ES modules
      */
     requireBootstrap(): any;
 
@@ -292,6 +306,83 @@ export type MashroomPluginConfig = {
     [key: string]: any;
 };
 
+export type MashroomPotentialPluginPackage = {
+    readonly url: URL;
+    readonly scannerName: string;
+    readonly definitionBuilderName: string | null;
+    readonly lastUpdate: number;
+    readonly processedOnce: boolean;
+    readonly status: 'processing' | 'processed';
+    readonly updateErrors: Array<string> | null;
+    readonly foundPlugins: Array<string> | null;
+}
+
+export type MashroomPluginScannerHints = {
+    readonly packageName?: string;
+    readonly packageVersion?: string;
+    // Other annotations, in the case of K8S all Service annotations
+    readonly [key: string]: any;
+}
+
+export type MashroomPluginScannerCallback = {
+    /**
+     * Add or update a new package location.
+     * It is possible to pass arbitrary hints to MashroomPluginPackageDefinitionBuilder plugins
+     */
+    addOrUpdatePackageUrl(url: URL, hints?: MashroomPluginScannerHints): void;
+    removePackageUrl(url: URL): void;
+}
+
+/**
+ * Plugin scanner interface.
+ * A plugin scanner reports new/updated plugin package URLs.
+ */
+export interface MashroomPluginPackageScanner {
+    /**
+     * Name of this scanner
+     */
+    readonly name: string;
+    /**
+     * Set the callback.
+     * This will be called after loading the plugin and before calling start().
+     */
+    setCallback(callback: MashroomPluginScannerCallback): void;
+    /**
+     * Start the scanner, will be called automatically after loading
+     */
+    start(): Promise<void>;
+    /**
+     * Stop the scanner, will be called on unload and when the server stops
+     */
+    stop():  Promise<void>;
+}
+
+export type MashroomPluginPackageDefinitionAndMeta = {
+    readonly packageUrl: URL;
+    readonly definition: MashroomPluginPackageDefinition;
+    readonly meta: MashroomPluginPackageMeta;
+}
+
+/**
+ * Plugin definition builder.
+ * Tries to build a MashroomPluginPackageDefinition based on URL.
+ * If it is not possible, it must return null (and not throw an error).
+ */
+export interface MashroomPluginPackageDefinitionBuilder {
+    /**
+     * Name of this scanner
+     */
+    readonly name: string;
+    /**
+     * Build the definition based on given URL.
+     * Might return multiple package definitions with an updated package URL in case of a location with submodules or a remote registry.
+     *
+     * If reading the definition fails, this should throw an error instead of just returning null.
+     * (If you return null, existing plugins might be unregistered).
+     */
+    buildDefinition(packageUrl: URL, scannerHints: MashroomPluginScannerHints): Promise<Array<MashroomPluginPackageDefinitionAndMeta> | null>;
+}
+
 /**
  * Plugin loader interface
  */
@@ -302,7 +393,7 @@ export interface MashroomPluginLoader {
     readonly name: string;
 
     /**
-     * Generate a minimum configuration for given plugin (can be empty)
+     * Generate a minimum configuration for a given plugin (can be empty)
      */
     generateMinimumConfig(plugin: MashroomPlugin): MashroomPluginConfig;
 
@@ -333,9 +424,8 @@ export type MashroomServerConfig = {
     readonly port: number;
     readonly httpsPort: number | null | undefined;
     readonly tlsOptions: TlsOptions | null | undefined;
-    readonly enableHttp2: boolean;
     readonly trustProxy: boolean | number | string;
-    readonly xPowerByHeader: string | null | undefined;
+    readonly xPoweredByHeader: string | null | undefined;
     readonly serverRootFolder: string;
     readonly tmpFolder: string;
     readonly externalPluginConfigFileNames: Array<string>;
@@ -371,11 +461,6 @@ export type MashroomPluginLoaderMap = {
 
 export interface MashroomPluginService {
     /**
-     * The currently known plugin loaders
-     */
-    getPluginLoaders(): Readonly<MashroomPluginLoaderMap>;
-
-    /**
      * Get all currently known plugins
      */
     getPlugins(): Readonly<Array<MashroomPlugin>>;
@@ -384,6 +469,21 @@ export interface MashroomPluginService {
      * Get all currently known plugin packages
      */
     getPluginPackages(): Readonly<Array<MashroomPluginPackage>>;
+
+    /**
+     * All potential plugin package URLs reported by plugin package scanners.
+     */
+    getPotentialPluginPackages(): Readonly<Array<MashroomPotentialPluginPackage>>;
+
+    /**
+     * All potential plugin package URLs reported by a specific plugin package scanner.
+     */
+    getPotentialPluginPackagesByScanner(scannerName: string): Readonly<Array<MashroomPotentialPluginPackage>>;
+
+    /**
+     * The currently known plugin loaders
+     */
+    getPluginLoaders(): Readonly<MashroomPluginLoaderMap>;
 
     /**
      * Register for the next loaded event of given plugin (fired AFTER the plugin has been loaded).
@@ -407,7 +507,7 @@ export interface MashroomMiddlewareStackService {
 
     /**
      * Execute the given middleware.
-     * Throws an exception if it doesn't exists
+     * Throws an exception if it doesn't exist
      */
     apply(
         pluginName: string,
@@ -431,7 +531,7 @@ export type MashroomHttpUpgradeHandler = (
 ) => void;
 
 /**
- * A services to add and remove HTTP/1 upgrade listeners
+ * A service to add and remove HTTP/1 upgrade listeners
  */
 export interface MashroomHttpUpgradeService {
     /**
@@ -445,7 +545,7 @@ export interface MashroomHttpUpgradeService {
 }
 
 /**
- * A services to obtain all available health probes
+ * A service to obtain all available health probes
  */
 export interface MashroomHealthProbeService {
     /**
@@ -496,7 +596,7 @@ export type MashroomHealthProbe = {
 };
 
 /**
- * Bootstrap method definition for plugin-loader plugins
+ * Bootstrap method for plugin-loader plugins
  */
 export type MashroomPluginLoaderPluginBootstrapFunction = (
     pluginName: string,
@@ -505,7 +605,25 @@ export type MashroomPluginLoaderPluginBootstrapFunction = (
 ) => Promise<MashroomPluginLoader>;
 
 /**
- * Bootstrap method definition for web-app plugins
+ * Bootstrap method for plugin-package-scanner plugins
+ */
+export type MashroomPluginPackageScannerPluginBootstrapFunction = (
+    pluginName: string,
+    pluginConfig: MashroomPluginConfig,
+    contextHolder: MashroomPluginContextHolder,
+) => Promise<MashroomPluginPackageScanner>;
+
+/**
+ * Bootstrap method for plugin-package-definition-builder plugins
+ */
+export type MashroomPluginPackageDefinitionBuilderPluginBootstrapFunction = (
+    pluginName: string,
+    pluginConfig: MashroomPluginConfig,
+    contextHolder: MashroomPluginContextHolder,
+) => Promise<MashroomPluginPackageDefinitionBuilder>;
+
+/**
+ * Bootstrap method for web-app plugins
  */
 export type MashroomWebAppPluginBootstrapFunction = (
     pluginName: string,
@@ -514,7 +632,7 @@ export type MashroomWebAppPluginBootstrapFunction = (
 ) => Promise<Application | ExpressApplicationWithUpgradeHandler>;
 
 /**
- * Bootstrap method definition for API plugins
+ * Bootstrap method for API plugins
  */
 export type MashroomApiPluginBootstrapFunction = (
     pluginName: string,
@@ -523,7 +641,7 @@ export type MashroomApiPluginBootstrapFunction = (
 ) => Promise<Router>;
 
 /**
- * Bootstrap method definition for middleware plugins
+ * Bootstrap method for middleware plugins
  */
 export type MashroomMiddlewarePluginBootstrapFunction = (
     pluginName: string,
@@ -532,7 +650,7 @@ export type MashroomMiddlewarePluginBootstrapFunction = (
 ) => Promise<RequestHandler>;
 
 /**
- * Bootstrap method definition for services plugins
+ * Bootstrap method for services plugins
  */
 export type MashroomServicesPluginBootstrapFunction = (
     pluginName: string,

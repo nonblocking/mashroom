@@ -1,0 +1,23 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Messaging External Provider AMQP",
+            "type": "external-messaging-provider",
+            "bootstrap": "./dist/provider/mashroom-bootstrap.js",
+            "requires": [
+                "Mashroom Messaging Services"
+            ],
+            "defaultConfig": {
+                "internalRoutingKey": "mashroom",
+                "brokerTopicExchangePrefix": "/topic/",
+                "brokerTopicMatchAny": "#",
+                "brokerHost": "localhost",
+                "brokerPort": 5672,
+                "brokerUsername": null,
+                "brokerPassword": null
+            }
+        }
+    ]
+}

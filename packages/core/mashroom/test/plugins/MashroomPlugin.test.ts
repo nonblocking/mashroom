@@ -4,14 +4,9 @@ import MashroomPlugin from '../../src/plugins/MashroomPlugin';
 
 import type {MashroomPluginDefinition} from '../../type-definitions';
 
-const RegistryConnectorMock: any = jest.fn(() => ({
-    on: () => { /* nothing to do */ },
-}));
-
 describe('MashroomPlugin', () => {
 
     it('processes the plugin definition correctly', () => {
-
         const pluginPackage: any = {};
         const pluginDefinition: MashroomPluginDefinition = {
             name: 'Plugin 1',
@@ -24,7 +19,7 @@ describe('MashroomPlugin', () => {
             }
         };
 
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggingUtils.dummyLoggerFactory);
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
 
         expect(plugin.name).toBe('Plugin 1');
         expect(plugin.type).toBe('web-app');

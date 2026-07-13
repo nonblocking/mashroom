@@ -9,27 +9,17 @@
     "license": "MIT",
     "version": "2.9.4",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
         "@mashroom/mashroom-portal": "2.9.4",
-        "@mashroom/mashroom-security": "2.9.4",
-        "@types/express": "^4.17.21"
+        "@mashroom/mashroom-security": "2.9.4"
     },
     "scripts": {
         "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "build": "babel src --extensions \".ts\" -d dist"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Portal Enhancement User ExtraData",
-                "type": "portal-app-enhancement",
-                "bootstrap": "./dist/mashroom-bootstrap.js"
-            }
-        ]
     }
 }

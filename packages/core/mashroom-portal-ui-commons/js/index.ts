@@ -26,8 +26,4 @@ export {default as FieldLabel} from './components/FieldLabel';
 export {default as AutocompleteField} from './components/AutocompleteField';
 export {default as AutocompleteStringArraySuggestionHandler} from './components/AutocompleteStringArraySuggestionHandler';
 
-export {mashroomPortalCommonsCombineReducers} from './store/reducers';
-
-export {setShowModal, setActiveTab} from './store/actions';
-
 export {escapeForHtml, escapeForRegExp} from './utils/escape-utils';

@@ -31,84 +31,102 @@ setPortalPluginConfig({
     }
 });
 
-describe('ssr-utils', () => {
+const portalApps = [
+    {
+        name: 'Test App 1',
+        ssrBootstrap: `${__dirname}/ssr-bootstrap.js`,
+        resourcesRootUrl: `file://${__dirname}`,
+        resources: {
+            js: ['bundle.js'],
+            css: ['style.css'],
+        },
+    },
+    {
+        name: 'Test App 2',
+        ssrBootstrap: null,
+    },
+    {
+        name: 'Test App 3',
+        ssrInitialHtmlUrl: 'http://localhost:1234/ssr-test',
+    },
+    {
+        name: 'Test App 4',
+        ssrBootstrap: `${__dirname}/ssr-bootstrap2.js`,
+    },
+    {
+        name: 'Test App 5',
+        ssrInitialHtmlUrl: 'http://localhost:2345/ssr-test',
+    },
+];
 
-    const portalApps = [
-        {
-            name: 'Test App 1',
-            ssrBootstrap: `${__dirname}/ssr-bootstrap.js`,
-            resourcesRootUri: `file://${__dirname}`,
-            resources: {
-                js: ['bundle.js'],
-                css: ['style.css'],
-            },
-        },
-        {
-            name: 'Test App 2',
-            ssrBootstrap: null,
-        },
-        {
-            name: 'Test App 3',
-            ssrInitialHtmlUri: 'http://localhost:1234/ssr-test',
-        },
-        {
-            name: 'Test App 4',
-            ssrBootstrap: `${__dirname}/ssr-bootstrap2.js`,
-        },
-    ];
+portalApps.forEach((app) => context.pluginRegistry.registerPortalApp(app as any));
 
-    portalApps.forEach((app) => context.pluginRegistry.registerPortalApp(app as any));
-
-    const pluginContext: any = {
-        loggerFactory: loggingUtils.dummyLoggerFactory,
-        serverInfo: {
-            devMode: false,
-        },
-        services: {
-            portal: {
-                service: {
-                    getPortalApps() {
-                        return portalApps;
-                    }
-                },
-            },
-            security: {
-                service: {
-                    getUser() {
-                        return {
-                            username: 'test',
-                            displayName: 'Test User',
-                            email: 'test@test.com',
-                            roles: ['Role1'],
-                        };
-                    },
-                    isAdmin() {
-                        return false;
-                    }
-                },
-            },
-            i18n: {
-                service: {
-                    getLanguage: () => 'en',
-                    availableLanguages: ['en', 'fr', 'de'],
+const pluginContext: any = {
+    loggerFactory: loggingUtils.dummyLoggerFactory,
+    serverInfo: {
+        devMode: false,
+    },
+    services: {
+        portal: {
+            service: {
+                getPortalApps() {
+                    return portalApps;
                 }
             },
-            memorycache: {
-                service: {
-                    get: (region: string, key: string) => {
-                        if (key === '1318d1d2a4691f35774f0706ee0ed7c0979822dbcc7982deaee0b2f635a4e5e5') {
-                            return 'content from cache';
-                        }
-
-                        return null;
-                    },
-                    set: () => { /* nothing to do */ },
+        },
+        security: {
+            service: {
+                getUser() {
+                    return {
+                        username: 'test',
+                        displayName: 'Test User',
+                        email: 'test@test.com',
+                        roles: ['Role1'],
+                    };
+                },
+                isAdmin() {
+                    return false;
                 }
+            },
+        },
+        i18n: {
+            service: {
+                getLanguage: () => 'en',
+                availableLanguages: ['en', 'fr', 'de'],
+            }
+        },
+        memorycache: {
+            service: {
+                get: (region: string, key: string) => {
+                    if (key === '1318d1d2a4691f35774f0706ee0ed7c0979822dbcc7982deaee0b2f635a4e5e5') {
+                        return 'content from cache';
+                    }
+
+                    return null;
+                },
+                set: () => { /* nothing to do */ },
             }
         }
-    };
+    }
+};
 
-    const noopRenderEmbeddedPortalAppsFn = async () => { throw new Error('Not implemented'); };
+const pluginRegistry: any = {
+    portalAppEnhancements: [],
+    portalAppConfigs: [{
+        name: 'Test App 5 Config',
+        plugin: {
+            applyTo: (name: string) => name === 'Test App 5',
+            addSSRRouteRequestHeaders: () => ({
+               'x-api-key': '2sfsdfdsf',
+            }),
+        }
+    }],
+};
+
+const noopRenderEmbeddedPortalAppsFn = async () => { throw new Error('Not implemented'); };
+
+describe('ssr-utils', () => {
+
 
     it('returns null if the App has no SSR bootstrap', async () => {
         const portalAppSetup: any = {};
@@ -116,7 +134,7 @@ describe('ssr-utils', () => {
             pluginContext,
         };
         const logger = loggingUtils.dummyLoggerFactory();
-        const html = await renderServerSide('Test App 2', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
+        const html = await renderServerSide('Test App 2', portalAppSetup, noopRenderEmbeddedPortalAppsFn, pluginRegistry, req, logger);
         expect(html).toBeFalsy();
     });
 
@@ -127,7 +145,7 @@ describe('ssr-utils', () => {
         };
         const logger = loggingUtils.dummyLoggerFactory();
 
-        const html = await renderServerSide('Test App 1', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
+        const html = await renderServerSide('Test App 1', portalAppSetup, noopRenderEmbeddedPortalAppsFn, pluginRegistry, req, logger);
 
         expect(html).toBeTruthy();
         expect(html).toEqual({
@@ -144,7 +162,7 @@ describe('ssr-utils', () => {
         };
         const logger = loggingUtils.dummyLoggerFactory();
 
-        const renderResult = await renderServerSide('Test App 4', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
+        const renderResult = await renderServerSide('Test App 4', portalAppSetup, noopRenderEmbeddedPortalAppsFn, pluginRegistry, req, logger);
 
         expect(renderResult).toBeTruthy();
         expect(renderResult).toEqual({
@@ -173,9 +191,9 @@ describe('ssr-utils', () => {
         };
         const logger = loggingUtils.dummyLoggerFactory();
 
-        const html = await renderServerSide('Test App 3', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
+        const html = await renderServerSide('Test App 3', portalAppSetup, noopRenderEmbeddedPortalAppsFn, pluginRegistry, req, logger);
 
-        expect(body).toEqual({
+        expect(body).toMatchObject({
             originalRequest: {
                 path: '/the-path',
                 queryParameters: {
@@ -192,6 +210,38 @@ describe('ssr-utils', () => {
             injectHeadScript: [],
             embeddedPortalPageApps: {},
         });
+    });
+
+    it('considers config plugins when fetching the initial SSR HTML', async () => {
+        let headers;
+
+        nock('http://localhost:2345')
+            .post('/ssr-test')
+            .reply(function () {
+                headers = this.req.headers;
+                return [200, 'this is a remote test'];
+            });
+
+        const portalAppSetup: any = {
+            theSetup: 1,
+        };
+        const req: any  = {
+            path: '/the-path',
+            query: {
+                q: 'foo'
+            },
+            pluginContext,
+        };
+        const logger = loggingUtils.dummyLoggerFactory();
+
+        const html = await renderServerSide('Test App 5', portalAppSetup, noopRenderEmbeddedPortalAppsFn, pluginRegistry, req, logger);
+
+        expect(headers).toEqual({
+            'content-type': 'application/json',
+            host: 'localhost:2345',
+            'x-api-key': '2sfsdfdsf'
+        });
+        expect(html).toBeTruthy();
     });
 
     it('returns the HTML a SSR bootstrap that embeds other Apps', async () => {
@@ -230,7 +280,7 @@ describe('ssr-utils', () => {
             };
         };
 
-        const ssrRenderResult = await renderServerSide('Test App 3', portalAppSetup, embeddedPortalAppsRenderer, req, logger);
+        const ssrRenderResult = await renderServerSide('Test App 3', portalAppSetup, embeddedPortalAppsRenderer, pluginRegistry, req, logger);
 
         expect(ssrRenderResult).toBeTruthy();
         expect(ssrRenderResult!.injectHeadScript.length).toBe(1);
@@ -251,7 +301,7 @@ describe('ssr-utils', () => {
             pluginContext,
         };
         const logger = loggingUtils.dummyLoggerFactory();
-        const html = await renderServerSide('Test App 3', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
+        const html = await renderServerSide('Test App 3', portalAppSetup, noopRenderEmbeddedPortalAppsFn, pluginRegistry, req, logger);
         expect(html).toBeFalsy();
     });
 
@@ -265,7 +315,7 @@ describe('ssr-utils', () => {
             pluginContext,
         };
         const logger = loggingUtils.dummyLoggerFactory();
-        const html = await renderServerSide('Test App 3', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
+        const html = await renderServerSide('Test App 3', portalAppSetup, noopRenderEmbeddedPortalAppsFn, pluginRegistry, req, logger);
         expect(html).toBeTruthy();
         expect(html).toEqual('content from cache');
     });

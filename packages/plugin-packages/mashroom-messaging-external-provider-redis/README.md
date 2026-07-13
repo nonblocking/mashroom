@@ -3,14 +3,14 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin allows to use a Redis server as external messaging provider for server side messaging.
-This enables cluster support for server side messaging and also allows communication with 3rd party systems.
+This plugin allows using a Redis server as an external provider for the [mashroom-messaging](../mashroom-messaging) plugin.
+This enables cluster support for server side messaging and also allows communication with third party systems.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-messaging-external-provider-redis** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-messaging-external-provider-redis** as *dependency*.
 
-To activate this provider configure the _Mashroom Messaging_ plugin like this:
+To activate this provider configure the [mashroom-messaging](../mashroom-messaging) plugin like this:
 
 ```json
 {
@@ -23,7 +23,7 @@ To activate this provider configure the _Mashroom Messaging_ plugin like this:
 ```
 
 
-And configure this plugin like this in the Mashroom config file:
+And configure this plugin like this in the server config file:
 
 ```json
 {
@@ -46,8 +46,8 @@ And configure this plugin like this in the Mashroom config file:
 }
 ```
 
- * _internalTopic_: The base topic the server should use for internal messages. E.g. if the value is *mashroom/test*
-   all messages published internally are prefixed with *mashroom/test* before published to MQTT and at the same time
+ * _internalTopic_: The base topic the server should use for internal messages. E.g., if the value is *mashroom/test*
+   all messages published internally are prefixed with *mashroom/test* before published to Redis and at the same time
    this provider listens to *mashroom/test/#* for messages (Default: mashroom)
  * _client_: Options for the Redis client. *redisOptions* are just to the *Redis* constructor of [ioredis](https://github.com/luin/ioredis
    Checkout out the [ioredis](https://github.com/luin/ioredis) documentation for all available options.

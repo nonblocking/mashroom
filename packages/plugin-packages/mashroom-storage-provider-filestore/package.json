@@ -9,12 +9,12 @@
     "license": "MIT",
     "version": "2.9.4",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
-        "fs-extra": "^11.3.0",
-        "mingo": "^6.6.1",
-        "nanoid": "^3.3.11",
+        "fs-extra": "^11.3.6",
+        "mingo": "^7.2.2",
         "proper-lockfile": "^4.1.2"
     },
     "devDependencies": {
@@ -48,18 +48,6 @@
         "build": "babel src -d dist --extensions \".ts\""
     },
     "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Storage Filestore Provider",
-                "type": "storage-provider",
-                "bootstrap": "./dist/storage/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "dataFolder": "./data/storage",
-                    "checkExternalChangePeriodMs": 100,
-                    "prettyPrintJson": true
-                }
-            }
-        ]
+
     }
 }

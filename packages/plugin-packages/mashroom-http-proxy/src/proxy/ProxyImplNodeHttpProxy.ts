@@ -102,18 +102,18 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             activeConnectionsTargetCount: {},
         };
 
-        this._httpProxy.on('proxyReq', this.onProxyRequest.bind(this));
-        this._httpsProxy.on('proxyReq', this.onProxyRequest.bind(this));
-        this._httpProxy.on('proxyRes', this.onProxyResponse.bind(this));
-        this._httpsProxy.on('proxyRes', this.onProxyResponse.bind(this));
-        this._httpProxy.on('end', this.onEnd.bind(this));
-        this._httpsProxy.on('end', this.onEnd.bind(this));
-        this._httpProxy.on('error', this.onError.bind(this));
-        this._httpsProxy.on('error', this.onError.bind(this));
-        this._wsProxy.on('proxyReqWs', this.onWsProxyRequest.bind(this));
-        this._wsProxy.on('open', this.onWsOpen.bind(this));
-        this._wsProxy.on('close', this.onWsClose.bind(this));
-        this._wsProxy.on('error', this.onWsError.bind(this));
+        this._httpProxy.on('proxyReq', this.onProxyRequest.bind(this) as any);
+        this._httpsProxy.on('proxyReq', this.onProxyRequest.bind(this) as any);
+        this._httpProxy.on('proxyRes', this.onProxyResponse.bind(this) as any);
+        this._httpsProxy.on('proxyRes', this.onProxyResponse.bind(this) as any);
+        this._httpProxy.on('end', this.onEnd.bind(this) as any);
+        this._httpsProxy.on('end', this.onEnd.bind(this) as any);
+        this._httpProxy.on('error', this.onError.bind(this) as any);
+        this._httpsProxy.on('error', this.onError.bind(this) as any);
+        this._wsProxy.on('proxyReqWs', this.onWsProxyRequest.bind(this) as any);
+        this._wsProxy.on('open', this.onWsOpen.bind(this) as any);
+        this._wsProxy.on('close', this.onWsClose.bind(this) as any);
+        this._wsProxy.on('error', this.onWsError.bind(this) as any);
     }
 
     async forward(req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {

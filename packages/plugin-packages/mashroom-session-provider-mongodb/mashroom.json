@@ -1,0 +1,28 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Session MongoDB Provider",
+            "type": "session-store-provider",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "client": {
+                    "uri": "mongodb://localhost:27017/mashroom_session_db?connectTimeoutMS=1000&socketTimeoutMS=2500",
+                    "connectionOptions": {
+                        "minPoolSize": 5,
+                        "serverSelectionTimeoutMS": 3000
+                    }
+                },
+                "collectionName": "sessions",
+                "ttl": 86400,
+                "autoRemove": "native",
+                "autoRemoveInterval": 10,
+                "touchAfter": 0,
+                "crypto": {
+                    "secret": false
+                }
+            }
+        }
+    ]
+}

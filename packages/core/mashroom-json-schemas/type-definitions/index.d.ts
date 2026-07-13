@@ -1,6 +1,6 @@
 
 export {MashroomPlugins} from './mashroom-plugins';
-export {MashroomPortalRemoteApps} from './mashroom-portal-remote-apps';
+export {MashroomRemotePackageScanner} from './mashroom-remote-package-scanner';
 export {MashroomSecurityAcl} from './mashroom-security-acl';
 export {MashroomSecurityLdapProviderGroupToRoleMapping} from './mashroom-security-ldap-provider-group-to-role-mapping';
 export {MashroomSecurityLdapProviderUserToRoleMapping} from './mashroom-security-ldap-provider-user-to-role-mapping';

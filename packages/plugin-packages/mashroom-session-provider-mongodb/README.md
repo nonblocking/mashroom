@@ -3,14 +3,14 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds a mongoDB session store that can be used by _Mashroom Session_.
-Actually this is just a wrapper for the [connect-mongo](https://github.com/jdesboeufs/connect-mongo) package.
+This plugin adds a mongoDB session store that can be used by [Mashroom Session](../mashroom-session).
+Actually, this is just a wrapper for the [connect-mongo](https://github.com/jdesboeufs/connect-mongo) package.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-session-provider-mongodb** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-session-provider-mongodb** as *dependency*.
 
-Activate this session provider in your Mashroom config file like this:
+Activate this session provider in your Mashroom Server config file like this:
 
 ```json
 {
@@ -22,7 +22,7 @@ Activate this session provider in your Mashroom config file like this:
 }
 ```
 
-And to change the default config of this plugin add:
+And to change the default config of this plugin, add:
 
 ```json
 {

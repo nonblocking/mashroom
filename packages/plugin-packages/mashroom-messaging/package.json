@@ -10,14 +10,14 @@
     "version": "2.9.4",
     "files": [
         "dist/**",
-        "type-definitions/*"
+        "type-definitions/*",
+        "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
         "@mashroom/mashroom-security": "2.9.4",
         "@mashroom/mashroom-utils": "2.9.4",
-        "@mashroom/mashroom-websocket": "2.9.4",
-        "@types/express": "^4.17.21"
+        "@mashroom/mashroom-websocket": "2.9.4"
     },
     "jest": {
         "testEnvironment": "node",
@@ -41,32 +41,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Messaging Services",
-                "type": "services",
-                "namespace": "messaging",
-                "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
-                "requires": [
-                    "Mashroom Security Services"
-                ],
-                "defaultConfig": {
-                    "externalProvider": null,
-                    "externalTopics": [],
-                    "userPrivateBaseTopic": "user",
-                    "enableWebSockets": true,
-                    "topicACL": "./topicACL.json"
-                }
-            },
-            {
-                "name": "Mashroom External Messaging Provider Loader",
-                "type": "plugin-loader",
-                "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-messaging-provider-plugin-loader.js",
-                "loads": "external-messaging-provider"
-            }
-        ]
     }
 }

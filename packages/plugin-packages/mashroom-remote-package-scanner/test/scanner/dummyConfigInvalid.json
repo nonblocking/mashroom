@@ -1,0 +1,7 @@
+{
+    "remotePackageUrls": [
+        "not_an_url",
+        "https://microfrontend1.myserver.com",
+        "ftp://microfrontend22.myserver.com"
+    ]
+}

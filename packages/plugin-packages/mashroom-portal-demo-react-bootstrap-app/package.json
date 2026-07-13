@@ -1,0 +1,31 @@
+{
+    "name": "mashroom-portal-demo-react-bootstrap-app",
+    "description": "A Microfrontend that uses React Bootstrap components",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
+    "license": "MIT",
+    "version": "1.0.0",
+    "sideEffects": false,
+    "files": [
+        "dist/**",
+        "screenshot.png",
+        "mashroom.json"
+    ],
+    "devDependencies": {
+        "@mashroom/mashroom-portal": "2.9.4",
+        "@types/react": "^19.2.17",
+        "@types/react-dom": "^19.2.3",
+        "react": "^19.2.7",
+        "react-dom": "^19.2.7",
+        "react-bootstrap": "^2.10.10"
+    },
+    "scripts": {
+        "lint": "eslint --fix",
+        "type-check": "tsc --noEmit",
+        "dev": "webpack serve --hot --mode development",
+        "build": "webpack --mode production && cpy ./screenshot.png dist"
+    }
+}

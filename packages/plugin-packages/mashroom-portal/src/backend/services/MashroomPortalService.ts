@@ -17,7 +17,8 @@ import type {
     MashroomPortalLayout,
     MashroomPortalPageEnhancement,
     MashroomPortalPageRef,
-    MashroomPortalTheme
+    MashroomPortalTheme,
+    MashroomPortalAppConfig,
 } from '../../../type-definitions';
 import type {
     MashroomPortalPluginRegistry,
@@ -49,6 +50,10 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
 
     getPortalAppEnhancements(): Readonly<Array<MashroomPortalAppEnhancement>> {
         return this._pluginRegistry.portalAppEnhancements;
+    }
+
+    getPortalAppConfigs(): Readonly<Array<MashroomPortalAppConfig>> {
+        return this._pluginRegistry.portalAppConfigs;
     }
 
     async getSites(limit?: number): Promise<Array<MashroomPortalSite>> {

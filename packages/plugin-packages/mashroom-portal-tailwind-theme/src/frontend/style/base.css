@@ -1,0 +1,56 @@
+/* Default styles for elements without Tailwind classes */
+
+h1:not([class]) {
+    @apply text-4xl font-serif mb-4;
+}
+
+h2:not([class]) {
+    @apply text-3xl font-serif mb-4;
+}
+
+h3:not([class]) {
+    @apply text-2xl font-serif mb-4;
+}
+
+h4:not([class]) {
+    @apply text-xl font-serif mb-4;
+}
+
+blockquote:not([class]) {
+    @apply my-2 mx-4 p-2 bg-gray-100 dark:bg-gray-700 border-l-[7px];
+}
+
+a:not([class]) {
+    @apply text-link hover:text-link-hover underline transition-(--transition-hover);
+}
+
+p:not([class]) {
+    @apply pb-4;
+}
+
+input[type="text"]:not([class]),
+input[type="number"]:not([class]),
+input[type="password"]:not([class]),
+input[type="tel"]:not([class]),
+input[type="search"]:not([class]),
+textarea:not([class]),
+select:not([class]) {
+    @apply px-4 py-2 w-full bg-input border border-border rounded-md outline-none focus:ring-1 focus:focus:ring-muted-foreground disabled:border-gray-500 disabled:text-gray-500 disabled:cursor-not-allowed;
+}
+
+
+button[class="mashroom-portal-ui-button"], button[class="mashroom-portal-ui-button "], button:not([class]) {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md cursor-pointer mr-2 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed transition-(--transition-hover);
+}
+
+button[class="mashroom-portal-ui-button secondary"], button[class="secondary"] {
+    @apply border-primary border hover:bg-background/90 px-4 py-2 rounded-md cursor-pointer mr-2 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed transition-(--transition-hover);
+}
+
+table:not([class]), table[class="table-striped"] {
+   @apply w-full overflow-x-auto [&_th]:text-left [&_tr]:border-b [&_tr]:border-b-gray-200 dark:[&_tr]:border-b-gray-600 [&_th]:p-2 [&_td]:p-2;
+}
+
+table[class="table-striped"] {
+    @apply [&_tbody]:[&_tr]:odd:bg-gray-100 dark:[&_tbody]:[&_tr]:odd:bg-gray-800;
+}

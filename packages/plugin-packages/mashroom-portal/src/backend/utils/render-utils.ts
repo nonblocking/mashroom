@@ -12,7 +12,7 @@ import type {
     MashroomPortalAppErrorRenderModel,
     MashroomPortalAppWrapperRenderModel,
 } from '../../../type-definitions';
-import type {MashroomPortalPageApps, MashroomPortalContentRenderResult} from '../../../type-definitions/internal';
+import type {MashroomPortalPageApps, MashroomPortalContentRenderResult, MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
 export const renderPage = async (themeExists: boolean, setupTheme: () => void, model: MashroomPortalPageRenderModel, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
     const fallback = () => minimalTemplatePortal(model);
@@ -94,13 +94,14 @@ export const insertHtmlIntoPageArea = (hostHtml: string, appAreaId: string, html
 };
 
 // Render the Portal Apps into given HTML content
-export const renderContent = async (hostHtml: string, portalPageApps: MashroomPortalPageApps, themeExists: boolean, setupTheme: () => void, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<MashroomPortalContentRenderResult> => {
+export const renderContent = async (hostHtml: string, portalPageApps: MashroomPortalPageApps, themeExists: boolean, setupTheme: () => void, messages: (key: string) => string,
+                                    pluginRegistry: MashroomPortalPluginRegistry, req: Request, res: Response, logger: MashroomLogger): Promise<MashroomPortalContentRenderResult> => {
     const serverSideRenderedApps: Array<string> = [];
     const appAreas = Object.keys(portalPageApps);
     const promises: Array<Promise<Array<string>>> = [];
 
     const renderEmbeddedPortalAppsFn = async  (hostHtml: string, portalPageApps: MashroomPortalPageApps) => {
-        return renderContent(hostHtml, portalPageApps, themeExists, setupTheme, messages, req, res, logger);
+        return renderContent(hostHtml, portalPageApps, themeExists, setupTheme, messages, pluginRegistry, req, res, logger);
     };
 
     let resultHtml = hostHtml;
@@ -111,7 +112,7 @@ export const renderContent = async (hostHtml: string, portalPageApps: MashroomPo
             Promise.all(
                 portalPageApps[appAreaId].map(async ({pluginName, appSetup}) => {
                     let appSSRHtml = null;
-                    const ssrRenderResult = await renderServerSide(pluginName, appSetup, renderEmbeddedPortalAppsFn, req, logger);
+                    const ssrRenderResult = await renderServerSide(pluginName, appSetup, renderEmbeddedPortalAppsFn, pluginRegistry, req, logger);
                     if (ssrRenderResult) {
                         (appSetup as { serverSideRendered: boolean; }).serverSideRendered = true;
                         if (serverSideRenderedApps.indexOf(pluginName) === -1) {

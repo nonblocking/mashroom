@@ -1,0 +1,146 @@
+/*
+ * Admin Panel Styles
+ */
+
+@reference "./theme.css";
+
+#mashroom-portal-admin-app-container {
+    font-size: var(--text-admin-panel);
+
+    .mashroom-portal-app-wrapper {
+        min-height: 32px;
+        margin: 0;
+
+        .mashroom-portal-app-header {
+            display: none !important;
+        }
+    }
+
+    .mashroom-portal-app-loading {
+        min-height: 32px;
+
+        span {
+            display: none;
+        }
+    }
+}
+
+.mashroom-portal-admin-app {
+    --mashroom-admin-app-color-drop-zone: var(--color-accent);
+
+    color: var(--color-foreground);
+    background-color: var(--color-background);
+    font-size: var(--text-admin-panel);
+
+    input, textarea, select {
+        font-size: var(--text-admin-panel);
+    }
+
+    .menu-bar {
+        background-color: var(--color-admin-panel-background);
+    }
+
+    .available-apps-panel {
+        .available-app {
+            margin-bottom: 2px;
+
+            &:hover {
+                background-color: var(--color-admin-panel-highlight-background);
+            }
+
+            .filter-match {
+                color: var(--color-accent);
+            }
+
+            .app-description {
+                color: var(--color-gray-400);
+            }
+        }
+    }
+
+    .dropdown-menu-button {
+        &:hover {
+            background-color: var(--color-admin-panel-highlight-background);
+        }
+    }
+
+    .portal-apps-control-toggle {
+        &:hover {
+            background-color: var(--color-admin-panel-highlight-background);
+        }
+    }
+
+    a {
+        color: var(--color-link);
+        text-decoration: underline;
+
+        &:hover {
+            color: var(--color-link-hover);
+        }
+    }
+
+    .page {
+        .configure, .delete {
+            &:hover {
+                background-color: var(--color-admin-panel-highlight-background);
+            }
+        }
+    }
+
+    .site {
+        .configure {
+            &:hover {
+                background-color: var(--color-admin-panel-highlight-background);
+            }
+        }
+    }
+}
+
+.mashroom-portal-admin-app-controls {
+    .tool-button {
+        color: white;
+        background-color: #888;
+        opacity: 0.8;
+        border-radius: 3px;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    &.edit-tool-active {
+        .edit-button {
+            background-color: var(--color-secondary);
+        }
+
+        &>.mashroom-portal-app-wrapper {
+            border: 2px solid var(--color-secondary);
+        }
+    }
+}
+
+.mashroom-portal-admin-app-drop-zone {
+    border-radius: 5px;
+}
+
+.mashroom-portal-admin-drag-ghost {
+    color: var(--color-foreground);
+    background-color: var(--color-app-background);
+    border-radius: 5px;
+}
+
+.mashroom-portal-app-sidebar-host {
+
+    .mashroom-portal-app-sidebar {
+        background-color: var(--color-app-background);
+    }
+
+    &.editor-open {
+        width: 70%;
+
+        .mashroom-portal-app-sidebar {
+            width: calc(42% - var(--mashroom-portal-spacing-default));
+            padding-right: var(--mashroom-portal-spacing-default);
+        }
+    }
+}

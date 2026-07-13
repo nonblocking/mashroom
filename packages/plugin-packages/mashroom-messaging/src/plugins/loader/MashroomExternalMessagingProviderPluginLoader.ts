@@ -32,7 +32,7 @@ export default class MashroomExternalMessagingProviderPluginLoader implements Ma
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
-        const bootstrap: MashroomExternalMessagingProviderPluginBootstrapFunction = plugin.requireBootstrap();
+        const bootstrap: MashroomExternalMessagingProviderPluginBootstrapFunction = await plugin.loadBootstrap();
         const provider: MashroomMessagingExternalProvider = await bootstrap(plugin.name, config, contextHolder);
         this._logger.info(`Registering external messaging provider plugin: ${plugin.name}`);
         this._registry.register(plugin.name, provider);

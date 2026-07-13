@@ -11,7 +11,8 @@ const middlewareStack = (req: Request, res: Response) => {
 export default middlewareStack;
 
 const externalAdminApp = (req: Request) => {
-    const path = req.path.substr('/ext'.length);
+    const path = `/${req.params.extension[0]}`;
+
     const adminIntegrationPlugins = req.pluginContext.services.core.pluginService.getPlugins().filter((p) => p.type === 'admin-ui-integration');
     const adminIntegrationPlugin = adminIntegrationPlugins.find((p) => p.config?.path === path);
 

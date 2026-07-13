@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "$schema": {
+        },
+        "remotePackageUrls": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "pattern": "^(\\./|\\../|/|http://|https://).*$"
+            }
+        }
+    },
+    "required": ["remotePackageUrls"],
+    "additionalProperties": false
+}

@@ -2,6 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import querystring from 'querystring';
+import {configFileUtils} from '@mashroom/mashroom-utils';
 import loginFailureReason from './login-failure-reason';
 
 import type {MashroomSecurityService,
@@ -171,7 +172,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
                 });
             }
             const groups = await this.getUserGroups(user, logger);
-            const roles = this._getRoles(request, username, groups, logger);
+            const roles = await this._getRoles(request, username, groups, logger);
 
             const mashroomUser: MashroomSecurityUser = {
                 username,
@@ -233,11 +234,11 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         return groupEntries.map((e) => e.cn);
     }
 
-    private _getRoles(request: Request, username: string, groups: Array<string>, logger: MashroomLogger): Array<string> {
+    private async _getRoles(request: Request, username: string, groups: Array<string>, logger: MashroomLogger): Promise<Array<string>> {
         const roles: Array<string> = [];
 
         if (groups && groups.length > 0) {
-            const groupToRoles = this._getGroupToRoleMapping(request, logger);
+            const groupToRoles = await this._getGroupToRoleMapping(request, logger);
             if (groupToRoles) {
                 groups.forEach((group) => {
                     const groupRoles = groupToRoles[group];
@@ -251,7 +252,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
             }
         }
 
-        const userToRoles = this._getUserToRoleMapping(request, logger);
+        const userToRoles = await this._getUserToRoleMapping(request, logger);
         if (userToRoles) {
             const roleProp = Object.keys(userToRoles).find((u) => u.toLowerCase() === username.toLowerCase());
             if (roleProp) {
@@ -266,7 +267,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         return roles;
     }
 
-    private _getGroupToRoleMapping(request: Request, logger: MashroomLogger): GroupToRoleMapping | undefined | null {
+    private async _getGroupToRoleMapping(request: Request, logger: MashroomLogger): Promise<GroupToRoleMapping | undefined | null> {
         if (!this._groupToRoleMappingPath) {
             return null;
         }
@@ -275,10 +276,8 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         }
 
         if (fs.existsSync(this._groupToRoleMappingPath)) {
-
-            const groupToRoleMappingModule = require(this._groupToRoleMappingPath);
-            this._groupToRoleMapping = groupToRoleMappingModule.default ?? groupToRoleMappingModule;
-            this._createRoleDefinitions(this._groupToRoleMapping as GroupToRoleMapping, request, logger);
+            this._groupToRoleMapping = await configFileUtils.loadConfigFile(this._groupToRoleMappingPath);
+            await this._createRoleDefinitions(this._groupToRoleMapping as GroupToRoleMapping, request, logger);
         } else {
             logger.warn(`No group to roles definition found: ${this._groupToRoleMappingPath || '-'}.`);
             this._groupToRoleMapping = null;
@@ -287,7 +286,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         return this._groupToRoleMapping;
     }
 
-    private _getUserToRoleMapping(request: Request, logger: MashroomLogger): UserToRoleMapping | undefined | null {
+    private async _getUserToRoleMapping(request: Request, logger: MashroomLogger): Promise<UserToRoleMapping | undefined | null> {
         if (!this._userToRoleMappingPath) {
             return null;
         }
@@ -296,8 +295,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         }
 
         if (fs.existsSync(this._userToRoleMappingPath)) {
-
-            const userToRoleMappingModule = require(this._userToRoleMappingPath);
+            const userToRoleMappingModule = await configFileUtils.loadConfigFile(this._userToRoleMappingPath);
             this._userToRoleMapping = userToRoleMappingModule.default ?? userToRoleMappingModule;
             this._createRoleDefinitions(this._userToRoleMapping as UserToRoleMapping, request, logger);
         } else {

@@ -42,6 +42,8 @@ export type SetTopicSubscribedByAppAction = {
     readonly topics:  Array<string>;
 }
 
+export type AnyAction = SetKnownPortalAppsAction | SetSelectedPortalAppAction | SetActivePortalAppAction | SetAppLoadingErrorAction | AddMessagePublishedByAppAction | AddMessagePublishedBySandboxAction | SetHostWidthAction | SetTopicSubscribedByAppAction;
+
 export const setKnownApps = (knownPortalApps: Array<MashroomKnownPortalApp>): SetKnownPortalAppsAction => {
     return {
         type: 'SET_AVAILABLE_PORTAL_APPS',

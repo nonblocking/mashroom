@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.4",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "2.9.4"
@@ -17,8 +18,7 @@
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
         "@mashroom/mashroom-http-proxy": "2.9.4",
-        "@mashroom/mashroom-security": "2.9.4",
-        "@types/express": "^4.17.21"
+        "@mashroom/mashroom-security": "2.9.4"
     },
     "jest": {
         "testEnvironment": "node",
@@ -42,28 +42,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Http Proxy Add User Headers Interceptor",
-                "type": "http-proxy-interceptor",
-                "namespace": "csrf",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "requires": [
-                    "Mashroom Security Services"
-                ],
-                "defaultConfig": {
-                    "userNameHeader": "X-USER-NAME",
-                    "displayNameHeader": "X-USER-DISPLAY-NAME",
-                    "emailHeader": "X-USER-EMAIL",
-                    "extraDataHeaders": {},
-                    "targetUris": [
-                        ".*"
-                    ]
-                }
-            }
-        ]
     }
 }

@@ -1,10 +1,4 @@
 
 $FONT_ICON: var(--mashroom-portal-font-icon, 'Font Awesome 6 Free');
-
+$COLOR_PORTAL_APP_BORDER: var(--mashroom-portal-color-input-border, #AAA);
 $DEFAULT_SPACING: 32px;
-
-$COLOR_BACKGROUND: var(--mashroom-portal-background-color-default, transparent);
-$COLOR_BACKGROUND_HIGHLIGHTED: var(--mashroom-portal-color-secondary, yellow);
-$COLOR_PORTAL_APP_BACKGROUND: var(--mashroom-portal-background-color-app, transparent);
-$COLOR_PORTAL_APP_BORDER: var(--mashroom-portal-light-theme-color-input-border, #AAA);
-$COLOR_ERROR: var(--mashroom-portal-dark-theme-color-error, red);

@@ -7,9 +7,9 @@ import type {
     MashroomPortalLayout,
     MashroomPortalPageEnhancement,
     MashroomPortalTheme,
-    MashroomPortalAppRegistry,
     MashroomPortalAppSetup,
     UserAgent,
+    MashroomPortalAppConfig,
 } from './api';
 
 export type Writable<Type> = {
@@ -28,12 +28,6 @@ export interface MashroomRestService {
     withBasePath(apiBasePath: string): MashroomRestService;
 }
 
-export interface MashroomPortalAppRegistryHolder {
-    readonly name: string;
-    readonly priority: number;
-    readonly registry: MashroomPortalAppRegistry;
-}
-
 export interface MashroomPortalPluginRegistry {
     readonly portalApps: Readonly<Array<MashroomPortalApp>>;
 
@@ -44,6 +38,8 @@ export interface MashroomPortalPluginRegistry {
     readonly portalPageEnhancements: Readonly<Array<MashroomPortalPageEnhancement>>;
 
     readonly portalAppEnhancements: Readonly<Array<MashroomPortalAppEnhancement>>;
+
+    readonly portalAppConfigs: Readonly<Array<MashroomPortalAppConfig>>;
 
     registerPortalApp(portalApp: MashroomPortalApp): void;
 
@@ -57,10 +53,6 @@ export interface MashroomPortalPluginRegistry {
 
     unregisterLayout(layoutName: string): void;
 
-    registerPortalAppRegistry(registry: MashroomPortalAppRegistryHolder): void;
-
-    unregisterPortalAppRegistry(name: string): void;
-
     registerPortalPageEnhancement(enhancement: MashroomPortalPageEnhancement): void;
 
     unregisterPortalPageEnhancement(name: string): void;
@@ -69,14 +61,18 @@ export interface MashroomPortalPluginRegistry {
 
     unregisterPortalAppEnhancement(name: string): void;
 
+    registerPortalAppConfig(portalAppConfig: MashroomPortalAppConfig): void;
+
+    unregisterPortalAppConfig(name: string): void;
+
     addRegisterListener(listener: MashroomPortalRegisterListener): void;
 
     removeRegisterListener(listener: MashroomPortalRegisterListener): void;
 }
 
-export type MashroomPortalPluginType = 'app' | 'theme' | 'layout' | 'registry' | 'app-enhancement' | 'page-enhancement';
+export type MashroomPortalPluginType = 'app' | 'theme' | 'layout' | 'app-enhancement' | 'page-enhancement' | 'portal-app-config';
 
-export type MashroomPortalRegisterListener = (pluginType: MashroomPortalPluginType, listener: MashroomPortalApp | MashroomPortalLayout | MashroomPortalTheme | MashroomPortalAppRegistryHolder | MashroomPortalPageEnhancement | MashroomPortalAppEnhancement) => void;
+export type MashroomPortalRegisterListener = (pluginType: MashroomPortalPluginType, listener: MashroomPortalApp | MashroomPortalLayout | MashroomPortalTheme | MashroomPortalPageEnhancement | MashroomPortalAppEnhancement | MashroomPortalAppConfig) => void;
 
 export type MashroomPortalOnAuthenticationExpirationStrategies = {
     readonly strategy: 'stayOnPage';
@@ -190,4 +186,14 @@ export type SSRRenderResult = {
     readonly html: string;
     readonly injectHeadScript: Array<string>;
     readonly embeddedPortalPageApps: MashroomPortalPageApps;
+}
+
+export type ImportMap = {
+    readonly imports: Record<string, string>;
+    readonly scopes: Record<string, Record<string, string>>;
+};
+
+export type MashroomImportMapConnector = {
+    addImportMap(importMap: ImportMap): void;
+    getImportMap(): ImportMap | undefined;
 }

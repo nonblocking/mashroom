@@ -1,0 +1,21 @@
+@import './theme.css';
+
+@import "./fonts.css";
+@import "./base.css";
+@import "./layout.css";
+@import "./components.css";
+@import "./apps.css";
+
+:root {
+    /* These variables are also used by the Admin Toolbar and other Apps shipped with Mashroom */
+    --mashroom-portal-spacing-default: calc(var(--spacing) * 4);
+    --mashroom-portal-spacing-small: calc(var(--spacing) * 2);
+    --mashroom-portal-font-icon: var(--font-icon);
+    --mashroom-portal-color-input-border: var(--color-border);
+
+    text-size-adjust: none;
+    text-rendering: optimizeLegibility;
+    color: var(--color-foreground);
+    background-color: var(--color-background);
+    font-family: var(--font-sans), 'sans-serif';
+}

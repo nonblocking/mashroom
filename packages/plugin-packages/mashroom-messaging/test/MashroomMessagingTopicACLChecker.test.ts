@@ -20,7 +20,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             extraData: null,
         };
 
-        expect(aclChecker.allowed('x/y/z', user)).toBeTruthy();
+        expect(await aclChecker.allowed('x/y/z', user)).toBeTruthy();
     });
 
     it('should accept a topic with the required role', async () => {
@@ -37,7 +37,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             extraData: null,
         };
 
-        expect(aclChecker.allowed('foo/bar/2', user)).toBeTruthy();
+        expect(await aclChecker.allowed('foo/bar/2', user)).toBeTruthy();
     });
 
     it('should not accept a topic without the required role', async () => {
@@ -54,7 +54,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             extraData: null,
         };
 
-        expect(aclChecker.allowed('foo/bar/2', user)).toBeFalsy();
+        expect(await aclChecker.allowed('foo/bar/2', user)).toBeFalsy();
     });
 
     it('should accept a topic when the user has no denied role', async () => {
@@ -71,7 +71,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             extraData: null,
         };
 
-        expect(aclChecker.allowed('my/topic', user)).toBeTruthy();
+        expect(await aclChecker.allowed('my/topic', user)).toBeTruthy();
     });
 
     it('should not accept a topic when the user a denied role', async () => {
@@ -88,7 +88,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             extraData: null,
         };
 
-        expect(aclChecker.allowed('my/topic', user)).toBeFalsy();
+        expect(await aclChecker.allowed('my/topic', user)).toBeFalsy();
     });
 
     it('supports single and multi level placeholder', async () => {
@@ -105,7 +105,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             extraData: null,
         };
 
-        expect(aclChecker.allowed('a/b/c/d/e', user)).toBeFalsy();
+        expect(await aclChecker.allowed('a/b/c/d/e', user)).toBeFalsy();
     });
 
 });

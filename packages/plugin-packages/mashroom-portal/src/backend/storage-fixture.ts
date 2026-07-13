@@ -1,6 +1,6 @@
 
+import {randomUUID} from 'node:crypto';
 import {PAGES_COLLECTION, PORTAL_APP_INSTANCES_COLLECTION, SITES_COLLECTION} from './constants';
-import {createAppInstanceId} from './utils/id-utils';
 
 import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection, MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
@@ -30,84 +30,84 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
 
     const welcomeAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Welcome Portal App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
     };
 
     const reactDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo React App 2',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
         appConfig: {
         },
     };
 
     const reactDemoAppInstance2: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo React App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
         appConfig: {
-            message: 'This simple React based SPA was launched with a different...',
+            message: 'This simple React based Microfrontend was launched with a different...',
         },
     };
 
     const reactDemoAppInstance3: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo React App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
         appConfig: {
-            message: '...configuration than this instance of the same SPA',
+            message: '...configuration than this instance of the same Microfrontend',
         },
     };
 
     const reactDemoAppInstance4: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo React App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
         appConfig: {
-            message: 'This React SPA is part of a tabbed container formed by the Mashroom Portal Tabify App',
+            message: 'This React Microfrontend is part of a tabbed container formed by the Mashroom Portal Tabify App',
         },
     };
 
-    const angularDemoAppInstance1: MashroomPortalAppInstance = {
-        pluginName: 'Mashroom Portal Demo Angular App',
-        instanceId: createAppInstanceId(),
+    const vueDemoAppInstance1: MashroomPortalAppInstance = {
+        pluginName: 'Mashroom Portal Demo Vue App',
+        instanceId: randomUUID(),
         appConfig: {
         },
     };
 
     const compositeDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo Composite App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
         appConfig: {
         },
     };
 
     const loadDynamicallyDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo Load Dynamically App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
     };
 
     const restProxyDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo Rest Proxy App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
     };
 
     const tabifyAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Tabify App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
     };
 
     const remoteDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo Hybrid Rendering Remote App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
         appConfig: {
         },
     };
 
     const sandboxAppInstance: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Sandbox App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
     };
 
     const galleryAppInstance: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal App Gallery App',
-        instanceId: createAppInstanceId(),
+        instanceId: randomUUID(),
     };
 
     const pageHomeEmpty: MashroomPortalPage = {
@@ -131,8 +131,8 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
                 instanceId: reactDemoAppInstance1.instanceId,
             }],
             'app-area3': [{
-                pluginName: angularDemoAppInstance1.pluginName,
-                instanceId: angularDemoAppInstance1.instanceId,
+                pluginName: vueDemoAppInstance1.pluginName,
+                instanceId: vueDemoAppInstance1.instanceId,
             }],
         },
     };
@@ -339,7 +339,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
              await portalAppInstancesCollection.insertOne(reactDemoAppInstance2);
              await portalAppInstancesCollection.insertOne(reactDemoAppInstance3);
              await portalAppInstancesCollection.insertOne(reactDemoAppInstance4);
-             await portalAppInstancesCollection.insertOne(angularDemoAppInstance1);
+             await portalAppInstancesCollection.insertOne(vueDemoAppInstance1);
              await portalAppInstancesCollection.insertOne(compositeDemoAppInstance1);
              await portalAppInstancesCollection.insertOne(loadDynamicallyDemoAppInstance1);
              await portalAppInstancesCollection.insertOne(restProxyDemoAppInstance1);

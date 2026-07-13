@@ -1,5 +1,6 @@
 
-import path from 'path';
+import {resolve, isAbsolute} from 'path';
+import {fileURLToPath} from 'url';
 import {PluginConfigurationError} from '@mashroom/mashroom-utils';
 
 import type {
@@ -18,6 +19,10 @@ import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/in
 
 const DEFAULT_ORDER = 1000;
 
+const removeTrailingSlash = (str: string) => {
+    return str.endsWith('/') ? str.slice(0, -1) : str;
+};
+
 export default class PortalPageEnhancementPluginLoader implements MashroomPluginLoader {
 
     private _logger: MashroomLogger;
@@ -27,7 +32,7 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
     }
 
     get name(): string {
-        return 'Portal App Enhancement Plugin Loader';
+        return 'Portal Page Enhancement Plugin Loader';
     }
 
     generateMinimumConfig(plugin: MashroomPlugin): MashroomPluginConfig {
@@ -38,16 +43,25 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
-        let resourcesRootUri = plugin.pluginDefinition.resourcesRoot || config.resourcesRoot || '.';
-        if (resourcesRootUri.indexOf('://') === -1 && !resourcesRootUri.startsWith('/')) {
-            // Process relative file path
-            resourcesRootUri = path.resolve(plugin.pluginPackage.pluginPackagePath, resourcesRootUri);
-        }
-        if (resourcesRootUri.indexOf('://') === -1) {
-            if (resourcesRootUri.startsWith('/')) {
-                resourcesRootUri = `file://${resourcesRootUri}`;
+        let resourcesRootUrl = plugin.pluginDefinition.resourcesRoot || config.resourcesRoot || '.';
+
+        if (resourcesRootUrl.indexOf('://') === -1) {
+            if (resourcesRootUrl.startsWith('./')) {
+                resourcesRootUrl = resourcesRootUrl.slice(2);
+            }
+            if (plugin.pluginPackage.pluginPackageUrl.protocol === 'file:') {
+                if (!isAbsolute(resourcesRootUrl)) {
+                    const packageBasePath = fileURLToPath(plugin.pluginPackage.pluginPackageUrl);
+                    resourcesRootUrl = resolve(packageBasePath, resourcesRootUrl);
+                } else {
+                    // Required for windows, don't remove
+                    resourcesRootUrl = resolve(resourcesRootUrl);
+                }
+                resourcesRootUrl = `file://${resourcesRootUrl}`;
             } else {
-                resourcesRootUri = `file:///${resourcesRootUri}`;
+                let packageUrl = removeTrailingSlash(plugin.pluginPackage.pluginPackageUrl.toString());
+                resourcesRootUrl = `${packageUrl}/${resourcesRootUrl || ''}`;
+                resourcesRootUrl = removeTrailingSlash(resourcesRootUrl);
             }
         }
 
@@ -55,26 +69,26 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
 
         const pageResources = plugin.pluginDefinition.pageResources;
         if (!pageResources) {
-            throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No pageResources defined`);
+            throw new PluginConfigurationError(`Page Enhancement plugin ${plugin.name}: No pageResources defined`);
         }
         if (Array.isArray(pageResources.js)) {
             pageResources.js.forEach((res: any) => {
                 if (!res.dynamicResource && (!res.path || res.path.startsWith('/'))) {
-                    throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name} pageResources.js: One of 'dynamicResource' or 'path' must exist and the 'path' property must not start with a slash`);
+                    throw new PluginConfigurationError(`Page Enhancement plugin ${plugin.name} pageResources.js: One of 'dynamicResource' or 'path' must exist and the 'path' property must not start with a slash`);
                 }
             });
         }
         if (Array.isArray(pageResources.css)) {
             pageResources.css.forEach((res: any) => {
                 if (!res.dynamicResource && (!res.path || res.path.startsWith('/'))) {
-                    throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name} pageResources.css: One of 'dynamicResource' or 'path' must exist and the 'path' property must not start with a slash`);
+                    throw new PluginConfigurationError(`Page Enhancement plugin ${plugin.name} pageResources.css: One of 'dynamicResource' or 'path' must exist and the 'path' property must not start with a slash`);
                 }
             });
         }
 
         let enhancementPlugin: MashroomPortalPageEnhancementPlugin | undefined = undefined;
         if (plugin.pluginDefinition.bootstrap) {
-            const bootstrap: MashroomPortalPageEnhancementPluginBootstrapFunction = plugin.requireBootstrap();
+            const bootstrap: MashroomPortalPageEnhancementPluginBootstrapFunction = await plugin.loadBootstrap();
             enhancementPlugin = await bootstrap(plugin.name, config, contextHolder);
         }
 
@@ -84,7 +98,7 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
             version: plugin.pluginPackage.version,
             lastReloadTs: plugin.lastReloadTs || Date.now(),
             order,
-            resourcesRootUri,
+            resourcesRootUrl,
             pageResources,
             plugin: enhancementPlugin,
         };

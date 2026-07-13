@@ -4,13 +4,13 @@
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin allows it to show proper HTML pages for arbitrary HTTP status codes.
-It delivers error pages only if the request accept header contains text/html. So, typically not for AJAX requests.
+It delivers error pages only if the request accept header contains text/html. So, typically not for API (fetch) requests.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-error-pages** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-error-pages** as *dependency*.
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your server config file like this:
 
 ```json
 {
@@ -29,7 +29,7 @@ You can override the default config in your Mashroom config file like this:
 ```
 
  * _mapping_: Maps status codes to error pages. The target files can be file paths or HTTP/S urls.
-   If the file path is not absolute the plugin will expect it to be relative to the plugin folder or the Mashroom server config file.
+   If the file path is not absolute, the plugin will expect it to be relative to the plugin folder or the Mashroom server config file.
    If a status code is not defined in the mapping or no default exists, no error page will be shown.
 
 ### HTML Files

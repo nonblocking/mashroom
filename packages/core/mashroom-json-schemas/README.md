@@ -3,7 +3,7 @@
 
 JSON schemas for most configuration files used in [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-The schemas are also available as TypeScript definitions under /type-definitions.
+The schemas are also available as TypeScript definitions under */type-definitions*.
 
 ## Available schemas
 

@@ -1,5 +1,4 @@
 
-import {nanoid} from 'nanoid';
 import { SESSION_STORAGE_WS_CLIENT_ID } from '../../../backend/constants';
 
 import type {
@@ -235,6 +234,6 @@ export default class RemoteMessagingClient {
     }
 
     private _createId() {
-        return nanoid(8);
+        return crypto.randomUUID();
     }
 }

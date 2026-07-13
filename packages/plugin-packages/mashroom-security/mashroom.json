@@ -1,0 +1,37 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Security Middleware",
+            "type": "middleware",
+            "bootstrap": "./dist/middleware/mashroom-bootstrap-middleware.js",
+            "requires": [
+                "Mashroom Security Services"
+            ],
+            "defaultConfig": {
+                "order": -1
+            }
+        },
+        {
+            "name": "Mashroom Security Services",
+            "type": "services",
+            "namespace": "security",
+            "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
+            "requires": [
+                "Mashroom Storage Services"
+            ],
+            "defaultConfig": {
+                "provider": "Mashroom Security Simple Provider",
+                "forwardQueryHintsToProvider": [],
+                "acl": "./acl.json"
+            }
+        },
+        {
+            "name": "Mashroom Security Provider Loader",
+            "type": "plugin-loader",
+            "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-security-provider-plugin-loader.js",
+            "loads": "security-provider"
+        }
+    ]
+}

@@ -1,0 +1,46 @@
+@import "variables";
+
+@import "bootstrap/scss/bootstrap";
+
+:root {
+    text-size-adjust: none;
+    text-rendering: optimizeLegibility;
+    // These variables are partially also used by the Admin Toolbar and other Apps shipped with Mashroom
+    --mashroom-portal-spacing-default: #{$spacing};
+    --mashroom-portal-spacing-small: #{$spacing / 2};
+    --mashroom-portal-font-icon: '#{$font-family-icon}';
+    --mashroom-portal-color-input-border: var(--bs-border-color);
+    // Only used in the Theme
+    --mashroom-portal-background-color-header: #{$header-bg-color};
+    --mashroom-portal-background-color-app: #{$app-bg-color};
+    --mashroom-portal-background-color-app-header: #{$app-bg-color-header};
+    --mashroom-portal-background-color-modal: #{$modal-bg-color};
+    --mashroom-portal-background-color-modal-header: #{$modal-bg-color-header};
+    --mashroom-portal-color-nav: #{$nav-color};
+    --mashroom-portal-color-nav-hover: #{$nav-color-hover};
+    --mashroom-portal-color-nav-active: #{$nav-color-active};
+    --mashroom-portal-background-color-nav: #{$nav-bg-color};
+    --mashroom-portal-background-color-nav-hover: #{$nav-bg-color-hover};
+    --mashroom-portal-background-color-nav-active: #{$nav-bg-color-active};
+}
+
+[data-bs-theme=dark] {
+    --mashroom-portal-background-color-header: #{$header-bg-color-dark};
+    --mashroom-portal-background-color-app: #{$app-bg-color-dark};
+    --mashroom-portal-background-color-app-header: #{$app-bg-color-header-dark};
+    --mashroom-portal-background-color-modal: #{$modal-bg-color-dark};
+    --mashroom-portal-background-color-modal-header: #{$modal-bg-color-header-dark};
+    --mashroom-portal-color-nav: #{$nav-color-dark};
+    --mashroom-portal-color-nav-hover: #{$nav-color-hover-dark};
+    --mashroom-portal-color-nav-active: #{$nav-color-active-dark};
+    --mashroom-portal-background-color-nav: #{$nav-bg-color-dark};
+    --mashroom-portal-background-color-nav-hover: #{$nav-bg-color-hover-dark};
+    --mashroom-portal-background-color-nav-active: #{$nav-bg-color-active-dark};
+    color: var(--bs-body-color);
+}
+
+@import "mixins";
+@import "base";
+@import "layout";
+@import "components";
+@import "apps";

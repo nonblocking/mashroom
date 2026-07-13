@@ -4,7 +4,7 @@
         "outDir": "./dist/out-tsc",
         "sourceMap": true,
         "declaration": false,
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "target": "ES2022",
@@ -12,6 +12,8 @@
         "lib": [
             "ES2022",
             "dom"
-        ]
+        ],
+        "types": ["node", "jest"],
+        "ignoreDeprecations": "6.0"
     }
 }

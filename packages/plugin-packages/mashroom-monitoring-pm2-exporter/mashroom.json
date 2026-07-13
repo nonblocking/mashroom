@@ -1,0 +1,47 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Monitoring PM2 Exporter",
+            "type": "services",
+            "namespace": "pm2Exporter",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "requires": [
+                "Mashroom Monitoring Metrics Collector Services"
+            ],
+            "defaultConfig": {
+                "pmxMetrics": {
+                    "v8": true,
+                    "runtime": true,
+                    "network": false,
+                    "http": true,
+                    "eventLoop": true
+                },
+                "mashroomMetrics": [
+                    "mashroom_plugins_total",
+                    "mashroom_plugins_loaded_total",
+                    "mashroom_plugins_error_total",
+                    "mashroom_remote_app_endpoints_total",
+                    "mashroom_remote_app_endpoints_error_total",
+                    "mashroom_websocket_connections_total",
+                    "mashroom_http_proxy_http_pool_connections_active_total",
+                    "mashroom_http_proxy_http_pool_connections_idle_total",
+                    "mashroom_http_proxy_http_pool_waiting_requests_total",
+                    "mashroom_http_proxy_https_pool_connections_active_total",
+                    "mashroom_http_proxy_https_pool_connections_idle_total",
+                    "mashroom_http_proxy_https_pool_waiting_requests_total",
+                    "mashroom_sessions_total",
+                    "mashroom_sessions_mongodb_connected",
+                    "mashroom_sessions_redis_nodes_connected",
+                    "mashroom_storage_mongodb_connected",
+                    "mashroom_memory_cache_entries_added_total",
+                    "mashroom_memory_cache_hit_ratio",
+                    "mashroom_memory_cache_redis_nodes_connected",
+                    "mashroom_messaging_amqp_connected",
+                    "mashroom_messaging_mqtt_connected"
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,36 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Welcome Portal App",
+            "type": "portal-app2",
+            "clientBootstrap": "startWelcomeApp",
+            "resources": {
+                "moduleSystem": "ESM",
+                "js": [
+                    "welcome-app.js"
+                ],
+                "css": [
+                    "welcome-app.css"
+                ]
+            },
+            "remote": {
+                "resourcesRoot": "/public"
+            },
+            "defaultConfig": {
+                "title": {
+                    "en": "Welcome Portal App",
+                    "de": "Willkommen Portal App"
+                },
+                "category": "Demo",
+                "proxies": {
+                    "bff": {
+                        "targetPath": "/api",
+                        "sendPermissionsHeader": true
+                    }
+                }
+            }
+        }
+    ]
+}

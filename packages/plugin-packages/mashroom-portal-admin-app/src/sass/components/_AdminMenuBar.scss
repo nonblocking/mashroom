@@ -2,6 +2,7 @@
 .admin-menu-bar {
     flex-grow: 3;
     display: flex;
+    flex-flow: row wrap;
 
     .mashroom-portal-ui-dropdown-menu {
         padding: 0 10px;

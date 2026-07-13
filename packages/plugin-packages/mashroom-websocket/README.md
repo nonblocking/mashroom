@@ -6,13 +6,12 @@ Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend
 This plugin adds WebSocket support to the _Mashroom Server_.
 It exposes a new service that can be used to interact with clients that connect at _/websocket/*_.
 
-<span class="panel-info">
-**NOTE**: This implementation only allows authenticated users to connect.
-</span>
+> [!NOTE]
+> This implementation only allows authenticated users to connect.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-websocket** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-websocket** as *dependency*.
 
 And you can use the security service like this:
 
@@ -33,7 +32,7 @@ export default async (req: Request, res: Response) => {
 }
 ```
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your server config file like this:
 
 ```json
 {
@@ -52,11 +51,11 @@ You can override the default config in your Mashroom config file like this:
 ```
 
  * _path_: The path where the clients can connect (Default: /websocket)
- * _reconnectMessageBufferFolder_: The path where messages are temporary stored during client reconnect. When set to null or empty string, buffering is disabled.
-   The base for relative paths is the Mashroom config file (Default: null)
+ * _reconnectMessageBufferFolder_: The path where messages are temporarily stored during client reconnect. When set to null or empty string, buffering is disabled.
+   The base for relative paths is the server config file (Default: null)
  * _reconnectTimeoutSec_: Time for how long are messages buffered during reconnect (Default: 5)
  * _restrictToRoles_: An optional array of roles that are required to connect (Default: null)
- * _enableKeepAlive_: Enable periodic keep alive messages to all clients.
+ * _enableKeepAlive_: Enable periodic keep-alive messages to all clients.
    This is useful if you want to prevent reverse proxies to close connections because of a read timeout (Default: true)
  * _keepAliveIntervalSec_: Interval for keepalive messages in seconds (Default: 15)
  * _maxConnections_: Max allowed WebSocket connections per node (Default: 2000)
@@ -65,7 +64,7 @@ There will also be a **test page** available under: _/websocket/test_
 
 ### Reconnect to a previous session
 
-When you connect with a client you will receive a message with your clientId from the server:
+When you connect with a client, you will receive a message with your clientId from the server:
 
 ```
 {
@@ -74,12 +73,12 @@ When you connect with a client you will receive a message with your clientId fro
 }
 ```
 
-When you get disconnected you should reconnect with the query parameter *?clientId=abcdef* to get all messages you
+When you get disconnected, you should reconnect with the query parameter *?clientId=abcdef* to get all messages you
 missed meanwhile.
 
 This only works if *reconnectMessageBufferFolder* is set properly.
 
-## Services
+## Provided Services
 
 ### MashroomWebSocketService
 

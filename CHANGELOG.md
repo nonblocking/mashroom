@@ -1,7 +1,144 @@
 
 # Change Log
 
-## [unreleased]
+## [unreleased v3]
+
+ * Dropped support for Node.js 20.x
+ * Added an MCP server that allows Coding Agents to add new (remote) Microfrontends and to place in on pages
+ * Added a [Shadcn Demo Microfrontend](packages/plugin-packages/mashroom-portal-demo-react-shadcn-app)
+ * Added a new [Tailwind 4 based Portal Theme](packages/plugin-packages/mashroom-portal-tailwind-theme)
+ * Added a [React Bootstrap Demo Microfrontend](packages/plugin-packages/mashroom-portal-demo-react-bootstrap-app)
+ * Added a new [Boostrap 5 based Portal Theme](packages/plugin-packages/mashroom-portal-bootstrap-theme) which is also the Default Theme now.
+   It uses the default Boostrap customizing and exposes all Bootstrap components.
+   So, Microfrontends can use libraries like [react-bootstrap](https://react-bootstrap.netlify.app) or [bootstrap-vue-next](https://bootstrap-vue-next.github.io/bootstrap-vue-next).
+ * Portal: Added a new plugin type *portal-app-config*.
+   This plugin can be used to (re-)configure one or many Portal Apps and to adapt:
+   * The proxy target URL
+   * The headers for proxy requests (e.g., to add some API key)
+   * The headers for SSR requests
+   * The actual user permissions (if they are not simply role-based but derived from some other source)
+   * The *importMap* of Portal Apps, which can be used to make sure all Apps share the same vendor libraries,
+   Example:
+   ```ts
+   const plugin1: MashroomPortalAppConfigPlugin = {
+     applyTo(portalAppName: string) {
+       return portalAppName === 'My Microfrontend with a BFF that requires an API Key';
+     },
+     addProxyRequestHeaders(portalApp, proxyId) {
+       if (proxyId === 'bff') {
+         return {
+           'x-api-key': '123456',
+         };
+       }
+     },
+   }
+   ```
+ * Portal: Added native support for [OpenMicrofrontends](https://open-microfrontends.org) compliant remote Portal Apps.
+   This means Mashroom Portal can now register any Microfrontends that expose an *OpenMicrofrontends* description, and you can add it to any page.
+   To try it out:
+    * Run *packages/test/test-server1*
+    * Start any of the *Microfrontends* [here](https://github.com/Open-Microfrontends/open-microfrontends-examples)
+    * Open http://localhost:5050/mashroom/admin/ext/remote-plugin-packages and paste the server URL of the Microfrontend into the form
+    * Add the OpenMicrofrontends example to any Portal page
+ * Core: Renamed server config property *xPowerByHeader* to *xPoweredByHeader* (the deprecated one is still supported for backward-compatibility)
+ * Sandbox App: Added the possibility to close the loaded App and to start over
+ * Portal: Added support for **import maps**. This is a **new way to share vendor libraries** amongst Microfrontends.
+   Currently, this is only supported for *modulesSystem* *SystemJS* because some major browsers do not support dynamically
+   changing import maps yet, see [here](https://bugzilla.mozilla.org/show_bug.cgi?id=1916277).
+   Example:
+   ```json
+   {
+     "resources": {
+       "moduleSystem": "SystemJS",
+       "importMap": {
+         "imports": {
+           "react": "https://ga.system.jspm.io/npm:react@19.1.1/index.js",
+           "react-dom": "https://ga.system.jspm.io/npm:react-dom@19.1.1/index.js",
+           "react-dom/client": "https://ga.system.jspm.io/npm:react-dom@19.1.1/client.js"
+        },
+       "js": [
+         "index.js"
+       ]
+     }
+   }
+   ```
+ * Portal: Added support for Portal Apps (Microfrontends) bundled to ES or SystemJS modules:
+   ```json
+   {
+     "resources": {
+       "moduleSystem": "ESM", // or: "SystemJS"
+       "js": [
+         "index.js"
+       ]
+     }
+   }
+   ```
+   If you are using modules, the client bootstrap can be exported rather than added a global variable!
+ * Core: Added the possibility to define a *buildManifestPath* in the plugin definition of a remote package to determine the actual version:
+   ```json
+   {
+      "buildManifestPath": "/buildManifest.json",
+      "plugins": [
+      ]
+   ```
+   The build manifest must be a JSON file and contain a *version* or *timestamp* property.
+   The default is */package.json* (which is the same as before)
+ * Core: Added support for hot reload of TypeScript files and ES modules
+ * Core: Added support for TypeScript with Node.js < 24. With the same [limitations](https://github.com/bloomberg/ts-blank-space/blob/main/docs/unsupported_syntax.md) as for Node.js >= 24.
+   All config files and plugin sources can be written in TypeScript now
+ * Core: Added support for ESM packages. JavaScript files in packages with `"type": "module"` are now correctly loaded.
+ * Core: Added support for YAML config files
+ * Core: Removed HTTP/2 support. This is typically something that should be done by a reverse proxy.
+ * **BREAKING CHANGE**: Core: Migrated to Express 5.
+   Check all your *webapp*, *middleware* and *api* plugins if they need to be updated, according to: https://expressjs.com/en/guide/migrating-5.html
+ * Documentation (mashroom-docs-static plugin): moved to a separate repo
+ * **BREAKING CHANGE**: Core: Removed support for the [flow](https://flow.org) type system
+ * Admin UI: Added filtering for plugins and plugin packages
+ * Remote Plugin Scanner Kubernetes: Added a new plugin to register *remote plugins* on a Kubernetes platform, replaces *K8S Remote App Registry*.
+   The configuration is very similar:
+   ```json
+   "Mashroom Remote Package Scanner Kubernetes": {
+     "namespaceLabelSelector": ["env=development", "microfrontends=true"],
+     "serviceLabelSelector": "microfrontends=true",
+     "serviceNameFilter": ".*"
+   }
+   ```
+   It comes with a lot of improvements compared to *K8S Remote App Registry*:
+   * It uses *watch* instead of *list* for Namespaces and Services
+   * It also watches Pods and ignores Services without any running ones
+   * It immediately updates plugin packages if the container image version changes (prevents caching problems)
+   * It can handle plugin packages in the default namespace
+   * It uses the image version as cache busting, so exposing */package.json* is no longer necessary
+ * Remote Plugin Scanner: Added a new plugin to register *remote plugins*, replaces *Remote App Registry*.
+   The configuration is very similar:
+   ```json
+    "Mashroom Remote Package Scanner": {
+    "remotePackageUrls": "./remotePackageUrls.json"
+   },
+   ```
+   And *remotePackageUrls.json* looks like this:
+   ```Json
+   {
+     "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-remote-package-scanner.json",
+     "remotePackageUrls": [
+     "https://demo-ssr-remote-app.mashroom-server.com"
+     ]
+   }
+   ```
+ * K8S Remote App Registry: **BREAKING CHANGE**: Is legacy now and should no longer be used (use the new generic *Remote Plugin Scanner Kubernetes* plugin instead)
+ * Remote App Registry: **BREAKING CHANGE** Is legacy now and should no longer be used (use the new generic *Remote Plugin Scanner* plugin instead)
+ * Portal: Plugin Rework
+   * **BREAKING CHANGE**: Removed plugin type *portal-app-registry*
+   * Added direct *remote plugin* support for Portal Apps, Portal Page Enhancements and Portal Layouts
+ * Plugin System Rework:
+   * Added two new plugin types that can be used to extend the plugin system with new source URLs and with custom plugin descriptors.
+     This means plugins could load from all kinds of URLs (e.g., http) and the plugin definition could be built from some custom information.
+   * Added support for *remote* (http(s)) packages to the core
+   * Improved change detection of the file system plugin scanner (reports only relevant changes now)
+   * Made sure plugins are only loaded once during startup
+   * Fixed the problem that plugins were not rebuild after removing the dist/output folder
+   * Ready probe returns HTTP 200 as soon as all local plugin packages are processed (even if some plugins could not be loaded)
+   * *MashroomPluginPackage.pluginPackagePath* is legacy now and only works for local plugins. Use *MashroomPluginPackage.pluginPackageURL*
 
 ## 2.9.4 (January 5, 2026)
 

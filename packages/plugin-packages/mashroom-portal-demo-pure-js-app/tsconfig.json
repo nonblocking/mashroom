@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "sourceMap": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "moduleResolution": "bundler",
+        "outDir": "dist",
+        "types": ["node", "jest"],
+        "rootDir": "src"
+    },
+    "include": ["src/*.ts"]
+}

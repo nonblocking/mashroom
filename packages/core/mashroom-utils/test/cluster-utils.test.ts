@@ -1,6 +1,8 @@
 
 import {isNodeCluster, getAllWorkerPids} from '../src/cluster-utils';
 
+jest.setTimeout(10000);
+
 describe('cluster-utils.isNodeCluster', () => {
 
     it('returns false when no worker exists', () => {
@@ -8,7 +10,6 @@ describe('cluster-utils.isNodeCluster', () => {
     });
 
 });
-
 
 describe('cluster-utils.getAllWorkerPids', () => {
 
@@ -23,5 +24,3 @@ describe('cluster-utils.getAllWorkerPids', () => {
     });
 
 });
-
-

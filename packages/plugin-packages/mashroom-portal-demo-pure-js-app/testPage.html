@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'/>
+    <meta content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0' name='viewport'/>
+    <title>Demo Pure JS App</title>
+    <link rel='stylesheet' href='./dist/style.css'/>
+</head>
+<body>
+
+    <div id='demo-pure-js-app-container'>
+        Loading...
+    </div>
+
+    <script type='text/javascript'>
+        (async () => {
+
+            var hostElement = document.getElementById('demo-pure-js-app-container');
+            var portalAppConfig = {
+                message: 'This is pure JS Microfrontend that communicates with other Microfrontends on the page via message bus',
+                pingButtonLabel: 'Send Ping',
+            };
+            var portalAppSetup = {
+                lang: 'en',
+                appConfig: portalAppConfig
+            };
+            var portalClientServices = {
+                messageBus: {
+                    publish: function() {},
+                    subscribe: function() {}
+                }
+            };
+
+            const microfrontend = await import('./dist/index.js');
+            microfrontend.default.startPureJsDemoApp(hostElement, portalAppSetup, portalClientServices);
+        })();
+
+    </script>
+</body>
+</html>

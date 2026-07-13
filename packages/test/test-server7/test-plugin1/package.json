@@ -1,4 +1,5 @@
 {
   "name": "test-plugin1",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "description": "Test Webapp Plugin written in TS and with a TS config"
 }

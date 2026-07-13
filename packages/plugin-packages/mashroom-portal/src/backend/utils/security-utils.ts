@@ -1,6 +1,7 @@
 
 import context from '../context/global-portal-context';
 import {findSiteByPath} from './model-utils';
+import {getConfigPluginWithDetermineRolePermissions} from './config-plugin-utils';
 
 import type {Request, Response} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -9,9 +10,8 @@ import type {
     MashroomPortalApp,
     MashroomPortalAppUserPermissions,
     MashroomPortalProxyDefinition,
-    MashroomPortalRolePermissions,
 } from '../../../type-definitions';
-import type {Writable} from '../../../type-definitions/internal';
+import type {MashroomPortalPluginRegistry, Writable} from '../../../type-definitions/internal';
 
 export const getUser = (req: Request): MashroomSecurityUser | null | undefined => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
@@ -130,11 +130,23 @@ export const isProxyAccessPermitted = async (req: Request, restProxyDef: Mashroo
     return true;
 };
 
-export const calculatePermissions = (rolePermissions: MashroomPortalRolePermissions | undefined | null, user: MashroomSecurityUser | undefined | null): MashroomPortalAppUserPermissions => {
+export const calculatePermissions = async (portalApp: MashroomPortalApp, pluginRegistry: MashroomPortalPluginRegistry, user: MashroomSecurityUser | undefined | null, req: Request): Promise<MashroomPortalAppUserPermissions> => {
     const permissions: Writable<MashroomPortalAppUserPermissions> = {};
-    if (rolePermissions) {
-        for (const permission in rolePermissions) {
-            const roles = rolePermissions[permission];
+
+    const configPluginWithDetermineRolePermissions = getConfigPluginWithDetermineRolePermissions(portalApp.name, pluginRegistry);
+    if (configPluginWithDetermineRolePermissions) {
+        const permissions = await configPluginWithDetermineRolePermissions.plugin.determineRolePermissions!(portalApp, user ?? null, req);
+        if (permissions) {
+            const logger = req.pluginContext.loggerFactory('mashroom.portal');
+            logger.debug(`Role permissions for Portal App ${portalApp.name} calculated by config plugin ${configPluginWithDetermineRolePermissions.name}:`, permissions);
+            return permissions;
+        }
+    }
+
+
+    if (portalApp.rolePermissions) {
+        for (const permission in portalApp.rolePermissions) {
+            const roles = portalApp.rolePermissions[permission];
             if (roles && Array.isArray(roles) && roles.find((requiredRole) => user?.roles?.find((role) => role === requiredRole))) {
                 permissions[permission] = true;
             }

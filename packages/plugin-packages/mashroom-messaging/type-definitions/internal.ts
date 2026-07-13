@@ -28,7 +28,7 @@ export type MashroomMessagingACLTopicRules = {
 }
 
 export interface MashroomMessageTopicACLChecker {
-    allowed(topic: string, user: MashroomSecurityUser | undefined | null): boolean;
+    allowed(topic: string, user: MashroomSecurityUser | undefined | null): Promise<boolean>;
 }
 
 export interface MashroomMessagingWebSocketHandler {

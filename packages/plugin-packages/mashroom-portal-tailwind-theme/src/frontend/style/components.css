@@ -1,0 +1,256 @@
+/* UI Components used in the Admin Toolbar, Sandbox and other Apps shipped with Mashroom */
+
+.mashroom-portal-checkbox {
+    position: absolute;
+    opacity: 0;
+
+    &+label {
+        cursor: pointer;
+        position: relative;
+        padding-left: 23px;
+
+        &:before {
+            position: absolute;
+            left: 2px;
+            top: -2px;
+            font-family: var(--mashroom-portal-font-icon), sans-serif;
+            font-size: 1.1em;
+            content: "\f0c8";
+            transition: var(--transition-focus);
+        }
+    }
+
+    &:checked+label:before {
+        content: "\f14a";
+    }
+
+    &[disabled]+label {
+        cursor: not-allowed;
+        color: var(--color-gray-500);
+
+        &:before {
+            color: var(--color-gray-500);
+        }
+    }
+}
+
+.mashroom-portal-radio {
+    position: absolute;
+    opacity: 0;
+
+    &+label {
+        cursor: pointer;
+        position: relative;
+        padding-left: 23px;
+
+        &:before {
+            position: absolute;
+            left: 1px;
+            top: -2px;
+            font-family: var(--mashroom-portal-font-icon), sans-serif;
+            font-size: 1.1em;
+            content: "\f111";
+            transition: var(--transition-focus);
+        }
+    }
+
+    &:checked+label:before {
+        content: "\f192";
+    }
+
+    &:focus+label {
+        &:before {
+            color: var(--color-link-hover);
+        }
+    }
+
+    &[disabled]+label {
+        cursor: not-allowed;
+        color: var(--color-gray-500);
+
+        &:before {
+            color: var(--color-gray-500);
+        }
+    }
+}
+
+.mashroom-portal-ui-field-label {
+    display: inline-block;
+    color: var(--color-muted-foreground);
+}
+
+.mashroom-portal-ui-error-message {
+    color: var(--color-destructive);
+    font-size: 0.9em;
+    padding: 3px 0 3px 12px;
+    position: relative;
+
+    &:before {
+        font-family: var(--mashroom-portal-font-icon), sans-serif;
+        font-weight: bold;
+        content: '\f12a';
+        position: absolute;
+        left: 2px;
+        top: 5px;
+        font-size: 0.9em;
+    }
+}
+
+.mashroom-portal-ui-input.error {
+    input,
+    select,
+    textarea {
+        border-color: var(--color-destructive) !important;
+        color: var(--color-destructive);
+
+        &:focus {
+            outline: 1px solid var(--color-destructive);
+        }
+    }
+
+    .mashroom-portal-checkbox+label:before,
+    .mashroom-portal-radio+label:before {
+        color: var(--color-destructive) !important;
+    }
+
+    .cm-editor {
+        border-color: var(--color-destructive) !important;
+
+        &.cm-focused {
+            outline-color: var(--color-destructive) !important;
+        }
+    }
+}
+
+.mashroom-portal-ui-dropdown-menu {
+
+    .dropdown-menu-content {
+        background-color: var(--color-background);
+        border-bottom-left-radius: var(--radius-md);
+        border-bottom-right-radius: var(--radius-md);
+        padding: var(--mashroom-portal-spacing-small);
+    }
+
+    .mashroom-portal-ui-dropdown-menu-item {
+        min-width: 200px;
+        border-radius: var(--radius-md);
+
+        &:hover {
+            background-color: var(--color-nav-hover-background);
+        }
+
+        &:last-child {
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+    }
+}
+
+.mashroom-portal-autocomplete-field {
+    .suggestions-container-open {
+        background-color: var(--color-background);
+        border: 1px solid var(--color-primary-subtle);
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
+    .suggestion-highlighted {
+        background-color: var(--color-nav-hover-background) !important;
+    }
+}
+
+.mashroom-portal-ui-modal {
+    .mashroom-portal-ui-modal-wrapper {
+        border-radius: 8px;
+    }
+
+    .mashroom-portal-ui-modal-header {
+        border-top-left-radius: var(--radius-md);
+        border-top-right-radius: var(--radius-md);
+        border-bottom: 1px solid var(--color-background);
+        background-color: var(--color-modal-header-background) !important;
+
+        .close-button {
+            &:after {
+                color: var(--color-link)
+            }
+
+            &:hover:after {
+                color: var(--color-link-hover);
+            }
+        }
+    }
+
+    .mashroom-portal-ui-modal-content {
+        border-bottom-left-radius: var(--radius-md);
+        border-bottom-right-radius: var(--radius-md);
+        background-color: var(--color-modal-background) !important;
+    }
+}
+
+.mashroom-portal-ui-tab-dialog {
+    .tab-dialog-header {
+        display: flex;
+        flex-wrap: wrap;
+        margin: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+
+        .tab-dialog-button {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-left: 0;
+            margin-top: var(--mashroom-portal-spacing-small);
+            margin-right: var(--mashroom-portal-spacing-small);
+            border-radius: 1000px;
+            border: 1px solid var(--color-nav-hover-background);
+            background-color: var(--color-nav-background);
+            color: var(--color-nav);
+            padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+            transition: var(--transition-hover);
+
+            &:hover {
+                color: var(--color-nav-hover);
+                background-color: var(--color-nav-hover-background);
+            }
+
+            &.active {
+                color: var(--color-nav-active);
+                background: var(--color-nav-active-background);
+                cursor: default;
+
+                .close-button {
+                    color: white;
+                }
+            }
+
+            .close-button {
+                cursor: pointer;
+                color: var(--color-link);
+
+                &:after {
+                    content: '\f00d';
+                    font-family: var(--mashroom-portal-font-icon), sans-serif;
+                    font-weight: bold;
+                    padding: 2px 15px;
+                }
+
+                &:hover {
+                    color: var(--color-link-hover);
+                }
+            }
+        }
+    }
+}
+
+.cm-editor {
+    border: 1px solid var(--color-border);
+    margin: 1px;
+    padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+    background-color: var(--color-input);
+    border-radius: var(--radius-md);
+
+    &.cm-focused {
+        @apply ring-1 ring-muted-foreground;
+    }
+}
+

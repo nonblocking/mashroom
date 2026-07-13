@@ -128,13 +128,12 @@ export default class PortalPageRenderController {
 
     /*
      * Get the content part of a given page (without header, navigation, theme or page enhancements).
-     * This only works properly if also the originalPageId (the page that was fully loaded) is given as query parameter
+     * This only works properly if also the originalPageId (the page that was fully loaded) is given as a query parameter
      */
     async getPortalPageContent(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
-        const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
         const devMode = req.pluginContext.serverInfo.devMode;
 
         try {
@@ -200,9 +199,10 @@ export default class PortalPageRenderController {
                 const portalLayout = await this._loadLayout(layoutName, logger);
                 const messages = (key: string) => i18nService.getMessage(key, lang);
 
-                const portalPageApps = await this._getPagePortalApps(req, page, user, cdnService);
+                const portalPageApps = await this._getPagePortalApps(req, page, user);
                 const setupTheme = () => this._setupTheme(theme, devMode, logger);
-                const {resultHtml, serverSideRenderingInjectHeadScript, embeddedPortalPageApps} = await renderContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
+                const {resultHtml, serverSideRenderingInjectHeadScript, embeddedPortalPageApps} =
+                    await renderContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, this._pluginRegistry, req, res, logger);
                 pageContent = resultHtml;
                 Object.keys(embeddedPortalPageApps).forEach((appAreaId) => {
                     portalPageApps[appAreaId] = portalPageApps[appAreaId] || [];
@@ -289,13 +289,14 @@ export default class PortalPageRenderController {
         const messages = (key: string) => i18nService.getMessage(key, lang);
 
         const portalLayout = await this._loadLayout(layoutName, logger);
-        const portalPageApps = await this._getPagePortalApps(req, page, user, cdnService);
+        const portalPageApps = await this._getPagePortalApps(req, page, user);
 
         const setupTheme = () => this._setupTheme(theme, devMode, logger);
         const appWrapperTemplateHtml = await renderAppWrapperToClientTemplate(!!theme, setupTheme, messages, req, res, logger);
         const appErrorTemplateHtml = await renderAppErrorToClientTemplate(!!theme, setupTheme, messages, req, res, logger);
 
-        const {resultHtml: pageContent, serverSideRenderingInjectHeadScript, serverSideRenderedApps, embeddedPortalPageApps} = await renderContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
+        const {resultHtml: pageContent, serverSideRenderingInjectHeadScript, serverSideRenderedApps, embeddedPortalPageApps} =
+            await renderContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, this._pluginRegistry, req, res, logger);
         Object.keys(embeddedPortalPageApps).forEach((appAreaId) => {
             portalPageApps[appAreaId] = portalPageApps[appAreaId] || [];
             portalPageApps[appAreaId].push(...embeddedPortalPageApps[appAreaId]);
@@ -585,7 +586,7 @@ export default class PortalPageRenderController {
         return `${removeExistingScripts}\n${addScriptsScript}`;
     }
 
-    private async _getPagePortalApps(req: Request, page: MashroomPortalPage, mashroomSecurityUser: MashroomSecurityUser | undefined | null, cdnService: MashroomCDNService | undefined | null): Promise<MashroomPortalPageApps> {
+    private async _getPagePortalApps(req: Request, page: MashroomPortalPage, mashroomSecurityUser: MashroomSecurityUser | undefined | null): Promise<MashroomPortalPageApps> {
         const portalPageApps: MashroomPortalPageApps = {};
         if (page.portalApps) {
             for (const areaId in page.portalApps) {
@@ -609,7 +610,7 @@ export default class PortalPageRenderController {
                         if (portalApp) {
                             const instanceData = await this._getPortalAppInstance(portalApp, instanceId, req);
                             if (instanceData) {
-                                appSetup = await createPortalAppSetup(portalApp, instanceData, null, mashroomSecurityUser, cdnService, this._pluginRegistry, req);
+                                appSetup = await createPortalAppSetup(portalApp, instanceData, null, mashroomSecurityUser, this._pluginRegistry, req);
                             }
                         }
                         if (!appSetup) {

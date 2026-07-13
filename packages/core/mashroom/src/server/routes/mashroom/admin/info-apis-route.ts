@@ -1,4 +1,5 @@
 
+import {htmlUtils} from '@mashroom/mashroom-utils';
 import infoTemplate from './template';
 
 import type {Request, Response} from 'express';
@@ -27,7 +28,7 @@ const apisList = (pluginContext: MashroomPluginContext) => {
             rows.push(`
                 <tr>
                     <td>${a.name}</td>
-                    <td><a href="${a.config.path}" target="_blank">${a.config.path}</a></td>
+                    <td><a href="${a.config.path}" target="_blank">${htmlUtils.escapeHtml(a.config.path)}</a></td>
                 </tr>
             `);
         }

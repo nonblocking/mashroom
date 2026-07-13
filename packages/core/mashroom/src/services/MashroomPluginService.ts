@@ -2,7 +2,7 @@
 import type {
     MashroomPluginService as MashroomPluginServiceType,
     MashroomLogger,
-    MashroomLoggerFactory
+    MashroomLoggerFactory,
 } from '../../type-definitions';
 import type {
     MashroomPluginRegistry,
@@ -12,20 +12,13 @@ type Listeners = {
     [pluginName: string]: Array<() => void>
 }
 
-const privatePropsMap: WeakMap<MashroomPluginService, {
-    readonly pluginRegistry: MashroomPluginRegistry;
-}> = new WeakMap();
-
 export default class MashroomPluginService implements MashroomPluginServiceType {
 
     private readonly _loadedListeners: Listeners;
     private readonly _unloadListeners: Listeners;
     private readonly _logger: MashroomLogger;
 
-    constructor(pluginRegistry: MashroomPluginRegistry, loggerFactory: MashroomLoggerFactory) {
-        privatePropsMap.set(this, {
-            pluginRegistry
-        });
+    constructor(private pluginRegistry: MashroomPluginRegistry, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.plugins.service');
         this._loadedListeners = {};
         this._unloadListeners = {};
@@ -43,7 +36,7 @@ export default class MashroomPluginService implements MashroomPluginServiceType 
                 });
             }
         });
-        pluginRegistry.on('unload', (event) => {
+        pluginRegistry.on('unloaded', (event) => {
             const listeners = this._unloadListeners[event.pluginName];
             delete this._unloadListeners[event.pluginName];
             if (listeners) {
@@ -58,28 +51,24 @@ export default class MashroomPluginService implements MashroomPluginServiceType 
         });
     }
 
-    getPluginLoaders() {
-        const privateProps = privatePropsMap.get(this);
-        if (privateProps) {
-            return privateProps.pluginRegistry.pluginLoaders;
-        }
-        return {};
-    }
-
     getPlugins() {
-        const privateProps = privatePropsMap.get(this);
-        if (privateProps) {
-            return privateProps.pluginRegistry.plugins;
-        }
-        return [];
+        return this.pluginRegistry.plugins;
     }
 
     getPluginPackages() {
-        const privateProps = privatePropsMap.get(this);
-        if (privateProps) {
-            return privateProps.pluginRegistry.pluginPackages;
-        }
-        return [];
+        return this.pluginRegistry.pluginPackages;
+    }
+
+    getPotentialPluginPackages() {
+        return this.pluginRegistry.potentialPluginPackages;
+    }
+
+    getPotentialPluginPackagesByScanner(scannerName: string) {
+        return this.pluginRegistry.potentialPluginPackages.filter((pp) => pp.scannerName === scannerName);
+    }
+
+    getPluginLoaders() {
+        return this.pluginRegistry.pluginLoaders;
     }
 
     onLoadedOnce(pluginName: string, listener: () => void) {

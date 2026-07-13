@@ -3,23 +3,21 @@ import {
     CircularProgress,
     DropdownMenu,
     ErrorMessage,
-    setShowModal
 } from '@mashroom/mashroom-portal-ui-commons';
-import {useDispatch, useSelector} from 'react-redux';
 import { DIALOG_NAME_SITE_CONFIGURE, DIALOG_NAME_SITE_DELETE } from '../constants';
-import {setSelectedSite} from '../store/actions';
+import {setSelectedSite, setShowModal} from '../store/actions';
 import {DependencyContext} from '../DependencyContext';
 
+import useStore from '../store/useStore';
 import type {
     MashroomPortalSiteLinkLocalized
 } from '@mashroom/mashroom-portal/type-definitions';
-import type {State} from '../types';
 
 export default () => {
     const closeDropDownRef = useRef<(() => void) | undefined>(undefined);
     const {dataLoadingService} = useContext(DependencyContext);
-    const {sites} = useSelector((state: State) => state);
-    const dispatch = useDispatch();
+    const sites = useStore((state) => state.sites);
+    const dispatch = useStore((state) => state.dispatch);
     const showModal = (name: string) => dispatch(setShowModal(name, true));
     const initConfigureSite = (siteId: string) => dispatch(setSelectedSite(siteId));
 

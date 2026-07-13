@@ -3,6 +3,7 @@ import type {MashroomServerConfig} from '@mashroom/mashroom-json-schemas/type-de
 const serverConfig: MashroomServerConfig = {
     name: 'Mashroom Test Server 7',
     port: 5050,
+    xPoweredByHeader: null,
     externalPluginConfigFileNames: ['mashroom'],
     pluginPackageFolders: [
         {
@@ -11,6 +12,10 @@ const serverConfig: MashroomServerConfig = {
         },
         {
             path: 'test-plugin1',
+            devMode: true
+        },
+        {
+            path: 'test-plugin2',
             devMode: true
         },
     ],
@@ -27,10 +32,9 @@ const serverConfig: MashroomServerConfig = {
         'Mashroom Session Redis Provider',
         'Mashroom Session Filestore Provider',
         'Mashroom Memory Cache Redis Provider',
-        'Mashroom Portal Remote App Kubernetes Background Job',
-        'Mashroom Portal Remote App Kubernetes Registry',
-        'Mashroom Portal Remote App Kubernetes Admin Webapp',
-        'Mashroom Portal Remote App Kubernetes Admin Webapp Integration',
+        "Mashroom Remote Package Scanner Kubernetes",
+        "Mashroom Remote Package Scanner Kubernetes Admin Webapp",
+        "Mashroom Remote Package Scanner Kubernetes Admin Webapp Integration",
         'Mashroom Monitoring PM2 Exporter',
         'Mashroom Http Proxy Add User Headers Interceptor',
         'Mashroom Http Proxy Add Access Token Interceptor',
@@ -101,7 +105,7 @@ const serverConfig: MashroomServerConfig = {
         },
         'Mashroom Portal WebApp': {
             adminApp: 'Mashroom Portal Admin App',
-            defaultTheme: 'Mashroom Portal Default Theme',
+            defaultTheme: 'Mashroom Portal Bootstrap Theme',
            authenticationExpiration: {
                warnBeforeExpirationSec: 60,
                autoExtend: false,
@@ -117,15 +121,15 @@ const serverConfig: MashroomServerConfig = {
                 cacheTTLSec: 300
             }
         },
-        'Mashroom Portal Default Theme': {
+        'Mashroom Portal Bootstrap Theme': {
             showEnvAndVersions: true,
             spaMode: true
         },
-        'Mashroom Portal Remote App Registry': {
-            remotePortalAppUrls: './remotePortalApps.ts'
+        'Mashroom Remote Package Scanner': {
+            remotePackageUrls: './remotePackageUrls.ts'
         },
-        'Mashroom Portal Remote App Registry Admin Webapp': {
-            showAddRemoteAppForm: true
+        'Mashroom Remote Package Scanner Admin Webapp': {
+            showAddRemotePluginPackageForm: true
         }
     }
 };

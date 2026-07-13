@@ -1,0 +1,102 @@
+$schema: '../dist/open-microfrontends.json'
+openMicrofrontends: 1.0.0
+info:
+  title: OpenMicrofrontends Example
+  description: Example definition of microfrontends for testing
+  version: 1.0.0
+  contact:
+    author: OpenMicrofrontends
+    email: test@test.com
+    organization: OpenMicrofrontends
+servers:
+  - url: http://my-test-server.com
+    description: Test Server
+securitySchemes:
+  ApiKeyAuth:
+    type: apiKey
+    in: header
+    name: X-API-Key
+microfrontends:
+  - name: My First Microfrontend
+    title:
+      en: My First Microfrontend
+      de: Mein erstes Microfrontend
+    description: An example microfrontend that shows all the features of the OpenMicrofrontends schema
+    assets:
+      basePath: /
+      buildManifestPath: /build.yaml
+      js:
+        moduleSystem: ESM
+        initial:
+          - Microfrontend.js
+        importMap:
+          imports:
+            externalModule1: https://ga.jspm.io/npm:externalModule1@1.2.2/index.js
+            externalModule2: https://ga.jspm.io/npm:externalModule2@5.1.8/index.js
+      css:
+        - styles.css
+    rendererFunctionName: startMyFirstMicrofrontend
+    ssr:
+      path: /ssr
+      security:
+        - ApiKeyAuth: []
+    userPermissions:
+      permissions:
+        - name: showDetails
+          description: The authenticated user is permitted to see details
+        - name: deletePermitted
+          description: The authenticated user is permitted to delete items
+      provided:
+        path: /permissions
+        security:
+          - ApiKeyAuth: []
+    apiProxies:
+      proxy1:
+        description: Proxy for the internal BFF API
+        path: /api
+        security:
+          - ApiKeyAuth: []
+      proxy2:
+        description: A proxy for an external API
+        targets:
+          - url: https://localhost:1234/api
+            description: Local
+          - url: http://my-api.my-namespace:1234/api
+            description: Test environment
+    config:
+      schema:
+        type: object
+        properties:
+          customerId:
+            type: string
+        required:
+          - customerId
+        additionalProperties: false
+      default:
+        customerId: '1000'
+    messages:
+      ping:
+        publish: true
+        subscribe: true
+        schema:
+          '$id': https://my-company.com/messages/ping
+          type: object
+          properties:
+            ping:
+              const: true
+          required:
+            - ping
+    annotations:
+      # Mashroom extensions
+      MASHROOM_ROLE_PERMISSIONS:
+        deleteCustomer:
+        - role1
+        - role2
+      MASHROOM_DEFAULT_RESTRICT_VIEW_TO_ROLES:
+      - role3
+      MASHROOM_PROXIES_RESTRICT_TO_ROLES:
+        proxy1:
+        - role4
+        - role5
+      MASHROOM_META_INFO:
+        myCustomProperty: myCustomValue

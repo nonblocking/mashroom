@@ -122,7 +122,7 @@ export default class MashroomBackgroundJobService implements MashroomBackgroundJ
                 return callbackWrapper.lastInvocation;
             },
             get nextInvocation() {
-                return nodeScheduleJob?.nextInvocation();
+                return nodeScheduleJob?.nextInvocation() ?? undefined;
             },
             invokeNow() {
                 if (nodeScheduleJob) {

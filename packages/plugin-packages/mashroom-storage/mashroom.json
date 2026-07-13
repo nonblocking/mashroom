@@ -1,0 +1,27 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Storage Services",
+            "type": "services",
+            "namespace": "storage",
+            "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
+            "defaultConfig": {
+                "provider": "Mashroom Storage Filestore Provider",
+                "memoryCache": {
+                    "enabled": false,
+                    "ttlSec": 120,
+                    "invalidateOnUpdate": true,
+                    "collections": {}
+                }
+            }
+        },
+        {
+            "name": "Mashroom Storage Provider Loader",
+            "type": "plugin-loader",
+            "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-plugin-loader.js",
+            "loads": "storage-provider"
+        }
+    ]
+}

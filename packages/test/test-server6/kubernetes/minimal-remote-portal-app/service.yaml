@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: minimal-remote-portal-app
+    namespace: test1
+    labels:
+        app: minimal-remote-portal-app
+        microfrontends: 'true'
+    annotations:
+        mashroom-server.com/remote-plugins: "true"
+        mashroom-server.com/remote-plugins-definition-path: /test-customer-definition-file.yaml
+spec:
+    selector:
+        app: minimal-remote-portal-app
+    ports:
+        -   port: 8008
+            targetPort: 8008

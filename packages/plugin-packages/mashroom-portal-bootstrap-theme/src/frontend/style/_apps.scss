@@ -1,0 +1,17 @@
+// App overrides
+
+.portal-app-mashroom-portal-tabify-app {
+    background-color: transparent;
+
+    .mashroom-portal-app-loading {
+        // Don't show the loading animation
+        display: none;
+    }
+
+    .mashroom-portal-ui-tab-dialog {
+        .tab-dialog-header {
+            margin: 0 0 16px;
+        }
+    }
+}
+

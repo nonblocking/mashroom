@@ -1,6 +1,0 @@
-{
-    "$schema": "../../core/mashroom-json-schemas/schemas/mashroom-portal-remote-apps.json",
-    "remotePortalApps": [
-        "https://demo-ssr-remote-app.mashroom-server.com"
-    ]
-}

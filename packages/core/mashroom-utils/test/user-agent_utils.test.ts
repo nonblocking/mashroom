@@ -16,7 +16,7 @@ describe('user-agent-utils.determineUserAgent', () => {
                 major: '94',
             },
             os: {
-                name: 'Mac OS',
+                name: 'macOS',
                 version: '10.15.7',
             }
         });

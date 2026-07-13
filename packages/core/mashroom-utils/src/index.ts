@@ -1,5 +1,6 @@
 
 export * as clusterUtils from './cluster-utils';
+export * as configFileUtils from './config-file-utils';
 export * as configUtils from './config-utils';
 export * as fileTypeUtils from './file-type-utils';
 export * as headerUtils from './header-utils';
@@ -8,6 +9,7 @@ export * as ipUtils from './ip-utils';
 export * as loggingUtils from './logging-utils';
 export * as messagingUtils from './messaging-utils';
 export * as modelUtils from './model-utils';
+export * as moduleUtils from './module-utils';
 export * as readonlyUtils from './readonly-utils';
 export * as requestUtils from './request-utils';
 export * as resourceUtils from './resource-utils';

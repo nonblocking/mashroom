@@ -3,27 +3,32 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds a Portal component which allows composing pages from Single Page Applications (SPAs).
+This plugin adds a Portal component which allows composing pages from SPA Microfrontends, we call Portal Apps.
 
-Registered SPAs (Portal Apps) can be placed on arbitrary pages via Drag'n'Drop. Each *instance* receives a **config object** during startup and
-a bunch of **client services**, which for example allow access to the message bus. The config is basically an arbitrary JSON object, which can be edited via Admin Toolbar.
-A Portal App can also bring its own config editor App, which again is just a simple SPA.
+> [!NOTE]
+> The Mashroom Portal supports the type of Microfrontends which is commonly associated with the term, basically some frontend written in SPA technology.
+> Since Mashroom supports different types of Microfrontends, we call them here **Portal Apps**.
 
-One of the provided client services allow Portal Apps to load any *other* App (known by name) into any existing DOM node. This can be used to:
+Registered Microfrontends (Portal Apps) can be placed on arbitrary pages via Drag'n'Drop. Each *instance* receives a **config object** during startup and
+a bunch of **client services**, which, for example, allow access to the message bus. The config is basically an arbitrary JSON object, which can be edited via Admin Toolbar.
+A Portal App can also bring its own config editor App, which again is a Portal App.
+
+One of the provided client services allows Portal Apps to load any *other* Portal App (known by name) into any existing DOM node. This can be used to:
+
  * Create **dynamic cockpits** where Apps are loaded dynamically based on some user input or search result
  * Create **Composite Apps** that consist of other Apps (which again could be used within other Apps again)
 
-The Portal supports **hybrid rendering** for both the Portal pages and SPAs. So, if an SPA supports server side rendering the initial HTML can be incorporated
-into the initial HTML page. Navigating to another page dynamically replaces the SPAs in the content area via client side rendering (needs to be supported by the Theme).
+The Portal supports **hybrid rendering** for both the Portal pages and Portal Apps. So, if the Portal App supports server-side rendering, the initial HTML can be incorporated
+into the HTML page. Navigating to another page dynamically replaces the Portal App in the content area via client side rendering (needs to be supported by the Theme).
 
-The Portal also supports **i18n**, **theming**, **role based security**, a client-side message bus which can be connected to a server-side broker and
+The Portal also supports **i18n**, **theming**, **role-based security**, a client-side message bus which can be connected to a server-side broker and
 a registry for **Portal Apps** on a separate server or container.
 
 ## Usage
 
-Since this plugin requires a lot of other plugins the easiest way to use it is to clone this quickstart repository: [mashroom-portal-quickstart](https://github.com/nonblocking/mashroom-portal-quickstart)
+Since this plugin requires a lot of other plugins, the easiest way to use it is to clone this quickstart repository: [mashroom-portal-quickstart](https://github.com/nonblocking/mashroom-portal-quickstart)
 
-You can find a full documentation of _Mashroom Server_ and this portal plugin with a setup and configuration guide here: [https://www.mashroom-server.com/documentation](https://www.mashroom-server.com/documentation)
+You can find full documentation of _Mashroom Server_ and this portal plugin with a setup and configuration guide here: [https://docs.mashroom-server.com](https://www.mashroom-server.com/documentation)
 
 The plugin allows the following configuration properties:
 
@@ -33,7 +38,7 @@ The plugin allows the following configuration properties:
         "Mashroom Portal WebApp": {
             "path": "/portal",
             "adminApp": "Mashroom Portal Admin App",
-            "defaultTheme": "Mashroom Portal Default Theme",
+            "defaultTheme": "Mashroom Portal Bootstrap Theme",
             "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
             "authenticationExpiration": {
               "warnBeforeExpirationSec": 60,
@@ -68,7 +73,7 @@ The plugin allows the following configuration properties:
 
  * _path_: The portal base path (Default: /portal)
  * _adminApp_: The admin to use (Default: Mashroom Portal Admin App)
- * _defaultTheme_: The default theme if none is selected in the site or page configuration (Default: Mashroom Portal Default Theme)
+ * _defaultTheme_: The default theme if none is selected in the site or page configuration (Default: Mashroom Portal Bootstrap Theme)
  * _defaultLayout_: The default layout if none is selected in the site or page configuration (Default: Mashroom Portal Default Layouts 1 Column)
  * _authenticationExpiration_:
    * _warnBeforeExpirationSec_: The time when the Portal should start to warn that the authentication is about to expire.
@@ -92,11 +97,7 @@ The plugin allows the following configuration properties:
    * _inlineStyles_: Inline the App's CSS to avoid sudden layout shifts after loading the initial HTML (Default: true)
  * _addDemoPages_: Add some demo pages if the configuration storage is empty (Default: true)
 
-## Browser support
-
-The Portal supports only modern Browsers and requires ES6.
-
-## Services
+## Provided Services
 
 ### MashroomPortalService
 
@@ -132,6 +133,11 @@ export interface MashroomPortalService {
     getPortalAppEnhancements(): Readonly<Array<MashroomPortalAppEnhancement>>;
 
     /**
+     * Get all registered portal app config plugins
+     */
+    getPortalAppConfigs(): Readonly<Array<MashroomPortalAppConfig>>;
+
+    /**
      * Get all sites
      */
     getSites(limit?: number): Promise<Array<MashroomPortalSite>>;
@@ -142,7 +148,7 @@ export interface MashroomPortalService {
     getSite(siteId: string): Promise<MashroomPortalSite | null | undefined>;
 
     /**
-     * Find the site with given path
+     * Find the site with the given path
      */
     findSiteByPath(path: string): Promise<MashroomPortalSite | null | undefined>;
 
@@ -167,7 +173,7 @@ export interface MashroomPortalService {
     getPage(pageId: string): Promise<MashroomPortalPage | null | undefined>;
 
     /**
-     * Find the page ref within a site with given friendly URL
+     * Find the page ref within a site with a given friendly URL
      */
     findPageRefByFriendlyUrl(site: MashroomPortalSite, friendlyUrl: string): Promise<MashroomPortalPageRef | null | undefined>;
 
@@ -177,7 +183,7 @@ export interface MashroomPortalService {
     findPageRefByPageId(site: MashroomPortalSite, pageId: string): Promise<MashroomPortalPageRef | null | undefined>;
 
     /**
-     * Insert new page
+     * Insert a new page
      */
     insertPage(page: MashroomPortalPage): Promise<void>;
 
@@ -187,12 +193,12 @@ export interface MashroomPortalService {
     updatePage(page: MashroomPortalPage): Promise<void>;
 
     /**
-     * Insert new page
+     * Insert a new page
      */
     deletePage(req: Request, pageId: string): Promise<void>;
 
     /**
-     * GetPortal App instance
+     * Get a Portal App instance
      */
     getPortalAppInstance(pluginName: string, instanceId: string | null | undefined): Promise<MashroomPortalAppInstance | null | undefined>;
 
@@ -213,7 +219,7 @@ export interface MashroomPortalService {
 }
 ```
 
-## Plugin Types
+## Provided Plugin Types
 
 ### portal-app
 
@@ -221,35 +227,33 @@ export interface MashroomPortalService {
 
 ### portal-app2
 
-This plugin type makes a Single Page Application (SPA) available in the Portal.
+This plugin type makes a Microfrontend (Portal App) available in the Portal.
 
-To register a new portal-app plugin add this to _package.json_:
+To register a new portal-app plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-    "mashroom": {
-        "plugins": [
-            {
-                "name": "My Single Page App",
-                "type": "portal-app2",
-                "clientBootstrap": "startMyApp",
-                "resources": {
-                    "js": [
-                        "bundle.js"
-                    ]
-                },
-                "local": {
-                    "resourcesRoot": "./dist",
-                    "ssrBootstrap": "./dist/renderToString.js"
-                },
-                "defaultConfig": {
-                    "appConfig": {
-                        "myProperty": "foo"
-                    }
+    "plugins": [
+        {
+            "name": "My First Microfrontend",
+            "type": "portal-app2",
+            "clientBootstrap": "startMyMicrofrontend",
+            "resources": {
+                "js": [
+                    "bundle.js"
+                ]
+            },
+            "local": {
+                "resourcesRoot": "./dist",
+                "ssrBootstrap": "./dist/renderToString.js"
+            },
+            "defaultConfig": {
+                "appConfig": {
+                    "myProperty": "foo"
                 }
             }
-        ]
-    }
+        }
+    ]
 }
 ```
 
@@ -260,9 +264,9 @@ A full config with all optional properties would look like this:
     "mashroom": {
         "plugins": [
             {
-                "name": "My Single Page App",
+                "name": "My First Microfrontend",
                 "type": "portal-app2",
-                "clientBootstrap": "startMyApp",
+                "clientBootstrap": "startMyMicrofrontend",
                 "resources": {
                     "js": [
                         "bundle.js"
@@ -328,11 +332,11 @@ A full config with all optional properties would look like this:
 ```
 
  * _clientBootstrap_: The global function exposed on the client side to launch the App (see below for an example)
- * _resources_: Javascript and CSS resources that must be loaded before the bootstrap method is invoked. All resource paths are relative to *resourcesRoot*.
+ * _resources_: JavaScript and CSS resources that must be loaded before the bootstrap method is invoked. All resource paths are relative to *resourcesRoot*.
  * _sharedResources_: Optional. Same as _resources_ but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it.
     This is useful if apps want to share vendor libraries or styles or such.
     Here you can find a demo how to use the *Webpack* *DllPlugin* together with this feature: [Mashroom Demo Shared DLL](https://github.com/nonblocking/mashroom-demo-shared-dll)
- * _screenshots_: Optional some screenshots of the App. The screenshots paths are relative to *resourcesRoot*.
+ * _screenshots_: Optional some screenshots of the App. The screenshot paths are relative to *resourcesRoot*.
  * _local_: Basic configuration if the App is deployed locally
    * _resourcesRoot_: The root path for APP resources such as JavaScript files and images. Needs to be relative within the package
    * _ssrBootstrap_: An optional local SSR bootstrap that returns an initial HTML for the App, relative within the package (see below for an example)
@@ -341,7 +345,7 @@ A full config with all optional properties would look like this:
    * _ssrInitialHtmlPath_: The optional path to a route that renders the initial HTML.
      The Portal will send a POST to this route with a JSON body of type *MashroomPortalAppSSRRemoteRequest*
      and expects a plain *text/html* response or an *application/json* response that satisfies *MashroomPortalAppSSRResult*.
- * _defaultConfig_: The default config that can be overwritten in the Mashroom config file
+ * _defaultConfig_: The default config that can be overwritten in the server config file
     * _title_: Optional human-readable title of the App. Can be a string or an object with translations.
     * _category_: An optional category to group the Apps in the Admin App
     * _tags_: An optional list of tags that can also be used in the search (in the Admin App)
@@ -368,29 +372,31 @@ A full config with all optional properties would look like this:
 
 The _clientBootstrap_ is in this case a global function that starts the App within the given host element. Here for example a React app:
 
-```ts
+```tsx
 import React from 'react';
-import {render, hydrate, unmountComponentAtNode} from 'react-dom';
+import {createRoot, hydrateRoot, type Root} from 'react-dom/client';
 import App from './App';
 
 import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = (element, portalAppSetup, clientServices) => {
-    const {appConfig, restProxyPaths, lang} = portalAppSetup;
+    const {serverSideRendered, appConfig, restProxyPaths, lang} = portalAppSetup;
     const {messageBus} = clientServices;
 
-    // Check if the Apps has been rendered in the server-side, if this is a Hybrid App and a ssrBootstrap is configured
-    //const ssrHost = element.querySelector('[data-ssr-host="true"]');
-    //if (ssrHost) {
-    //    hydrate(<App appConfig={appConfig} messageBus={messageBus}/>, ssrHost);
+    let root: Root;
+
+    //if (serverSideRendered) {
+    //   root = hydrateRoot(element, <App appConfig={appConfig} messageBus={messageBus}/>);
     //} else {
         // CSR
-        render(<App appConfig={appConfig} messageBus={messageBus}/>, element);
+        root = createRoot(element);
+        root.render(<App appConfig={appConfig} messageBus={messageBus}/>);
+
     //}
 
     return {
         willBeRemoved: () => {
-            unmountComponentAtNode(portalAppHostElement);
+            root.unmount();
         },
         updateAppConfig: (appConfig) => {
             // Implement if dynamic app config should be possible
@@ -398,12 +404,12 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (element, portalAppS
     };
 };
 
-global.startMyApp = bootstrap;
+global.startMyMicrofrontend = bootstrap;
 ```
 
 And for an Angular app:
 
-```ts
+```tsx
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 import {AppModule} from './app/app.module';
@@ -426,12 +432,12 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (hostElement, portal
     );
 };
 
-global.startAngularDemoApp = bootstrap;
+global.startMyMicrofrontend = bootstrap;
 ```
 
-In case of a Hybrid App which supports Server Side Rendering (SSR) the server side bootstrap would look like this:
+In the case of a Hybrid App which supports Server Side Rendering (SSR) the server side bootstrap would look like this:
 
-```ts
+```tsx
 import React from 'react';
 import {renderToString} from 'react-dom/server';
 import App from './App';
@@ -463,7 +469,7 @@ export type MashroomPortalAppSetup = {
     readonly appId: string;
     readonly title: string | null | undefined;
     readonly proxyPaths: MashroomPortalProxyPaths;
-    // Legacy, will be removed in Mashroom v3
+    // Legacy, will be removed
     readonly restProxyPaths: MashroomPortalProxyPaths;
     readonly resourcesBasePath: string;
     readonly globalLaunchFunction: string;
@@ -512,7 +518,7 @@ _MashroomPortalMessageBus_
 ```ts
 export interface MashroomPortalMessageBus {
     /**
-     * Subscribe to given topic.
+     * Subscribe to a given topic.
      * Topics starting with getRemotePrefix() will be subscribed server side via WebSocket (if available).
      * Remote topics can also contain wildcards: # for multiple levels and + or * for a single level
      * (e.g. remote:/foo/+/bar)
@@ -520,19 +526,19 @@ export interface MashroomPortalMessageBus {
     subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
 
     /**
-     * Subscribe once to given topic. The handler will be removed after the first message has been received.
+     * Subscribe once to the given topic. The handler will be removed after the first message has been received.
      * Remote topics are accepted.
      */
     subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
 
     /**
-     * Unsubscribe from given topic.
+     * Unsubscribe from the given topic.
      * Remote topics are accepted.
      */
     unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
 
     /**
-     * Publish to given topic.
+     * Publish to the given topic.
      * Remote topics are accepted.
      */
     publish(topic: string, data: any): Promise<void>;
@@ -551,7 +557,7 @@ export interface MashroomPortalMessageBus {
     /**
      * Register a message interceptor.
      * An interceptor can be useful for debugging or to manipulate the messages.
-     * It can change the data of an event by return a different value or block messages
+     * It can change the data of an event by returning a different value or block messages
      * by calling cancelMessage() from the interceptor arguments.
      */
     registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor): void;
@@ -568,23 +574,23 @@ _MashroomPortalStateService_
 ```ts
 export interface MashroomPortalStateService {
     /**
-     * Get a property from state.
+     * Get a property from the state.
      * It will be looked up in the URL (query param or encoded) and in the local and session storage
      */
     getStateProperty(key: string): any | null | undefined;
 
     /**
-     * Add given key value pair into the URL (encoded)
+     * Add the given key value pair into the URL (encoded)
      */
     setUrlStateProperty(key: string, value: any | null | undefined): void;
 
     /**
-     * Add given key value pair to the session storage
+     * Add the given key value pair to the session storage
      */
     setSessionStateProperty(key: string, value: any): void;
 
     /**
-     * Add given key value pair to the local storage
+     * Add the given key value pair to the local storage
      */
     setLocalStoreStateProperty(key: string, value: any): void;
 }
@@ -605,24 +611,24 @@ export interface MashroomPortalAppService {
     searchApps(filter?: AppSearchFilter): Promise<Array<MashroomKnownPortalApp>>;
 
     /**
-     * Load a Portal App into given host element at given position (or at the end if position is not set)
+     * Load a Portal App into a given host element at a given position (or at the end if the position is not set)
      *
-     * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
+     * The returned promise will always be resolved! If there was a loading error, the MashroomPortalLoadedPortalApp.error property will be true.
      */
     loadApp(appAreaId: string, pluginName: string, instanceId: string | null | undefined, position?: number | null | undefined, overrideAppConfig?: any | null | undefined): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
      * Load a Portal App into a modal overlay.
      *
-     * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
+     * The returned promise will always be resolved! If there was a loading error, the MashroomPortalLoadedPortalApp.error property will be true.
      */
     loadAppModal(pluginName: string, title?: string | null | undefined, overrideAppConfig?: any | null | undefined, onClose?: ModalAppCloseCallback | null | undefined): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
-     * Reload given Portal App.
+     * Reload the given Portal App.
      *
-     * The returned promise will always resolve!
-     * If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
+     * The returned promise will always be resolved!
+     * If there was a loading error, the MashroomPortalLoadedPortalApp.error property will be true.
      */
     reloadApp(id: string, overrideAppConfig?: any | null | undefined): Promise<MashroomPortalLoadedPortalApp>;
 
@@ -635,6 +641,14 @@ export interface MashroomPortalAppService {
      * Move a loaded App to another area (to another host element within the DOM)
      */
     moveApp(id: string, newAppAreaId: string, newPosition?: number): void;
+
+    /**
+     * Loads the Portal App without starting it and returns a reference to the client bootstrap.
+     *
+     * ONLY use this if you exactly know what you are doing!
+     * If you start the Portal App, you have to take care of calling the lifecycle methods yourself.
+     */
+    loadAppClientBootstrap(pluginName: string): Promise<ClientBootstrapReference>;
 
     /**
      * Show the name and version for all currently loaded App in an overlay (for debug purposes)
@@ -657,7 +671,7 @@ export interface MashroomPortalAppService {
     unregisterAppLoadedListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
-     * Add a listener for unload events (fired before an App will be detached from the page)
+     * Add a listener for unloaded events (fired before an App will be detached from the page)
      */
     registerAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
 
@@ -667,7 +681,18 @@ export interface MashroomPortalAppService {
     unregisterAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
-     * Load the setup for given App/plugin name on the current page
+     * Register a bootstrap adapter.
+     * This can be used to start Apps with non-compliant client bootstraps.
+     */
+    registerClientBootstrapAdapter(adapter: MashroomPortalAppClientBootstrapAdapter): void;
+
+    /**
+     * Unregister a bootstrap adapter.
+     */
+    unregisterClientBootstrapAdapter(adapter: MashroomPortalAppClientBootstrapAdapter): void;
+
+    /**
+     * Load the setup for a given App / plugin name on the current page
      */
     loadAppSetup(pluginName: string, instanceId: string | null | undefined): Promise<MashroomPortalAppSetup>;
 
@@ -685,7 +710,7 @@ export interface MashroomPortalAppService {
     checkLoadedPortalAppsUpdated(): Promise<Array<string>>;
 
     /**
-     * Prefetch resources of given App/plugin. This is useful if you know which apps you will have to load
+     * Prefetch resources of a given App / plugin. This is useful if you know which apps you will have to load
      * in the future and want to minimize the loading time.
      */
     prefetchResources(pluginName: string): Promise<void>;
@@ -741,7 +766,6 @@ export interface MashroomPortalUserService {
      */
     getDefaultLanguage(): Promise<string>;
 }
-
 ```
 
 _MashroomPortalSiteService_
@@ -751,17 +775,17 @@ export interface MashroomPortalSiteService {
     /**
      * Get the base url for the current site
      */
-        getCurrentSiteUrl(): string;
+    getCurrentSiteUrl(): string;
 
     /**
      * Get a list with all sites
      */
-        getSites(): Promise<Array<MashroomPortalSiteLinkLocalized>>;
+    getSites(): Promise<Array<MashroomPortalSiteLinkLocalized>>;
 
     /**
-     * Get the page tree for given site
+     * Get the page tree for a given site
      */
-        getPageTree(siteId: string): Promise<Array<MashroomPortalPageRefLocalized>>;
+    getPageTree(siteId: string): Promise<Array<MashroomPortalPageRefLocalized>>;
 }
 ```
 
@@ -774,7 +798,7 @@ export interface MashroomPortalPageService {
      */
     getCurrentPageId(): string;
     /**
-     * Get the page friendlyUrl from given URL (e.g. /portal/web/test?x=1 -> /test)
+     * Get the page friendlyUrl from the given URL (e.g., /portal/web/test?x=1 -> /test)
      */
     getPageFriendlyUrl(pageUrl: string): string;
     /**
@@ -782,9 +806,9 @@ export interface MashroomPortalPageService {
      */
     getPageId(pageUrl: string): Promise<string | undefined>;
     /**
-     * Get the content for given pageId.
+     * Get the content for the given pageId.
      * It also calculates if the correct theme and all necessary page enhancements for the requested page
-     * are already loaded. Otherwise fullPageLoadRequired is going to be true and no content returned.
+     * are already loaded. Otherwise, fullPageLoadRequired is going to be true and no content returned.
      */
     getPageContent(pageId: string): Promise<MashroomPortalPageContent>;
 }
@@ -831,7 +855,7 @@ export interface MashroomPortalAdminService {
     getExistingRoles(): Promise<Array<RoleDefinition>>;
 
     /**
-     * Get all app instances on current page
+     * Get all app instances on the current page
      */
     getAppInstances(): Promise<Array<MashroomPagePortalAppInstance>>;
 
@@ -871,7 +895,7 @@ export interface MashroomPortalAdminService {
     getPage(pageId: string): Promise<MashroomPortalPage>;
 
     /**
-     * Add new page
+     * Add a new page
      */
     addPage(page: MashroomPortalPage): Promise<MashroomPortalPage>;
 
@@ -906,7 +930,7 @@ export interface MashroomPortalAdminService {
     getSite(siteId: string): Promise<MashroomPortalSite>;
 
     /**
-     * Add new site
+     * Add a new site
      */
     addSite(site: MashroomPortalSite): Promise<MashroomPortalSite>;
 
@@ -934,33 +958,31 @@ export interface MashroomPortalAdminService {
 
 ### portal-theme
 
-This plugin types adds a theme to the Portal.
+This plugin type adds a theme to the Portal.
 
-To register a new portal-theme plugin add this to _package.json_:
+To register a new portal-theme plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-     "mashroom": {
-        "plugins": [
-           {
-                "name": "My Theme",
-                "type": "portal-theme",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "resourcesRoot": "./dist",
-                "views": "./views",
-                "defaultConfig": {
-                    "param1": true
-                 }
+    "plugins": [
+        {
+            "name": "My Theme",
+            "type": "portal-theme",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "resourcesRoot": "./dist",
+            "views": "./views",
+            "defaultConfig": {
+                "param1": true
             }
-        ]
-     }
+        }
+    ]
 }
 ```
 
  * _resourcesRoot_: Folder that contains assets (can be accessed in the theme via *resourcesBasePath*)
  * _views_: The folder with the views. There must exist a view **portal** which renders a portal page
 
-Since *Mashroom Portal* uses the *Express* render mechanism all Template Engines supported by *Express* can be used to define the template.
+Since *Mashroom Portal* uses the *Express* render mechanism, all Template Engines supported by *Express* can be used to define the template.
 The bootstrap returns the template engine and the engine name like so:
 
 ```ts
@@ -984,12 +1006,11 @@ export default bootstrap;
 
 ```
 
-<span class="panel-info">
-**NOTE**: Even if Express.js could automatically load the template engine (like for Pug) you have to provide the *engineFactory* here, otherwise plugin local
-modules can not be loaded. In that case define the engineFactory like this:
-<br/>
-*engineFactory: () => require('pug').__express*
-</span>
+> [!NOTE]
+> Even if Express.js could automatically load the template engine (like for Pug) you have to provide the *engineFactory* here;
+> otherwise plugin local modules cannot be loaded. In that case define the engineFactory like this:
+>
+> *engineFactory: () => require('pug').__express*
 
 The theme can contain the following views:
 
@@ -1071,7 +1092,7 @@ A typical *portal* view with *Handlebars* might look like this:
 
 The _pageContent_ variable contains the actual content with the Portal layout (see below) and the Apps.
 
-Here all available variables:
+Here are all available variables:
 
 ```ts
 export type MashroomPortalPageRenderModel = {
@@ -1099,26 +1120,24 @@ export type MashroomPortalPageRenderModel = {
 
 ### portal-layouts
 
-This plugin type adds portal layouts to the portal. A layout defines a areas where portal-apps can be placed.
+This plugin type adds portal layouts to the portal. A layout defines areas where portal-apps can be placed.
 
-To register a new portal-layouts plugin add this to _package.json_:
+To register a new portal-layouts plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-     "mashroom": {
-        "plugins": [
-           {
-                "name": "My Layouts",
-                "type": "portal-layouts",
-                "layouts": {
-                    "1 Column": "./layouts/1column.html",
-                    "2 Columns": "./layouts/2columns.html",
-                    "2 Columns 70/30": "./layouts/2columns_70_30.html",
-                    "2 Columns with 1 Column Header": "./layouts/2columnsWith1columnHeader.html"
-                }
+    "plugins": [
+        {
+            "name": "My Layouts",
+            "type": "portal-layouts",
+            "layouts": {
+                "1 Column": "./layouts/1column.html",
+                "2 Columns": "./layouts/2columns.html",
+                "2 Columns 70/30": "./layouts/2columns_70_30.html",
+                "2 Columns with 1 Column Header": "./layouts/2columnsWith1columnHeader.html"
             }
-        ]
-     }
+        }
+    ]
 }
 ```
  * _layouts_: A map with the layout html files (on the local file system)
@@ -1138,99 +1157,47 @@ A layout looks like this:
 
 Important is the class **mashroom-portal-app-area** and a unique id element.
 
-### portal-app-registry
-
-This plugin type adds a registry for portal-apps to the Portal. Can be used to integrate Portal Apps in some customized way.
-
-To register a new portal-app-registry plugin add this to _package.json_:
-
-```json
-{
-     "mashroom": {
-        "plugins": [
-           {
-                "name": "My Custom App Registry",
-                "type": "portal-app-registry",
-                "bootstrap": "./dist/registry/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "priority": 100
-                }
-            }
-        ]
-     }
-}
-```
-
- * _defaultConfig.priority_: Priority of this registry if a portal-app with the same name is registered multiple times (Default: 1)
-
-And the bootstrap must return an implementation of _MashroomPortalAppRegistry_:
-
- ```ts
-import {MyRegistry} from './MyRegistry';
-
-import type {MashroomPortalAppRegistryBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
-
-const bootstrap: MashroomPortalAppRegistryBootstrapFunction = async (pluginName, pluginConfig, pluginContext) => {
-    return new MyRegistry();
-};
-
-export default bootstrap;
-
- ```
-
-The plugin must implement the following interface:
-
-```ts
-export interface MashroomPortalAppRegistry {
-    readonly portalApps: Readonly<Array<MashroomPortalApp>>;
-}
-```
-
-h3.
-
 ### portal-page-enhancement
 
 This plugin type allows it to add extra resources (JavaScript and CSS) to a Portal page based on some (optional) rules.
 This can be used to add polyfills or some analytics stuff without the need to change a theme.
 
-To register a new portal-page-enhancement plugin add this to _package.json_:
+To register a new portal-page-enhancement plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-     "mashroom": {
-        "plugins": [
-           {
-                "name": "My Portal Page Enhancement",
-                "type": "portal-page-enhancement",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-               "resourcesRoot": "./dist/public",
-                "pageResources": {
-                    "js": [{
-                        "path": "my-extra-scripts.js",
-                        "rule": "includeExtraScript",
-                        "location": "header",
-                        "inline": false
-                    }, {
-                        "dynamicResource": "myScript",
-                        "location": "header"
-                    }],
-                    "css": []
-                },
-                "defaultConfig": {
-                    "order": 100
-                }
+    "plugins": [
+        {
+            "name": "My Portal Page Enhancement",
+            "type": "portal-page-enhancement",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "resourcesRoot": "./dist/public",
+            "pageResources": {
+                "js": [{
+                    "path": "my-extra-scripts.js",
+                    "rule": "includeExtraScript",
+                    "location": "header",
+                    "inline": false
+                }, {
+                    "dynamicResource": "myScript",
+                    "location": "header"
+                }],
+                "css": []
+            },
+            "defaultConfig": {
+                "order": 100
             }
-        ]
-     }
+        }
+    ]
 }
 ```
 
  * _bootstrap_: Path to the script that contains the bootstrap for the plugin (optional)
  * _resourcesRoot_: The root for all resources (can be a local path or an HTTP url)
- * _pageResources_: A list of JavaScript and CSS resourced that should be added to all portal pages.
-   They can be static or dynamically generated. And they can be added to the header or footer (location)
+ * _pageResources_: A list of JavaScript and CSS resources that should be added to all portal pages.
+   They can be statically or dynamically generated. And they can be added to the header or footer (location)
    and also be inlined. The (optional) rule property refers to a rule in the instantiated plugin (bootstrap), see below.
- * _defaultConfig.order_: The weight of the resources - the higher it is the **later** they will be added to the page (Default: 1000)
+ * _defaultConfig.order_: The order of the resources - the higher it is, the **later** they will be added to the page (Default: 1000)
 
 The bootstrap returns a map of rules and could look like this:
 
@@ -1252,7 +1219,7 @@ const bootstrap: MashroomPortalPageEnhancementPluginBootstrapFunction = () => {
 export default bootstrap;
 ```
 
-The JavaScript or CSS resource can also be generated dynamically by the plugin. In that case it will always be inlined.
+The plugin can also generate the JavaScript or CSS resource dynamically. In that case it will always be inlined.
 To use this state a _dynamicResource_ name instead of a _path_ and include the function that actually generates
 the content to the object returned by the bootstrap:
 
@@ -1295,28 +1262,26 @@ export default bootstrap;
 
 This plugin type allows it to update or rewrite the _portalAppSetup_ that is passed to Portal Apps at startup.
 This can be used to add extra config or user properties from a context.
-Additionally, this plugin allows it to pass extra _clientServices_ to Portal Apps or replace one of the default ones.
+Additionally, this plugin allows it passing extra _clientServices_ to Portal Apps or replace one of the default ones.
 
-To register a new portal-app-enhancement plugin add this to _package.json_:
+To register a new portal-app-enhancement plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-     "mashroom": {
-        "plugins": [
-           {
-              "name": "My Portal App Enhancement",
-              "type": "portal-app-enhancement",
-              "bootstrap": "./dist/mashroom-bootstrap.js",
-              "portalCustomClientServices": {
-                  "customService": "MY_CUSTOM_SERVICE"
-              }
-           }
-        ]
-     }
+    "plugins": [
+        {
+            "name": "My Portal App Enhancement",
+            "type": "portal-app-enhancement",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "portalCustomClientServices": {
+                "customService": "MY_CUSTOM_SERVICE"
+            }
+        }
+    ]
 }
 ```
 
- * _bootstrap_: Path to the script that contains the bootstrap for the plugin (could be omitted, if portalCustomClientServices is used)
+ * _bootstrap_: Path to the script that contains the bootstrap for the plugin (could be omitted if portalCustomClientServices is used)
  * _portalCustomClientServices_: A map of client services that should be injected in the _clientServices_ object the
   Portal Apps receive. The value (in this example MY_CUSTOM_SERVICE) needs to be an existing global variable on the page (in _window_).
 
@@ -1341,5 +1306,77 @@ export interface MashroomPortalAppEnhancementPlugin {
      * Enhance the portalAppSetup object passed as the first argument (if necessary)
      */
     enhancePortalAppSetup: (portalAppSetup: MashroomPortalAppSetup, portalApp: MashroomPortalApp, request: Request) => Promise<MashroomPortalAppSetup>;
+}
+```
+
+### portal-app-config
+
+This plugin type allows it to adapt the Portal App configuration in particular how the communication with its backends.
+
+To register a new portal-app-config plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
+
+```json
+{
+    "plugins": [
+        {
+            "name": "My Portal App Config",
+            "type": "portal-app-config",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+            }
+        }
+    ]
+}
+```
+
+* _bootstrap_: Path to the script that contains the bootstrap for the plugin
+* _defaultConfig.order_: The order of the plugin - the higher it is the less likely it will be considered (Default: 1000)
+
+The bootstrap returns the actual config plugin:
+
+```ts
+import type {MashroomPortalAppConfigPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+
+const bootstrap: MashroomPortalAppConfigPluginBootstrapFunction = () => {
+    return new MyPortalAppConfigPlugin();
+};
+
+export default bootstrap;
+```
+
+The plugin has to implement the following interface:
+
+```ts
+export interface MashroomPortalAppConfigPlugin {
+    /**
+     * Return true if the config should be applied to the given Portal App
+     */
+    applyTo(portalAppName: string): boolean;
+    /**
+     * Overwrite the targetUrl for a given proxyId.
+     * Returning undefined keeps the original.
+     */
+    overwriteProxyTargetUrl?(portalApp: MashroomPortalApp, proxyId: string, request: Request): string | undefined;
+
+    /**
+     * Add (security) headers to outgoing proxy requests.
+     */
+    addProxyRequestHeaders?(portalApp: MashroomPortalApp, proxyId: string, request: Request): Record<string, string> | undefined;
+
+    /**
+     * Add (security) headers to SSR route requests.
+     */
+    addSSRRouteRequestHeaders?(portalApp: MashroomPortalApp, request: Request): Record<string, string>;
+
+    /**
+     * Determine the actual rolePermissions for the Portal App.
+     */
+    determineRolePermissions?(portalApp: MashroomPortalApp, user: MashroomSecurityUser  | null, request: Request): Promise<Record<string, boolean> | undefined>;
+
+    /**
+     * Rewrite Portal App import map.
+     * This can be used to make sure all Portal Apps use the same vendor library or change the location of vendor libraries.
+     */
+    rewriteImportMap?(portalApp: MashroomPortalApp, request: Request): MashroomPortalAppResources['importMap'];
 }
 ```

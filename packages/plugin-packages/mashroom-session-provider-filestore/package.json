@@ -9,35 +9,21 @@
     "license": "MIT",
     "version": "2.9.4",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
-        "express": "^4.19.2",
         "session-file-store": "^1.5.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
         "@mashroom/mashroom-session": "2.9.4",
-        "@types/express": "^4.17.21",
-        "@types/express-session": "^1.18.1",
-        "@types/session-file-store": "^1.2.5"
+        "@types/express-session": "^1.18.2",
+        "@types/session-file-store": "^1.2.6"
     },
     "scripts": {
         "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Session Filestore Provider",
-                "type": "session-store-provider",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "path": "./data/sessions"
-                }
-            }
-        ]
     }
 }

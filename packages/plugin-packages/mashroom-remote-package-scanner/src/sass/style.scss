@@ -1,0 +1,155 @@
+
+$COLOR_PRIMARY: #4D487F;
+$COLOR_PRIMARY_LIGHT: #706aab;
+$COLOR_PRIMARY_DARK: #3a365f;
+$COLOR_ERROR: red;
+
+$FONT_DEFAULT: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+@mixin hover-animation() {
+    transition: color 500ms ease-out, background-color 500ms ease-out;
+}
+
+body {
+    text-rendering: optimizeLegibility;
+    font-size: 16px;
+    line-height: 1.5;
+    font-family: $FONT_DEFAULT;
+    min-height: 800px;
+    margin: 16px;
+}
+
+h2 {
+    font-size: 1.2em;
+    font-weight: normal;
+}
+
+h3 {
+    font-size: 1em;
+}
+
+a, a:visited, a:focus {
+    color: $COLOR_PRIMARY;
+    text-decoration: none;
+    @include hover-animation();
+
+    &:hover {
+        color: $COLOR_PRIMARY_DARK;
+    }
+
+    &:active {
+        color: $COLOR_PRIMARY_DARK;
+    }
+}
+
+button, input[type="submit"] {
+    background-color: $COLOR_PRIMARY;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none !important;
+    font-size: 1em;
+    @include hover-animation();
+
+    &:hover {
+        background-color: $COLOR_PRIMARY_DARK;
+    }
+
+    &:active {
+        background-color: $COLOR_PRIMARY_DARK;
+    }
+}
+
+input[type="text"], input[type="number"], input[type="password"], input[type="tel"], input[type="search"] {
+    padding: 8px 12px;
+    border: 1px solid #AAA;
+    font-size: 1em;
+    width: 100%;
+
+    &:focus {
+        outline: 1px solid #AAA;
+    }
+
+    &:invalid {
+        border: 1px solid $COLOR_ERROR;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        color: gray !important;
+    }
+}
+
+label {
+    margin: 0;
+}
+
+table, th, td {
+    border: none;
+}
+
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+tr:nth-child(even) {
+    background-color: #E2E2E2;
+}
+
+th {
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+    white-space: nowrap;
+    font-weight: 700;
+}
+
+td {
+    padding: 8px 10px;
+    vertical-align: top;
+}
+
+.add-endpoint-form {
+
+    .form-row {
+        padding: 5px 10px;
+        display: flex;
+
+        .form-label {
+            align-self: center;
+            padding-right: 10px;
+        }
+
+        .form-input {
+            min-width: 400px;
+        }
+    }
+
+    .form-actions {
+       padding-top: 10px;
+    }
+
+    .error-message {
+        padding: 10px;
+        color: $COLOR_ERROR;
+    }
+}
+
+.endpoints {
+    .row-error {
+        background-color: #FFDDDD;
+    }
+
+    .error {
+        color: $COLOR_ERROR;
+    }
+
+    .pending, .processing {
+        color: orange;
+    }
+
+}

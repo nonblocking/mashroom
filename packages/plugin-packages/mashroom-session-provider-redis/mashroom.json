@@ -1,0 +1,26 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Session Redis Provider",
+            "type": "session-store-provider",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "client": {
+                    "redisOptions": {
+                        "host": "localhost",
+                        "port": "6379",
+                        "maxRetriesPerRequest": 3,
+                        "enableOfflineQueue": false
+                    },
+                    "cluster": false,
+                    "clusterNodes": null,
+                    "clusterOptions": null
+                },
+                "prefix": "mashroom:sess:",
+                "ttl": 86400
+            }
+        }
+    ]
+}

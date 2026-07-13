@@ -27,10 +27,6 @@ export interface MashroomServerConfig {
    */
   tlsOptions?: {} | null;
   /**
-   * Enable HTTP/2 for the HTTPS server. If you enable this WebSockets will no longer work (Default: false)
-   */
-  enableHttp2?: boolean;
-  /**
    * Configure if reverse proxies should be trusted (e.g., with secure cookies). See https://expressjs.com/en/guide/behind-proxies.html for details (Default: 1)
    */
   trustProxy?: boolean | number | string;
@@ -39,9 +35,9 @@ export interface MashroomServerConfig {
    */
   indexPage?: string;
   /**
-   * The x-powered-by to send; null disables the header
+   * The X-Powered-By header to send; null disables the header
    */
-  xPowerByHeader?: string;
+  xPoweredByHeader?: string | null;
   /**
    * The tmp folder for plugin builds and so on
    */
@@ -403,7 +399,7 @@ export interface Plugins {
      */
     adminApp?: string | null;
     /**
-     * The default theme if none is selected in the site or page configuration (Default: Mashroom Portal Default Theme)
+     * The default theme if none is selected in the site or page configuration (Default: Mashroom Portal Bootstrap Theme)
      */
     defaultTheme?: string;
     /**
@@ -513,9 +509,9 @@ export interface Plugins {
      */
     addDemoPages?: boolean;
   };
-  "Mashroom Portal Default Theme"?: {
+  "Mashroom Portal Bootstrap Theme"?: {
     /**
-     * The theme will try to operate like an SPA and loads new page content via AJAX and replaces the DOM (Default: true)
+     * The theme will try to operate like an SPA and loads new page content via fetch and replaces the DOM (Default: true)
      */
     spaMode?: boolean;
     /**
@@ -523,7 +519,7 @@ export interface Plugins {
      */
     darkMode?: boolean | string;
     /**
-     * Custom CSS that can be used to overwrite CSS variables and to customize the theme (relative to Mashroom config file, default: null)
+     * Custom CSS that can be used to overwrite CSS variables and to customize the theme (relative to the server config file, default: null)
      */
     styleFile?: string;
     /**
@@ -539,77 +535,71 @@ export interface Plugins {
      */
     showEnvAndVersions?: boolean;
   };
-  "Mashroom Portal Remote App Background Job"?: {
+  "Mashroom Portal Tailwind Theme"?: {
     /**
-     * The cron schedule for the background job that scans for new apps (Default: every minute)
+     * The theme will try to operate like an SPA and loads new page content via fetch and replaces the DOM (Default: true)
+     */
+    spaMode?: boolean;
+    /**
+     * Possible values: true, false, "auto" (Default: "auto",)
+     */
+    darkMode?: boolean | string;
+    /**
+     * Custom CSS that can be used to overwrite CSS variables and to customize the theme (relative to the server config file, default: null)
+     */
+    styleFile?: string;
+    /**
+     * Optional logo image URL (Default: null)
+     */
+    logoImageUrl?: string;
+    /**
+     * Show or hide Portal App headers (Default: true)
+     */
+    showPortalAppHeaders?: boolean;
+    /**
+     * Show the environment (NODE_ENV) and version information in the header (Default: false)
+     */
+    showEnvAndVersions?: boolean;
+  };
+  "Mashroom Remote Package Scanner"?: {
+    /**
+     * Location of the config file with the remote URLs, relative to the server config (Default: ./remotePackageUrls.json)
+     */
+    remotePackageUrls?: string;
+  };
+  "Mashroom Remote Package Scanner Background Job"?: {
+    /**
+     * The cron schedule for the background job that scans for packages (Default: every minute)
      */
     cronSchedule?: string;
     /**
-     * Socket timeout when trying to reach the remote app (Default: 3)
-     */
-    socketTimeoutSec?: number;
-    /**
-     * Interval for refreshing known endpoints (Default: 600)
+     * Interval for refreshing known packages (Default: 600)
      */
     registrationRefreshIntervalSec?: number;
-    /**
-     * Remove registered Apps of an endpoint if it cannot be reached for a number of scan intervals (Default: -1 which means: never remove)
-     */
-    unregisterAppsAfterScanErrors?: number;
   };
-  "Mashroom Portal Remote App Registry"?: {
+  "Mashroom Remote Package Scanner Admin Webapp"?: {
     /**
-     * Location of the config file with the remote URLs, relative to the server config (Default: ./remotePortalApps.json)
+     * Show the 'Add a new Remote Package URL' form in the Admin UI
      */
-    remotePortalAppUrls?: string;
+    showAddRemotePluginPackageForm?: boolean;
   };
-  "Mashroom Portal Remote App Registry Admin Webapp"?: {
+  "Mashroom Remote Package Scanner Kubernetes"?: {
     /**
-     *  Show the 'Add a new Remote Portal App Endpoint' form in the Admin UI
+     * Label selector(s) for namespaces, can be a single string or an array, can also be null (Default: microfrontends=true)
      */
-    showAddRemoteAppForm?: boolean;
-  };
-  "Mashroom Portal Remote App Kubernetes Background Job"?: {
+    namespaceLabelSelector?: string | string[];
     /**
-     * The cron schedule for the background job that scans for new apps (Default: every minute)
+     * A distinct list of Kubernetes namespaces to check, can be null if _k8sNamespacesLabelSelector_ is set (Default: null)
      */
-    cronSchedule?: string;
+    namespaces?: string[] | null;
     /**
-     * Label selector(s) for namespaces, can be a single string or an array (e.g. environment=development,tier=frontend) (Default: null)
+     * Label selector(s) for services, can be a single string or an array, can be null (Default: microfrontends=true)
      */
-    k8sNamespacesLabelSelector?: string | string[];
-    /**
-     * A distinct list of Kubernetes namespaces to scan; can be null if k8sNamespacesLabelSelector is set (Default: ["default"])
-     */
-    k8sNamespaces?: string[] | null;
-    /**
-     * Label selector(s) for services, can be a single string or an array (e.g. microfrontend=true) (e.g. microfrontend=true) (Default: null)
-     */
-    k8sServiceLabelSelector?: string | string[];
+    serviceLabelSelector?: string | string[];
     /**
      * A regular expression for services that should be checked (case-insensitive). (Default: ".*")
      */
     serviceNameFilter?: string;
-    /**
-     * Socket timeout when trying to the Kubernetes service (Default: 3)
-     */
-    socketTimeoutSec?: number;
-    /**
-     * The time in seconds after that a registered services show be re-checked (Default: 600)
-     */
-    refreshIntervalSec?: number;
-    /**
-     * Remove registered Apps of a service if it cannot be reached for a number of scan intervals (Default: -1 which means: never remove)
-     */
-    unregisterAppsAfterScanErrors?: number;
-    /**
-     * Access services via IP address and not via <name>.<namespace> (Default: false)
-     */
-    accessViaClusterIP?: boolean;
-    /**
-     * Number of services that should be processed in parallel at a time (Default: 20)
-     */
-    serviceProcessingBatchSize?: number;
   };
   "Mashroom Security Services"?: {
     /**
@@ -644,7 +634,7 @@ export interface Plugins {
      */
     darkMode?: boolean | string;
     /**
-     * Custom CSS that will be loaded instead of the built-in style (relative to Mashroom config file, default: null)
+     * Custom CSS that will be loaded instead of the built-in style (relative to the server config file, default: null)
      */
     styleFile?: string;
   };
@@ -921,7 +911,7 @@ export interface Plugins {
   };
   "Mashroom Storage Filestore Provider"?: {
     /**
-     * Folder to store the data files. The base for relative paths is the Mashroom config file (Default: ./data/storage)
+     * Folder to store the data files. The base for relative paths is the server config file (Default: ./data/storage)
      */
     dataFolder?: string;
     /**

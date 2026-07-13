@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-composite-app",
-    "description": "A simple SPA that uses other SPAs (which are registered to the Mashroom Portal) as building blocks",
+    "description": "A simple Microfrontend that uses other Microfrontends (which are registered to the Mashroom Portal) as building blocks",
     "homepage": "https://www.mashroom-server.com",
     "repository": {
         "type": "git",
@@ -10,60 +10,20 @@
     "version": "2.9.4",
     "sideEffects": false,
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom-portal": "2.9.4",
-        "@types/react": "^19.1.3",
-        "@types/react-dom": "^19.1.4",
-        "react": "^19.1.0",
-        "react-dom": "^19.1.0"
+        "@types/react": "^19.2.17",
+        "@types/react-dom": "^19.2.3",
+        "react": "^19.2.7",
+        "react-dom": "^19.2.7"
     },
     "scripts": {
         "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "dev": "webpack serve --hot --mode development --config ./webpack.config.client.js",
         "build": "webpack --mode production --config ./webpack.config.client.js && webpack --mode production --config ./webpack.config.server.js && cpy ./screenshot.png dist"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Portal Demo Composite App",
-                "type": "portal-app2",
-                "clientBootstrap": "startCompositeDemoApp",
-                "requires": [
-                    "Mashroom Portal Demo Angular App",
-                    "Mashroom Portal Demo Vue App",
-                    "Mashroom Portal Demo Svelte App"
-                ],
-                "resources": {
-                    "js": [
-                        "bundle.js"
-                    ],
-                    "css": [
-                        "bundle.css"
-                    ]
-                },
-                "screenshots": [
-                    "screenshot.png"
-                ],
-                "local": {
-                    "resourcesRoot": "./dist",
-                    "ssrBootstrap": "./dist/app-ssr.js"
-                },
-                "caching": {
-                    "ssrHtml": "same-config"
-                },
-                "defaultConfig": {
-                    "title": "Demo Composite App",
-                    "description": {
-                        "en": "A simple SPA that uses other SPAs (which are registered to the Mashroom Portal) as building blocks",
-                        "de": "Ein einfacher SPA der andere SPAs (die im Mashroom Portal registriert sind) als Komponenten benutzt"
-                    },
-                    "category": "Demo"
-                }
-            }
-        ]
     }
 }

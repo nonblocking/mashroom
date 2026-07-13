@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-json-schemas",
-    "description": "JSON schemas for Mashroom config files",
+    "description": "JSON schemas for Mashroom Server config files",
     "homepage": "https://www.mashroom-server.com",
     "repository": {
         "type": "git",
@@ -13,7 +13,7 @@
         "type-definitions/**"
     ],
     "devDependencies": {
-        "ajv": "^8.17.1",
+        "ajv": "^8.20.0",
         "json-schema-to-typescript": "^15.0.4"
     },
     "jest": {
@@ -39,8 +39,6 @@
         "build": "node gen-types.js"
     },
     "lavamoat": {
-        "allowScripts": {
-            "json-schema-to-typescript>cli-color>es5-ext": false
-        }
+        "allowScripts": {}
     }
 }

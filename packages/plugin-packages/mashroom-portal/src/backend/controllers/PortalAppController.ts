@@ -34,13 +34,13 @@ export default class PortalAppController {
     async getPortalAppSetup(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
-        const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
+
 
         try {
             const sitePath = getSitePath(req);
             const pageId = req.params.pageId as string;
-            const pluginName = req.params.pluginName;
-            const portalAppInstanceId = req.params.portalAppInstanceId;
+            const pluginName = req.params.pluginName as string;
+            const portalAppInstanceId = req.params.portalAppInstanceId as string;
             const mashroomSecurityUser = getUser(req);
 
             if (!await isSitePathPermitted(req, sitePath)) {
@@ -88,7 +88,7 @@ export default class PortalAppController {
                 return;
             }
 
-            const portalAppSetup = await createPortalAppSetup(portalApp, portalAppInstance, null, mashroomSecurityUser, cdnService, this._pluginRegistry, req);
+            const portalAppSetup = await createPortalAppSetup(portalApp, portalAppInstance, null, mashroomSecurityUser, this._pluginRegistry, req);
 
             logger.debug(`Sending Portal App setup for: ${portalApp.name}`, portalAppSetup);
 
@@ -108,8 +108,9 @@ export default class PortalAppController {
     async getPortalAppResource(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
-        const pluginName = req.params.pluginName;
-        const resourcePath = req.params['0'];
+        const pluginName = req.params.pluginName as string;
+        const resourcePathSegments = req.params.resourcePath as unknown as Array<string>;
+        const resourcePath = resourcePathSegments.join('/');
 
         const portalApp = this._getPortalApp(pluginName);
         if (!portalApp) {
@@ -126,16 +127,16 @@ export default class PortalAppController {
     async getSharedPortalAppResource(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
-        const typeAndResourcePath = req.params['0'];
-        const parts = typeAndResourcePath.split('/');
-        if (parts.length < 2 || ['js', 'css'].indexOf(parts[0]) === -1) {
-            logger.error('Invalid shared resource: ', typeAndResourcePath);
+        const typeAndResourcePathSegments = req.params.typeAndResourcePath as unknown as Array<string>;
+
+        if (typeAndResourcePathSegments.length < 2 || ['js', 'css'].indexOf(typeAndResourcePathSegments[0]) === -1) {
+            logger.error('Invalid shared resource: ', typeAndResourcePathSegments.join('/'));
             res.sendStatus(404);
             return;
         }
 
-        const resourceType = parts[0] as 'css' | 'js';
-        const resourcePath = parts.slice(1).join('/');
+        const resourceType = typeAndResourcePathSegments[0] as 'css' | 'js';
+        const resourcePath = typeAndResourcePathSegments.slice(1).join('/');
 
         // Find Portal Apps that provide the shared resource
         const portalApps = this._pluginRegistry.portalApps.filter((portalApp) => {
@@ -313,7 +314,7 @@ export default class PortalAppController {
             }
         }
 
-        const resourceUri = `${portalApp.resourcesRootUri}/${resourcePath}`;
+        const resourceUri = `${portalApp.resourcesRootUrl}/${resourcePath}`;
 
         // Security check: A proxy target could be a sub path of the resource base URL,
         // so, make sure this route is not misused to access an API endpoint

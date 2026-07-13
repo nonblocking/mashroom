@@ -5,7 +5,10 @@ metadata:
     namespace: test1
     labels:
         app: mashroom-demo-ssr-remote-portal-app
-        microfrontend: 'true'
+        microfrontends: 'true'
+    annotations:
+        mashroom-server.com/remote-plugins: "true"
+        mashroom-server.com/remote-plugins-definition-path: /mashroom.json
 spec:
     selector:
         app: mashroom-demo-ssr-remote-portal-app

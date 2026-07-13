@@ -32,6 +32,11 @@ setPortalPluginConfig({
     }
 });
 
+const pluginRegistry: any = {
+    portalAppEnhancements: [],
+    portalAppConfigs: [],
+};
+
 describe('render-utils', () => {
 
     it('renders the page content', async () => {
@@ -104,7 +109,7 @@ describe('render-utils', () => {
         const res: any = {};
         const logger = loggingUtils.dummyLoggerFactory();
 
-        const result = await renderContent(layout, portalApps, false, () => { /* nothing to do */ }, (key) => key, req, res, logger);
+        const result = await renderContent(layout, portalApps, false, () => { /* nothing to do */ }, (key) => key, pluginRegistry, req, res, logger);
 
         expect(result).toBeTruthy();
         expect(result.resultHtml).toContain('data-mr-app-id="app1"');

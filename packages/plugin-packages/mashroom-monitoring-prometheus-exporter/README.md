@@ -7,15 +7,18 @@ This plugin exports the following metrics to the [Prometheus](https://prometheus
 
  * The standard metrics like CPU and memory usage described [here](https://prometheus.io/docs/instrumenting/writing_clientlibs/#standard-and-runtime-collectors)
  * Additional V8 GC metrics (if the module _prometheus-gc-stats_ is present)
+
+If [mashroom-monitoring-metrics-collector](../mashroom-monitoring-metrics-collector) is installed, it also exports:
+
  * Loaded plugins with status
  * HTTP request durations and response codes
  * Mashroom plugin metrics like session count, http proxy stats, memory cache stats, MongoDB/Redis connection stats, ...
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-monitoring-prometheus-exporter** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-monitoring-prometheus-exporter** as *dependency*.
 
-You can change the default configuration in your Mashroom config file like this:
+You can change the default configuration in your server config file like this:
 
 ```json
 {

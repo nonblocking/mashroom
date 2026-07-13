@@ -1,4 +1,5 @@
 
+import {htmlUtils} from '@mashroom/mashroom-utils';
 import infoTemplate from './template';
 
 import type {Request, Response} from 'express';
@@ -22,7 +23,7 @@ const pluginLoadersTable = (pluginContext: MashroomPluginContext) => {
     const pluginTypes = Object.keys(pluginContext.services.core.pluginService.getPluginLoaders());
     const pluginLoaders = pluginTypes.map((pluginType) => {
         const pluginLoader = pluginContext.services.core.pluginService.getPluginLoaders()[pluginType];
-        return {name: pluginLoader?.name || '', loads: pluginType};
+        return {name: htmlUtils.escapeHtml(pluginLoader?.name || ''), loads: pluginType};
     });
     pluginLoaders.sort((p1, p2) => p1.name.localeCompare(p2.name));
 

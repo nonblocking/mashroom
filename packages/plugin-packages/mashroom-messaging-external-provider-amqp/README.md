@@ -3,14 +3,14 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin allows to use an AMQP 1.0 compliant broker as external messaging provider for server side messaging.
-This enables cluster support for server side messaging and also allows communication with 3rd party systems.
+This plugin allows using an AMQP 1.0 compliant broker as an external provider for the [mashroom-messaging](../mashroom-messaging) plugin.
+This enables cluster support for server side messaging and also allows communication with third party systems.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-messaging-external-provider-amqp** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-messaging-external-provider-amqp** as *dependency*.
 
-To activate this provider configure the _Mashroom Messaging_ plugin like this:
+To activate this provider configure the [mashroom-messaging](../mashroom-messaging) plugin like this:
 
 ```json
 {
@@ -22,7 +22,7 @@ To activate this provider configure the _Mashroom Messaging_ plugin like this:
 }
 ```
 
-And configure this plugin like this in the Mashroom config file:
+And configure this plugin like this in the server config file:
 
 ```json
 {
@@ -40,7 +40,7 @@ And configure this plugin like this in the Mashroom config file:
 }
 ```
 
- * _internalRoutingKey_: The base routing key the server should use for internal messages. E.g. if the value is *mashroom.test*
+ * _internalRoutingKey_: The base routing key the server should use for internal messages. E.g., if the value is *mashroom.test*
     all messages published internally are prefixed with *mashroom.test* before published to the broker and at the same time
     this provider listens to *mashroom.test.#* for messages (Default: mashroom)
  * _brokerTopicExchangePrefix_: The prefix for the topic exchange (default: /topic/ (RabbitMQ))
@@ -50,7 +50,7 @@ And configure this plugin like this in the Mashroom config file:
  * _brokerUsername_: AMQP broker username (optional)
  * _brokerPassword_: AMQP broker password (optional)
 
-### Broker specific configuration
+### Broker-specific configuration
 
 *RabbitMQ*
 

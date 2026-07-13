@@ -2,7 +2,7 @@
 
 import {Readable, Writable} from 'stream';
 import {createServer as createHttpServer, request} from 'http';
-import WebSocket from 'ws';
+import {WebSocketServer, WebSocket} from 'ws';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import ProxyImplNodeStreamAPI from '../../src/proxy/ProxyImplNodeStreamAPI';
 import InterceptorHandler from '../../src/proxy/InterceptorHandler';
@@ -323,7 +323,7 @@ describe('ProxyImplNodeStreamAPI', () => {
                 server.listen(30003, () => resolve(server));
             });
 
-            const targetWsServer = new WebSocket.Server(({port: 30001}));
+            const targetWsServer = new WebSocketServer(({port: 30001}));
 
             const client = new WebSocket('ws://localhost:30003?test=1');
             client.on('error', (error) => {

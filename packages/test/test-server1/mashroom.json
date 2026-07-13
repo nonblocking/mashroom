@@ -1,17 +1,21 @@
 {
     "$schema": "../../core/mashroom-json-schemas/schemas/mashroom-server-config.json",
     "name": "Mashroom Test Server 1",
+    "xPoweredByHeader": "Mashroom Test Server 1",
     "port": 5050,
     "httpsPort": 5443,
     "tlsOptions": {
         "key": "./certs/key.pem",
         "cert": "./certs/cert.pem"
     },
-    "enableHttp2": false,
     "externalPluginConfigFileNames": ["mashroom"],
     "pluginPackageFolders": [
         {
             "path": "../../plugin-packages",
+            "devMode": true
+        },
+        {
+            "path": "./plugins",
             "devMode": true
         },
         {
@@ -36,15 +40,15 @@
         "Mashroom Session Redis Provider",
         "Mashroom Session Filestore Provider",
         "Mashroom Memory Cache Redis Provider",
-        "Mashroom Portal Remote App Kubernetes Background Job",
-        "Mashroom Portal Remote App Kubernetes Registry",
-        "Mashroom Portal Remote App Kubernetes Admin Webapp",
-        "Mashroom Portal Remote App Kubernetes Admin Webapp Integration",
+        "Mashroom Remote Package Scanner Kubernetes",
+        "Mashroom Remote Package Scanner Kubernetes Admin Webapp",
+        "Mashroom Remote Package Scanner Kubernetes Admin Webapp Integration",
         "Mashroom Monitoring PM2 Exporter",
         "Mashroom Http Proxy Add User Headers Interceptor",
         "Mashroom Http Proxy Add Access Token Interceptor",
         "Mashroom CDN Services",
-        "Mashroom Robots Middleware"
+        "Mashroom Robots Middleware",
+        "Mashroom CSRF Middleware"
     ],
     "plugins": {
         "Mashroom VHost Path Mapper Middleware": {
@@ -103,7 +107,7 @@
         },
         "Mashroom Security Default Login Webapp": {
             "pageTitle": "Mashroom Test Server",
-            "darkMode": false,
+            "darkMode": "auto",
             "styleFile": "./login_style.css"
         },
         "Mashroom Storage Services": {
@@ -157,7 +161,7 @@
         },
         "Mashroom Portal WebApp": {
             "adminApp": "Mashroom Portal Admin App",
-            "defaultTheme": "Mashroom Portal Default Theme",
+            "defaultTheme": "Mashroom Portal Bootstrap Theme",
             "authenticationExpiration": {
                 "warnBeforeExpirationSec": 60,
                 "autoExtend": false,
@@ -179,21 +183,26 @@
                 "cacheTTLSec": 300
             }
         },
-        "Mashroom Portal Default Theme": {
+        "Mashroom Portal Bootstrap Theme": {
             "showEnvAndVersions": true,
             "showPortalAppHeaders": false,
             "spaMode": true,
-            "darkMode": false,
+            "darkMode": "auto",
             "styleFile": "./defaultThemeOverrides.css"
         },
-        "Mashroom Portal Remote App Background Job": {
-            "unregisterAppsAfterScanErrors": 3
+        "Mashroom Portal Tailwind Theme": {
+            "showEnvAndVersions": true,
+            "showPortalAppHeaders": false,
+            "spaMode": true,
+            "darkMode": "auto"
         },
-        "Mashroom Portal Remote App Registry": {
-            "remotePortalAppUrls": "./remotePortalApps.json"
+        "Mashroom Remote Package Scanner": {
+            "remotePackageUrls": "./remotePackageUrls.json"
         },
-        "Mashroom Portal Remote App Registry Admin Webapp": {
-            "showAddRemoteAppForm": true
+        "Mashroom Remote Package Scanner Background Job": {
+        },
+        "Mashroom Remote Package Scanner Admin Webapp": {
+            "showAddRemotePluginPackageForm": true
         }
     }
 }

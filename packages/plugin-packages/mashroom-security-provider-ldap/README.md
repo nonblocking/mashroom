@@ -7,9 +7,9 @@ This plugin adds an LDAP security provider.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-security-provider-ldap** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-security-provider-ldap** as *dependency*.
 
-To activate this provider, configure the _Mashroom Security_ plugin like this:
+To activate this provider, configure the [Mashroom Security](../mashroom-security) plugin like this:
 
 ```json
 {
@@ -21,7 +21,7 @@ To activate this provider, configure the _Mashroom Security_ plugin like this:
 }
 ```
 
-And configure this plugin like this in the Mashroom config file:
+And configure this plugin like this in the server config file:
 
 ```json
 {
@@ -56,7 +56,7 @@ And configure this plugin like this in the Mashroom config file:
  * _ldapConnectTimeout_: Connect timeout in ms (Default: 3000)
  * _ldapTimeout_: Timeout in ms (Default: 5000)
  * _tlsOptions_: Optional TLS options if your LDAP server requires TLS. The options are passed to [Node TLS](https://nodejs.org/api/tls.html#tls_tls_createserver_options_secureconnectionlistener)
-    but the file paths (e.g. for "cert") are resolved relatively to the server config.
+    but the file paths (e.g., for "cert") are resolved relatively to the server config.
  * _bindDN_: The bind user for searching
  * _bindCredentials_: The password for the bind user
  * _baseDN_: The base DN for searches (can be empty)
@@ -65,8 +65,8 @@ And configure this plugin like this in the Mashroom config file:
  * _extraDataMapping_: Optionally map extra LDAP attributes to _user.extraData_. The key in the map is the extraData property, the value the LDAP attribute (Default: null)
  * _secretsMapping_: Optionally map extra LDAP attributes to _user.secrets_ (Default: null)
  * _groupToRoleMapping_: An optional JSON file that contains a user group to roles mapping (Default: /groupToRoleMapping.json)
- * _userToRoleMapping_: An optional JSON file that contains a user name to roles mapping (Default: /userToRoleMapping.json)
- * _authenticationTimeoutSec_: The inactivity time after that the authentication expires. Since this plugin uses the session to store make sure the session _cookie.maxAge_ is greater than this value (Default: 1200)
+ * _userToRoleMapping_: An optional JSON file that contains a username to roles mapping (Default: /userToRoleMapping.json)
+ * _authenticationTimeoutSec_: The inactivity time that the authentication expires after. Since this plugin uses the session to store the timestamp, make sure the session _cookie.maxAge_ is greater than this value (Default: 1200)
 
 For a server that requires TLS you have to provide a _tlsOptions_ object:
 

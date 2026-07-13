@@ -4,6 +4,7 @@
         "module": "commonjs",
         "sourceMap": true,
         "strict": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "types": ["node", "jest", "express-session"]
     }
 }

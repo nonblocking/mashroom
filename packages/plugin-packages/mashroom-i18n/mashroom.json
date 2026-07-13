@@ -1,0 +1,22 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Internationalization Services",
+            "type": "services",
+            "namespace": "i18n",
+            "bootstrap": "./dist/mashroom-bootstrap-services.js",
+            "requires": [
+                "Mashroom Session Middleware"
+            ],
+            "defaultConfig": {
+                "availableLanguages": [
+                    "en"
+                ],
+                "defaultLanguage": "en",
+                "messages": "./messages"
+            }
+        }
+    ]
+}

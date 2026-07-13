@@ -1,0 +1,32 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom OpenMicrofrontends Support Definition Builder Plugin",
+            "type": "plugin-package-definition-builder",
+            "bootstrap": "./dist/def-builder/mashroom-bootstrap-package-definition-builder.js",
+            "defaultConfig": {
+                "order": 10
+            }
+        },
+        {
+            "name": "Mashroom OpenMicrofrontends Support App Enhancement Plugin",
+            "type": "portal-app-enhancement",
+            "bootstrap": "./dist/app-enhancement/mashroom-bootstrap-portal-app-enhancement.js"
+        },
+        {
+            "name": "Mashroom OpenMicrofrontends Support Page Enhancement Plugin",
+            "type": "portal-page-enhancement",
+            "resourcesRoot": "./dist/public",
+            "pageResources": {
+                "js": [{
+                    "path": "openMicrofrontendsClientBootstrapAdapter.js",
+                    "location": "footer"
+                }]
+            },
+            "defaultConfig": {
+            }
+        }
+    ]
+}

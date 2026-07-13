@@ -1,7 +1,7 @@
 
 const SAMPLE_UUID_V4 = '4242-4242-4242-4242-4242';
-jest.mock('uuid', () => ({
-    v4: () => '4242-4242-4242-4242-4242',
+jest.mock('node:crypto', () => ({
+    randomUUID: () => '4242-4242-4242-4242-4242',
 }));
 
 import os from 'os';

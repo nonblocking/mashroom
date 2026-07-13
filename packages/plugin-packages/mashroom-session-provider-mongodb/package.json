@@ -9,50 +9,22 @@
     "license": "MIT",
     "version": "2.9.4",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
-        "connect-mongo": "^5.1.0",
-        "express": "^4.21.2",
-        "mongodb": "^6.16.0"
+        "connect-mongo": "^6.0.0",
+        "mongodb": "^7.5.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.9.4",
         "@mashroom/mashroom-session": "2.9.4",
-        "@types/express": "^4.17.21",
-        "@types/express-session": "^1.18.1"
+        "@types/express-session": "^1.19.0"
     },
     "scripts": {
         "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Session MongoDB Provider",
-                "type": "session-store-provider",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "client": {
-                        "uri": "mongodb://localhost:27017/mashroom_session_db?connectTimeoutMS=1000&socketTimeoutMS=2500",
-                        "connectionOptions": {
-                            "minPoolSize": 5,
-                            "serverSelectionTimeoutMS": 3000
-                        }
-                    },
-                    "collectionName": "sessions",
-                    "ttl": 86400,
-                    "autoRemove": "native",
-                    "autoRemoveInterval": 10,
-                    "touchAfter": 0,
-                    "crypto": {
-                        "secret": false
-                    }
-                }
-            }
-        ]
     }
 }

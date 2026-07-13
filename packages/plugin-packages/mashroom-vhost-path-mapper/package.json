@@ -10,15 +10,12 @@
     "version": "2.9.4",
     "files": [
         "dist/**",
-        "type-definitions/*"
+        "type-definitions/*",
+        "mashroom.json"
     ],
-    "dependencies": {
-        "express": "^4.21.2"
-    },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
-        "@types/express": "^4.17.21",
-        "webpack-cli": "^6.0.1"
+        "webpack-cli": "^7.2.1"
     },
     "jest": {
         "testEnvironment": "node",
@@ -42,28 +39,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src --extensions \".ts\" -d dist"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom VHost Path Mapper Middleware",
-                "type": "middleware",
-                "bootstrap": "./dist/middleware/mashroom-bootstrap-middleware.js",
-                "defaultConfig": {
-                    "order": -1000,
-                    "considerHttpHeaders": [
-                        "x-forwarded-host"
-                    ],
-                    "hosts": {}
-                }
-            },
-            {
-                "name": "Mashroom VHost Path Mapper Service",
-                "type": "services",
-                "namespace": "vhostPathMapper",
-                "bootstrap": "./dist/services/mashroom-bootstrap-services.js"
-            }
-        ]
     }
 }

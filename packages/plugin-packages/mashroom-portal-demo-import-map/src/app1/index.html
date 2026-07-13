@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/systemjs@6.15.1/dist/system.min.js"></script>
+        <script type="systemjs-importmap">
+            {
+              "imports": {
+                "react": "https://ga.system.jspm.io/npm:react@19.1.1/index.js",
+                "react-dom": "https://ga.system.jspm.io/npm:react-dom@19.1.1/index.js",
+                "react-dom/client": "https://ga.system.jspm.io/npm:react-dom@19.1.1/client.js",
+                "scheduler": "https://ga.system.jspm.io/npm:scheduler@0.26.0/index.js",
+                "process": "https://ga.system.jspm.io/npm:process@0.11.10/browser.js"
+              }
+            }
+        </script>
+    </head>
+    <body>
+        <div id="root"></div>
+
+        <script>
+            (async () => {
+                const host = document.getElementById('root');
+                const module = await System.import('/index1.js');
+                module.startApp(host, {
+                    config: {
+                    }
+                });
+            })();
+        </script>
+    </body>
+</html>

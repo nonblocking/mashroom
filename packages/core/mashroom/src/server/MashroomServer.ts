@@ -17,9 +17,9 @@ import type {
 import type {
     MashroomServer as MashroomServerType,
     GlobalNodeErrorHandler,
-    MashroomPluginPackageScanner,
     InternalMashroomHttpUpgradeService,
-} from  '../../type-definitions/internal';
+    MashroomPluginManager,
+} from '../../type-definitions/internal';
 
 export default class MashroomServer implements MashroomServerType {
 
@@ -28,7 +28,7 @@ export default class MashroomServer implements MashroomServerType {
     private readonly _logger: MashroomLogger;
 
     constructor(private _expressApp: Application, private _serverInfo: MashroomServerInfo, private _config: MashroomServerConfig,
-                private _scanner: MashroomPluginPackageScanner, private _errorHandler: GlobalNodeErrorHandler,
+                private _pluginManager: MashroomPluginManager, private _errorHandler: GlobalNodeErrorHandler,
                 private _httpUpgradeService: InternalMashroomHttpUpgradeService, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.server');
         this._addServerRoutes();
@@ -53,7 +53,7 @@ Starting
         this._logger.info('Stopping Mashroom server...');
 
         this._errorHandler.uninstall();
-        await this._scanner.stop();
+        await this._pluginManager.stop();
 
         await Promise.all([
             this._stopHttpServer(),
@@ -73,7 +73,6 @@ Starting
             const httpServer = http.createServer(this._expressApp);
             httpServer.listen(this._config.port, () => {
                 this._logger.info(`Mashroom HTTP server available at http://localhost:${this._config.port}`);
-                this._scanner.start();
                 this._errorHandler.install();
                 this._httpServer = httpServer;
                 this._httpUpgradeService.addServer(httpServer);
@@ -99,31 +98,11 @@ Starting
         this._logger.debug('Using TLS options: ', fixedTlsOptions);
 
         return new Promise<void>((resolve, reject) => {
-            let httpsServer: HttpsServer;
-            if (this._config.enableHttp2) {
-                // FIXME: spdy is no longer maintained and stopped working with Node.js 15
-                this._logger.warn('HTTP/2 support only works properly with Node.js <= 14 at the moment!');
-                let spdy;
-                try {
-                    spdy = require('spdy');
-                } catch (e) {
-                    this._logger.error('For HTTP/2 you need to install spdy as peer dependency!', e);
-                    process.exit(1);
-                }
-                httpsServer = spdy.createServer({
-                    ...fixedTlsOptions,
-                    spdy: {
-                        protocols: ['h2', 'http/1.1'],
-                    }
-                }, this._expressApp);
-            } else {
-                httpsServer = https.createServer({
-                    ...fixedTlsOptions,
-                }, this._expressApp);
-            }
+            const httpsServer = https.createServer({
+                ...fixedTlsOptions,
+            }, this._expressApp);
             httpsServer.listen(this._config.httpsPort, () => {
                 this._logger.info(`Mashroom HTTPS server available at https://localhost:${this._config.httpsPort}`);
-                this._scanner.start();
                 this._errorHandler.install();
                 this._httpsServer = httpsServer;
                 this._httpUpgradeService.addServer(httpsServer);

@@ -1,4 +1,5 @@
 
+import {htmlUtils} from '@mashroom/mashroom-utils';
 import {ready} from '../health/checks';
 import infoTemplate from './template';
 
@@ -35,7 +36,7 @@ const serverOverviewTable = async (req: Request) => {
         <table class="overview">
             <tr>
                 <th>Server Name</th>
-                <td>${serverConfig.name}</td>
+                <td>${htmlUtils.escapeHtml(serverConfig.name)}</td>
                 <td>&nbsp;</td>
             </tr>
             <tr>

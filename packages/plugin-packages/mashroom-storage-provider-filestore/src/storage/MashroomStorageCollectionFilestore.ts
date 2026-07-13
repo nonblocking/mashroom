@@ -1,8 +1,8 @@
 
 import {statSync, existsSync, type BigIntStats} from 'fs';
 import {readFile, writeFile} from 'fs/promises';
+import {randomUUID} from 'node:crypto';
 import {lock as lockFile} from 'proper-lockfile';
-import {nanoid} from 'nanoid';
 import {Query} from 'mingo';
 import ConcurrentAccessError from '../errors/ConcurrentAccessError';
 
@@ -152,12 +152,13 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
         if (filter || sort) {
             const query = new Query(filter || {});
             let cursor = query.find(data);
+
             let totalCount;
             if (withTotalCount && (limit || skip)) {
-                totalCount = cursor.count();
+                totalCount = cursor.all().length;
+                cursor = query.find(data);
             }
 
-            cursor = query.find(data);
             if (sort) {
                 const fixedSort: Record<string, number> = {};
                 Object.keys(sort).forEach((key) => {
@@ -301,6 +302,6 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
     }
 
     private _generateId(): string {
-        return nanoid(8);
+        return randomUUID();
     }
 }

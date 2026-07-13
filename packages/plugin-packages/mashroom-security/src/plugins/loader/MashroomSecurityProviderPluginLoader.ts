@@ -23,7 +23,7 @@ export default class MashroomSecurityProviderPluginLoader implements MashroomPlu
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
-        const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = plugin.requireBootstrap();
+        const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = await plugin.loadBootstrap();
         const provider: MashroomSecurityProvider = await bootstrap(plugin.name, config, contextHolder);
         this._logger.info(`Registering security provider plugin: ${plugin.name}`);
         this._registry.register(plugin.name, provider);

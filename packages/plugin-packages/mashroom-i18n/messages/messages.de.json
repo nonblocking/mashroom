@@ -9,5 +9,7 @@
     "portalAppLoadingFailed": "<strong>${name}</strong> steht derzeit nicht zur Verfügung",
     "pageNotFound": "Seite nicht gefunden",
     "accessDenied": "Zugriff verboten",
-    "serverError": "Server Fehler"
+    "serverError": "Server Fehler",
+    "selectLanguage": "Sprache auswählen",
+    "toggleDarkMode": "Dark Mode ein/aus"
 }

@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-If you add this plugin all updating HTTP methods (such as POST, PUT and DELETE) must contain a CSRF token automatically generated for the session.
+If you add this plugin, all updating HTTP methods (such as POST, PUT and DELETE) must contain a CSRF token automatically generated for the session.
 Otherwise, the request will be rejected.
 
 There are two ways to pass the token:
@@ -17,7 +17,7 @@ _Mashroom Portal_ automatically uses this plugin to secure all requests if avail
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-csrf-protection** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-csrf-protection** as *dependency*.
 
 After that you can use the service like this:
 
@@ -33,7 +33,7 @@ export default (req: Request, res: Response) => {
 }
 ```
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your server config file like this:
 
 ```json
 {
@@ -52,7 +52,7 @@ You can override the default config in your Mashroom config file like this:
  * _safeMethods_: List of HTTP methods that require no CSRF token check (Default: ["GET", "HEAD", "OPTIONS"]).
  * _saltLength_ and _secretLength_ are passed to the [csrf](https://www.npmjs.com/package/csrf) package.
 
-## Services
+## Provided Services
 
 ### MashroomCSRFService
 

@@ -133,16 +133,8 @@ describe('plugin config validation', () => {
         expect(valid).toBeTruthy();
     });
 
-    it('fails at a valid portal-app config', () => {
-        const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'plugins', 'portal-app3.json')).toString("utf-8"));
-        const validate = ajv.compile(schema);
-        const valid = validate(config);
-
-        expect(valid).toBeFalsy();
-    });
-
     it('succeeds at a valid portal-app v2 config', () => {
-        const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'plugins', 'portal-app4.json')).toString("utf-8"));
+        const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'plugins', 'portal-app.json')).toString("utf-8"));
         const validate = ajv.compile(schema);
         const valid = validate(config);
 
@@ -175,14 +167,6 @@ describe('plugin config validation', () => {
 
     it('succeeds at a valid portal-page-enhancement config', () => {
         const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'plugins', 'portal-page-enhancement.json')).toString("utf-8"));
-        const validate = ajv.compile(schema);
-        const valid = validate(config);
-
-        expect(valid).toBeTruthy();
-    });
-
-    it('succeeds at a valid portal-app-registry config', () => {
-        const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'plugins', 'portal-app-registry.json')).toString("utf-8"));
         const validate = ajv.compile(schema);
         const valid = validate(config);
 

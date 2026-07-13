@@ -1,0 +1,31 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Demo React Shadcn App",
+            "type": "portal-app2",
+            "clientBootstrap": "startReactShadcnDemoApp",
+            "resources": {
+                "js": [
+                    "bundle.js"
+                ]
+            },
+            "screenshots": [
+                "screenshot.png"
+            ],
+            "local": {
+                "resourcesRoot": "./dist"
+            },
+            "defaultConfig": {
+                "title": "Demo React Shadcn App",
+                "description": {
+                    "en": "A Microfrontend that uses React Shadcn components"
+                },
+                "category": "Demo",
+                "appConfig": {
+                }
+            }
+        }
+    ]
+}

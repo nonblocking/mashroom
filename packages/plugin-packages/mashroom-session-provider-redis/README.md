@@ -3,14 +3,14 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds a Redis session store that can be used by _Mashroom Session_.
-Actually this is just a wrapper for the [connect-redis](https://github.com/tj/connect-redis) package.
+This plugin adds a Redis session store that can be used by [Mashroom Session](../mashroom-session).
+Actually, this is just a wrapper for the [connect-redis](https://github.com/tj/connect-redis) package.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-session-provider-redis** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-session-provider-redis** as *dependency*.
 
-Activate this session provider in your Mashroom config file like this:
+Activate this session provider in your Mashroom Server config file like this:
 
 ```json
 {
@@ -22,7 +22,7 @@ Activate this session provider in your Mashroom config file like this:
 }
 ```
 
-And to change the default config of this plugin add:
+And to change the default config of this plugin, add:
 
 ```json
 {
@@ -51,13 +51,12 @@ And to change the default config of this plugin add:
  * *prefix*: The key prefix. Appends to whatever prefix you may have set on the client itself. (Default: mashroom:sess:)
  * *ttl*: TTL in seconds (Default: 86400 - one day)
 
-<span class="panel-info">
-**NOTE**: Don't set *client.redisOptions.keyPrefix* because then the session metrics will not work properly.
-</span>
+> [!NOTE]
+> Don't set *client.redisOptions.keyPrefix* because otherwise the session metrics will not work properly.
 
 ### Usage with Sentinel
 
-For a high availability cluster with [Sentinel](https://redis.io/topics/sentinel) the configuration would look like this:
+For a high-availability cluster with [Sentinel](https://redis.io/topics/sentinel) the configuration would look like this:
 
 ```json
 {
@@ -81,7 +80,7 @@ For a high availability cluster with [Sentinel](https://redis.io/topics/sentinel
  * *sentinels*: list of sentinel nodes to connect to
  * *name*: identifies a group of Redis instances composed of a master and one or more slaves
 
-Checkout out the *Sentinel* section of the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
+Check out the *Sentinel* section of the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
 
 ### Usage with a cluster
 
@@ -120,4 +119,4 @@ For a [sharding cluster](https://redis.io/topics/cluster-spec) configure the plu
  * *clusterOptions*: Passed as second argument of the *Redis.Cluster* constructor of *ioredis*
  * *redisOptions*: Passed as *redisOptions* in the *clusterOptions*
 
-Checkout out the *Cluster* section of the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
+Check out the *Cluster* section of the [ioredis](https://github.com/luin/ioredis) documentation for all available options.

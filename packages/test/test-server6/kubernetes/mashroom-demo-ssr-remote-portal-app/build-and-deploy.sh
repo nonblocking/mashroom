@@ -1,14 +1,15 @@
 #!/bin/bash
 
 source ../set-env.sh
-REPO_PATH=/tmp/mashroom-demo-ssr-remote-portal-app
+REPO_PATH=`mktemp -d -t mashroom-demo-ssr-remote-portal-app`
+echo "Cloning repo into: $REPO_PATH"
 
 # Checkout
 rm -rf $REPO_PATH && true
-git clone https://github.com/nonblocking/mashroom-demo-ssr-remote-portal-app.git $REPO_PATH
+git clone --depth=1 https://github.com/nonblocking/mashroom-demo-ssr-remote-portal-app.git $REPO_PATH
 
 # Build
-export VERSION=`node version.js $REPO_PATH`
+export VERSION=`node -p -e "require('$REPO_PATH/package.json').version"`
 echo "Building and deploying version $VERSION"
 
 npm ci --prefix $REPO_PATH

@@ -1,10 +1,10 @@
 import React, {useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-
-import {useDispatch, useSelector} from 'react-redux';
 import {addReceivedMessage as addReceivedMessageAction, setGlobalNotificationsSubscription as setGlobalNotificationsSubscriptionAction, setPrivateUserTopicsSubscription as setPrivateUserTopicsSubscriptionAction} from '../store/actions';
+import useStore from '../store/useStore';
+
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
-import type {Subscription, ReceivedMessage, State} from '../types';
+import type {Subscription, ReceivedMessage} from '../types';
 
 type Props = {
     messageBus: MashroomPortalMessageBus,
@@ -12,8 +12,9 @@ type Props = {
 
 export default ({messageBus}: Props) => {
     const {t} = useTranslation();
-    const {privateUserTopicsSubscription, globalNotificationsSubscription} = useSelector((state: State) => state);
-    const dispatch = useDispatch();
+    const privateUserTopicsSubscription = useStore((state) => state.privateUserTopicsSubscription);
+    const globalNotificationsSubscription = useStore((state) => state.globalNotificationsSubscription);
+    const dispatch = useStore((state) => state.dispatch);
     const setPrivateUserTopicsSubscription = (subscription: Subscription) => dispatch(setPrivateUserTopicsSubscriptionAction(subscription));
     const setGlobalNotificationsSubscription = (subscription: Subscription) => dispatch(setGlobalNotificationsSubscriptionAction(subscription));
     const addReceivedMessage = (message: ReceivedMessage) => dispatch(addReceivedMessageAction(message));

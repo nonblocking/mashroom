@@ -1,0 +1,35 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom CSRF Services",
+            "type": "services",
+            "namespace": "csrf",
+            "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
+            "requires": [
+                "Mashroom Session Middleware"
+            ],
+            "defaultConfig": {
+                "saltLength": 8,
+                "secretLength": 18
+            }
+        },
+        {
+            "name": "Mashroom CSRF Middleware",
+            "type": "middleware",
+            "bootstrap": "./dist/middleware/mashroom-bootstrap-middleware.js",
+            "requires": [
+                "Mashroom CSRF Services"
+            ],
+            "defaultConfig": {
+                "order": 100,
+                "safeMethods": [
+                    "GET",
+                    "HEAD",
+                    "OPTIONS"
+                ]
+            }
+        }
+    ]
+}

@@ -28,10 +28,10 @@ export default class ResourceManager {
         this._htmlDoc = htmlDoc;
     }
 
-    loadJs(path: string, loadedPortalApp: LoadedPortalAppInternal): Promise<void> {
+    loadJs(path: string, loadedPortalApp?: LoadedPortalAppInternal): Promise<void> {
         return new Promise((resolve, reject) => {
             const existingResource = LOADED_JS_RESOURCES[path];
-            if (existingResource) {
+            if (loadedPortalApp && existingResource) {
                 console.info('JS resource is already loaded: ', path);
                 if (existingResource.refs.indexOf(loadedPortalApp) === -1) {
                     existingResource.refs.push(loadedPortalApp);
@@ -52,16 +52,13 @@ export default class ResourceManager {
                 loaded: false,
                 onLoadCallbacks: [resolve],
                 onErrorCallbacks: [reject],
-                refs: [loadedPortalApp]
+                refs: loadedPortalApp ? [loadedPortalApp] : [],
             };
 
             scriptElem.src = path;
-            if (path.indexOf('.mjs') !== -1) {
-                scriptElem.type = 'module';
-            }
             scriptElem.addEventListener('error', (error: any) => {
                 console.error('Error loading JS resource: ', path, error);
-                this._remoteLogger.error(`Error loading JS resource: ${path}`, error, loadedPortalApp.pluginName);
+                this._remoteLogger.error(`Error loading JS resource: ${path}`, error, loadedPortalApp?.pluginName);
                 delete LOADED_JS_RESOURCES[path];
                 resource.onErrorCallbacks.forEach((cb) => cb());
             });

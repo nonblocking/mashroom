@@ -7,7 +7,7 @@ This plugin adds a service for forwarding requests to a target URI. It supports 
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-http-proxy** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-http-proxy** as *dependency*.
 
 After that you can use the service like this:
 
@@ -23,7 +23,7 @@ export default async (req: Request, res: Response) => {
 }
 ```
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your server config file like this:
 
 ```json
 {
@@ -83,7 +83,7 @@ You can override the default config in your Mashroom config file like this:
    * *nodeHttpProxy* (based on [node-http-proxy](https://github.com/http-party/node-http-proxy))
    * *default* (which is *streamAPI*)
 
-## Services
+## Provided Services
 
 ### MashroomHttpProxyService
 
@@ -110,33 +110,31 @@ export interface MashroomHttpProxyService {
 }
 ```
 
-## Plugin Types
+## Provided Plugin Types
 
 ### http-proxy-interceptor
 
-This plugin type can be used to intercept http proxy calls and to add for example authentication headers to backend calls.
+This plugin type can be used to intercept http proxy calls and to add, for example, authentication headers to backend calls.
 
-To register your custom http-proxy-interceptor plugin add this to _package.json_:
+To register your custom http-proxy-interceptor plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
-```json
+```json title="mashroom.json"
 {
-    "mashroom": {
-        "plugins": [
-            {
-                "name": "My Custom Http Proxy Interceptor",
-                "type": "http-proxy-interceptor",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "order": 500,
-                    "myProperty": "foo"
-                }
+    "plugins": [
+        {
+            "name": "My Custom Http Proxy Interceptor",
+            "type": "http-proxy-interceptor",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "order": 500,
+                "myProperty": "foo"
             }
-        ]
-    }
+        }
+    ]
 }
 ```
 
-* _defaultConfig.order_: The weight of the middleware in the stack - the higher it is the **later** it will be executed (Default: 1000)
+* _defaultConfig.order_: The order of the middleware in the stack—the higher it is, the **later** it will be executed (Default: 1000)
 
 The bootstrap returns the interceptor:
 
@@ -224,7 +222,7 @@ export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 }
 ```
 
-Return forbidden for some reason:
+You could also return forbidden like this:
 
 ```ts
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
@@ -302,7 +300,7 @@ export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 }
 ```
 
-Encrypt request/response body (only supported by the default/*streamAPI* proxy implementation):
+Encrypt the request/response body (only supported by the default/*streamAPI* proxy implementation):
 
 ```ts
 import crypto from 'crypto';

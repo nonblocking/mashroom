@@ -9,17 +9,18 @@
     "license": "MIT",
     "version": "2.9.4",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
-        "mongodb": "^6.16.0"
+        "mongodb": "^7.5.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.4",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.9.4",
         "@mashroom/mashroom-storage": "2.9.4",
         "@mashroom/mashroom-utils": "2.9.4",
-        "@shelf/jest-mongodb": "^5.1.0"
+        "@shelf/jest-mongodb": "^6.0.2"
     },
     "jest": {
         "testEnvironment": "node",
@@ -45,26 +46,10 @@
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
     },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Storage MongoDB Provider",
-                "type": "storage-provider",
-                "bootstrap": "./dist/storage/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "uri": "mongodb://localhost:27017/mashroom_storage_db",
-                    "connectionOptions": {
-                        "minPoolSize": 5,
-                        "serverSelectionTimeoutMS": 3000
-                    }
-                }
-            }
-        ]
-    },
     "lavamoat": {
         "allowScripts": {
-            "@shelf/jest-mongodb>mongodb-memory-server": false
+            "@shelf/jest-mongodb>mongodb-memory-server": false,
+            "@shelf/jest-mongodb>@swc/jest>@swc/core": false
         }
     }
 }

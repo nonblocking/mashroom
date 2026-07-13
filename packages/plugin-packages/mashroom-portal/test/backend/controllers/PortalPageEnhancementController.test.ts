@@ -38,7 +38,7 @@ const portalPageEnhancement: MashroomPortalPageEnhancement = {
     version: '1.0.1',
     lastReloadTs: Date.now(),
     order: 1000,
-    resourcesRootUri: `file:///${__dirname}`,
+    resourcesRootUrl: `file:///${__dirname}`,
     pageResources: {
         js: [{
             path: 'test-script1.js',
@@ -75,7 +75,7 @@ describe('PortalPageEnhancementController', () => {
             },
             params: {
                 pluginName: 'Test Page Enhancement',
-                0: 'test-script1.js',
+                resourcePath: ['test-script1.js'],
             },
             pluginContext,
             query: {},
@@ -107,7 +107,7 @@ describe('PortalPageEnhancementController', () => {
             },
             params: {
                 pluginName: 'Test Page Enhancement',
-                0: 'test-script2.js',
+                resourcePath: ['test-script2.js'],
             },
             pluginContext,
             query: {},
@@ -134,7 +134,7 @@ describe('PortalPageEnhancementController', () => {
             },
             params: {
                 pluginName: 'Test Page Enhancement XXX',
-                0: 'test-script1.js',
+                resourcePath: ['test-script1.js'],
             },
             pluginContext,
             query: {},

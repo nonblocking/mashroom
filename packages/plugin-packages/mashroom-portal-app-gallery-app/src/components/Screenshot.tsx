@@ -1,14 +1,16 @@
 import React from 'react';
 import MashroomLogo from '../../assets/logo-primary.svg';
+import OpenMicrofrontendsLogo from '../../assets/logo-openmicrofrontends.svg';
 import styles from './Screenshot.scss';
 
 type Props = {
     srcs: Array<string> | undefined;
     forbidden: boolean;
-    showImageInOverlay: (src: string) => void
+    showImageInOverlay: (src: string) => void;
+    openMicrofrontends: boolean;
 }
 
-export default ({srcs, forbidden, showImageInOverlay}: Props) => {
+export default ({srcs, forbidden, showImageInOverlay, openMicrofrontends}: Props) => {
     // For the moment just show the first one
     const src = srcs?.[0];
 
@@ -17,7 +19,7 @@ export default ({srcs, forbidden, showImageInOverlay}: Props) => {
             {!src && !forbidden && (
                 <div className={styles.NoImage}>
                     <div className={styles.NoImageIcon}
-                        dangerouslySetInnerHTML={{ __html: MashroomLogo }}
+                        dangerouslySetInnerHTML={{ __html: openMicrofrontends ? OpenMicrofrontendsLogo : MashroomLogo }}
                     />
                 </div>
             )}

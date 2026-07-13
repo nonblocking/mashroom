@@ -3,11 +3,11 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds a Service to manage cache control headers. It also allows to disable the cache globally.
+This plugin adds a Service to manage cache control headers. It also allows disabling the cache globally.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-browser-cache** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-browser-cache** as *dependency*.
 
 After that you can use the service like this:
 
@@ -23,7 +23,7 @@ export default async (req: Request, res: Response) => {
 };
 ```
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your server config file like this:
 
 ```json
 {
@@ -38,11 +38,11 @@ You can override the default config in your Mashroom config file like this:
  * _disabled_: Disable browser caching (default: false)
  * _maxAgeSec_: Max age in seconds (default: 31536000 (30d))
 
-## Services
+## Provided Services
 
 ### MashroomCacheControlService
 
-The Cache Control service is accessible through _pluginContext.services.browserCache.cacheControl_
+The Cache Control service is accessible through _pluginContext.services.browserCache.cacheControl_.
 
 **Interface:**
 

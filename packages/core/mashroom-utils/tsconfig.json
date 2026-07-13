@@ -7,6 +7,7 @@
         "strict": true,
         "esModuleInterop": true,
         "declaration": true,
-        "forceConsistentCasingInFileNames": false
+        "forceConsistentCasingInFileNames": false,
+        "types": ["node", "jest"]
     }
 }

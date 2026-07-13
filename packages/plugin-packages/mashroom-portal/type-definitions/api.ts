@@ -5,6 +5,7 @@ import type {
     MashroomPluginConfig,
     MashroomPluginContextHolder
 } from '@mashroom/mashroom/type-definitions';
+import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
 /* Model */
 
@@ -175,10 +176,10 @@ export type MashroomPortalAppSetup = {
      */
     readonly restProxyPaths: MashroomPortalProxyPaths;
     readonly sharedResourcesBasePath: string;
-    readonly sharedResources: MashroomPortalAppResources | null | undefined;
+    readonly sharedResources: MashroomPortalAppSharedResources | null | undefined;
     readonly resourcesBasePath: string;
     readonly resources: MashroomPortalAppResources;
-    readonly globalLaunchFunction: string;
+    readonly clientBootstrapName: string;
     readonly lang: string;
     readonly user: MashroomPortalAppUser;
     readonly appConfig: MashroomPluginConfig;
@@ -318,7 +319,7 @@ export interface MashroomPortalTheme {
 
 export interface MashroomPortalLayout {
     /**
-     * Name of the layout
+     * Name of the layout (plugin name + layout ID)
      */
     readonly name: string;
 
@@ -333,7 +334,7 @@ export interface MashroomPortalLayout {
     readonly lastReloadTs: number;
 
     /**
-     * The layout name
+     * The layout ID
      */
     readonly layoutId: string;
 
@@ -366,6 +367,15 @@ export type MashroomPortalProxyDefinitions = {
 };
 
 export type MashroomPortalAppResources = {
+    readonly moduleSystem: 'none' | 'ESM' | 'SystemJS';
+    readonly importMap?: {
+        readonly imports: Record<string, string>;
+    };
+    readonly js: Array<string>;
+    readonly css?: Array<string>;
+};
+
+export type MashroomPortalAppSharedResources = {
     readonly js: Array<string>;
     readonly css?: Array<string>;
 };
@@ -396,7 +406,7 @@ export type MashroomPortalApp = {
     readonly tags: Array<string>;
 
     /**
-     * Any kind of optional meta information
+     * Any kind of optional meta-information
      */
     readonly metaInfo: any | null | undefined;
 
@@ -441,6 +451,11 @@ export type MashroomPortalApp = {
     readonly lastReloadTs: number;
 
     /**
+     * The URL of the plugin package this plugin is part of
+     */
+    readonly packageUrl: URL;
+
+    /**
      * Resource to load
      */
     readonly resources: MashroomPortalAppResources;
@@ -448,10 +463,10 @@ export type MashroomPortalApp = {
     /**
      * Shared JS libraries (only loaded once on a page)
      */
-    readonly sharedResources: MashroomPortalAppResources | null | undefined;
+    readonly sharedResources: MashroomPortalAppSharedResources | null | undefined;
 
     /**
-     * An optional list of screenshots (relative to resourcesRootUri)
+     * An optional list of screenshots (relative to resourcesRootUrl)
      */
     readonly screenshots: Array<string> | null | undefined;
 
@@ -478,12 +493,12 @@ export type MashroomPortalApp = {
      * The route will receive a POST with a JSON body with a "portalAppSetup" property.
      * This will only be used if remoteApp is true.
      */
-    readonly ssrInitialHtmlUri: string | null | undefined;
+    readonly ssrInitialHtmlUrl: string | null | undefined;
 
     /**
-     * Resources root URI (local path if remoteApp false, otherwise an HTTP or HTTPS url)
+     * Resources root URL (local path if remoteApp false, otherwise an HTTP or HTTPS url)
      */
-    readonly resourcesRootUri: string;
+    readonly resourcesRootUrl: string;
 
     /**
      * Optional caching information
@@ -498,12 +513,12 @@ export type MashroomPortalApp = {
 
     /**
      * If no role restrictions were defined via Admin App in the UI only these roles can view the app.
-     * If not set every user can load the app.
+     * If not set, every user can load the app.
      */
     readonly defaultRestrictViewToRoles: Array<string> | null | undefined;
 
     /**
-     * A mapping between app specific permissions and existing roles
+     * A mapping between app-specific permissions and existing roles
      */
     readonly rolePermissions: MashroomPortalRolePermissions | null | undefined;
 
@@ -566,15 +581,15 @@ export type MashroomPortalPageEnhancement = {
      */
     readonly lastReloadTs: number;
     /**
-     * Resources root URI (can be file, http or https)
+     * Resources root URL (can be a file, http or https)
      */
-    readonly resourcesRootUri: string;
+    readonly resourcesRootUrl: string;
     /**
      * Resources that should be added to portal pages
      */
     readonly pageResources: MashroomPortalPageEnhancementResources;
     /**
-     * The "weight" of this plugin, the higher it es the later the resources are added to the page
+     * The order of this plugin, the higher it es the later the resources are added to the page
      */
     readonly order: number;
     /**
@@ -625,7 +640,7 @@ export type MashroomPortalAppEnhancement = {
     /**
      * The actual plugin
      */
-    plugin: MashroomPortalAppEnhancementPlugin | undefined;
+    readonly plugin: MashroomPortalAppEnhancementPlugin | undefined;
 }
 
 export interface MashroomPortalAppEnhancementPlugin {
@@ -633,6 +648,58 @@ export interface MashroomPortalAppEnhancementPlugin {
      * Enhance the portalAppSetup object passed as the first argument (if necessary)
      */
     enhancePortalAppSetup: (portalAppSetup: MashroomPortalAppSetup, portalApp: MashroomPortalApp, request: Request) => Promise<MashroomPortalAppSetup>;
+}
+
+export type MashroomPortalAppConfig = {
+    /**
+     * Config plugin name
+     */
+    readonly name: string;
+    /**
+     * Config plugin description
+     */
+    readonly description: string | undefined | null;
+    /**
+     * The order of this plugin, the higher it es the later the resources are added to the page
+     */
+    readonly order: number;
+    /**
+     * The actual plugin
+     */
+    readonly plugin: MashroomPortalAppConfigPlugin;
+}
+
+export interface MashroomPortalAppConfigPlugin {
+    /**
+     * Return true if the config should be applied to the given Portal App
+     */
+    applyTo(portalAppName: string): boolean;
+    /**
+     * Overwrite the targetUrl for a given proxyId.
+     * Returning undefined keeps the original.
+     */
+    overwriteProxyTargetUrl?(portalApp: MashroomPortalApp, proxyId: string, request: Request): string | undefined;
+
+    /**
+     * Add (security) headers to outgoing proxy requests.
+     */
+    addProxyRequestHeaders?(portalApp: MashroomPortalApp, proxyId: string, request: Request): Record<string, string> | undefined;
+
+    /**
+     * Add (security) headers to SSR route requests.
+     */
+    addSSRRouteRequestHeaders?(portalApp: MashroomPortalApp, request: Request): Record<string, string>;
+
+    /**
+     * Determine the actual rolePermissions for the Portal App.
+     */
+    determineRolePermissions?(portalApp: MashroomPortalApp, user: MashroomSecurityUser  | null, request: Request): Promise<Record<string, boolean> | undefined>;
+
+    /**
+     * Rewrite Portal App import map.
+     * This can be used to make sure all Portal Apps use the same vendor library or change the location of vendor libraries.
+     */
+    rewriteImportMap?(portalApp: MashroomPortalApp, request: Request): MashroomPortalAppResources['importMap'];
 }
 
 /* Backend services */
@@ -664,6 +731,11 @@ export interface MashroomPortalService {
     getPortalAppEnhancements(): Readonly<Array<MashroomPortalAppEnhancement>>;
 
     /**
+     * Get all registered portal app config plugins
+     */
+    getPortalAppConfigs(): Readonly<Array<MashroomPortalAppConfig>>;
+
+    /**
      * Get all sites
      */
     getSites(limit?: number): Promise<Array<MashroomPortalSite>>;
@@ -674,7 +746,7 @@ export interface MashroomPortalService {
     getSite(siteId: string): Promise<MashroomPortalSite | null | undefined>;
 
     /**
-     * Find the site with given path
+     * Find the site with the given path
      */
     findSiteByPath(path: string): Promise<MashroomPortalSite | null | undefined>;
 
@@ -699,7 +771,7 @@ export interface MashroomPortalService {
     getPage(pageId: string): Promise<MashroomPortalPage | null | undefined>;
 
     /**
-     * Find the page ref within a site with given friendly URL
+     * Find the page ref within a site with a given friendly URL
      */
     findPageRefByFriendlyUrl(site: MashroomPortalSite, friendlyUrl: string): Promise<MashroomPortalPageRef | null | undefined>;
 
@@ -709,7 +781,7 @@ export interface MashroomPortalService {
     findPageRefByPageId(site: MashroomPortalSite, pageId: string): Promise<MashroomPortalPageRef | null | undefined>;
 
     /**
-     * Insert new page
+     * Insert a new page
      */
     insertPage(page: MashroomPortalPage): Promise<void>;
 
@@ -719,7 +791,7 @@ export interface MashroomPortalService {
     updatePage(page: MashroomPortalPage): Promise<void>;
 
     /**
-     * Insert new page
+     * Insert a new page
      */
     deletePage(req: Request, pageId: string): Promise<void>;
 
@@ -754,6 +826,18 @@ export type AppSearchFilter = {
 
 export type ModalAppCloseCallback = () => void;
 
+export type ClientBootstrapReference = {
+    readonly pluginName: string;
+    readonly instanceId: string;
+    clientBootstrap: MashroomPortalAppPluginBootstrapFunction;
+}
+
+export interface MashroomPortalAppClientBootstrapAdapter {
+    readonly name: string;
+    shouldAdapt(portalAppSetup: MashroomPortalAppSetup): boolean;
+    adapt(originalBootstrap: MashroomPortalAppPluginBootstrapFunction): MashroomPortalAppPluginBootstrapFunction;
+}
+
 export interface MashroomPortalAppService {
     /**
      * Get all Portal Apps available to the user
@@ -766,24 +850,24 @@ export interface MashroomPortalAppService {
     searchApps(filter?: AppSearchFilter): Promise<Array<MashroomKnownPortalApp>>;
 
     /**
-     * Load a Portal App into given host element at given position (or at the end if position is not set)
+     * Load a Portal App into a given host element at a given position (or at the end if the position is not set)
      *
-     * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
+     * The returned promise will always be resolved! If there was a loading error, the MashroomPortalLoadedPortalApp.error property will be true.
      */
     loadApp(appAreaId: string, pluginName: string, instanceId: string | null | undefined, position?: number | null | undefined, overrideAppConfig?: any | null | undefined): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
      * Load a Portal App into a modal overlay.
      *
-     * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
+     * The returned promise will always be resolved! If there was a loading error, the MashroomPortalLoadedPortalApp.error property will be true.
      */
     loadAppModal(pluginName: string, title?: string | null | undefined, overrideAppConfig?: any | null | undefined, onClose?: ModalAppCloseCallback | null | undefined): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
-     * Reload given Portal App.
+     * Reload the given Portal App.
      *
-     * The returned promise will always resolve!
-     * If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
+     * The returned promise will always be resolved!
+     * If there was a loading error, the MashroomPortalLoadedPortalApp.error property will be true.
      */
     reloadApp(id: string, overrideAppConfig?: any | null | undefined): Promise<MashroomPortalLoadedPortalApp>;
 
@@ -796,6 +880,14 @@ export interface MashroomPortalAppService {
      * Move a loaded App to another area (to another host element within the DOM)
      */
     moveApp(id: string, newAppAreaId: string, newPosition?: number): void;
+
+    /**
+     * Loads the Portal App without starting it and returns a reference to the client bootstrap.
+     *
+     * ONLY use this if you exactly know what you are doing!
+     * If you start the Portal App, you have to take care of calling the lifecycle methods yourself.
+     */
+    loadAppClientBootstrap(hostElementId: string, pluginName: string): Promise<ClientBootstrapReference>;
 
     /**
      * Show the name and version for all currently loaded App in an overlay (for debug purposes)
@@ -818,7 +910,7 @@ export interface MashroomPortalAppService {
     unregisterAppLoadedListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
-     * Add a listener for unload events (fired before an App will be detached from the page)
+     * Add a listener for unloaded events (fired before an App will be detached from the page)
      */
     registerAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
 
@@ -828,7 +920,18 @@ export interface MashroomPortalAppService {
     unregisterAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
-     * Load the setup for given App/plugin name on the current page
+     * Register a bootstrap adapter.
+     * This can be used to start Apps with non-compliant client bootstraps.
+     */
+    registerClientBootstrapAdapter(adapter: MashroomPortalAppClientBootstrapAdapter): void;
+
+    /**
+     * Unregister a bootstrap adapter.
+     */
+    unregisterClientBootstrapAdapter(adapter: MashroomPortalAppClientBootstrapAdapter): void;
+
+    /**
+     * Load the setup for a given App / plugin name on the current page
      */
     loadAppSetup(pluginName: string, instanceId: string | null | undefined): Promise<MashroomPortalAppSetup>;
 
@@ -846,7 +949,7 @@ export interface MashroomPortalAppService {
     checkLoadedPortalAppsUpdated(): Promise<Array<string>>;
 
     /**
-     * Prefetch resources of given App/plugin. This is useful if you know which apps you will have to load
+     * Prefetch resources of a given App / plugin. This is useful if you know which apps you will have to load
      * in the future and want to minimize the loading time.
      */
     prefetchResources(pluginName: string): Promise<void>;
@@ -866,7 +969,7 @@ export interface MashroomPortalSiteService {
     getSites(): Promise<Array<MashroomPortalSiteLinkLocalized>>;
 
     /**
-     * Get the page tree for given site
+     * Get the page tree for a given site
      */
     getPageTree(siteId: string): Promise<Array<MashroomPortalPageRefLocalized>>;
 }
@@ -877,7 +980,7 @@ export interface MashroomPortalPageService {
      */
     getCurrentPageId(): string;
     /**
-     * Get the page friendlyUrl from given URL (e.g. /portal/web/test?x=1 -> /test)
+     * Get the page friendlyUrl from the given URL (e.g., /portal/web/test?x=1 -> /test)
      */
     getPageFriendlyUrl(pageUrl: string): string;
     /**
@@ -885,7 +988,7 @@ export interface MashroomPortalPageService {
      */
     getPageId(pageUrl: string): Promise<string | undefined>;
     /**
-     * Get the content for given pageId.
+     * Get the content for the given pageId.
      * It also calculates if the correct theme and all necessary page enhancements for the requested page
      * are already loaded. Otherwise, fullPageLoadRequired is going to be true and no content returned.
      */
@@ -954,7 +1057,7 @@ export interface MashroomPortalAdminService {
     getExistingRoles(): Promise<Array<RoleDefinition>>;
 
     /**
-     * Get all app instances on current page
+     * Get all app instances on the current page
      */
     getAppInstances(): Promise<Array<MashroomPagePortalAppInstance>>;
 
@@ -994,7 +1097,7 @@ export interface MashroomPortalAdminService {
     getPage(pageId: string): Promise<MashroomPortalPage>;
 
     /**
-     * Add new page
+     * Add a new page
      */
     addPage(page: MashroomPortalPage): Promise<MashroomPortalPage>;
 
@@ -1029,7 +1132,7 @@ export interface MashroomPortalAdminService {
     getSite(siteId: string): Promise<MashroomPortalSite>;
 
     /**
-     * Add new site
+     * Add a new site
      */
     addSite(site: MashroomPortalSite): Promise<MashroomPortalSite>;
 
@@ -1060,7 +1163,7 @@ export type MashroomPortalMessageBusInterceptor = (data: any, topic: string, sen
 
 export interface MashroomPortalMessageBus {
     /**
-     * Subscribe to given topic.
+     * Subscribe to a given topic.
      * Topics starting with getRemotePrefix() will be subscribed server side via WebSocket (if available).
      * Remote topics can also contain wildcards: # for multiple levels and + or * for a single level
      * (e.g. remote:/foo/+/bar)
@@ -1068,19 +1171,19 @@ export interface MashroomPortalMessageBus {
     subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
 
     /**
-     * Subscribe once to given topic. The handler will be removed after the first message has been received.
+     * Subscribe once to the given topic. The handler will be removed after the first message has been received.
      * Remote topics are accepted.
      */
     subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
 
     /**
-     * Unsubscribe from given topic.
+     * Unsubscribe from the given topic.
      * Remote topics are accepted.
      */
     unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
 
     /**
-     * Publish to given topic.
+     * Publish to the given topic.
      * Remote topics are accepted.
      */
     publish(topic: string, data: any): Promise<void>;
@@ -1099,7 +1202,7 @@ export interface MashroomPortalMessageBus {
     /**
      * Register a message interceptor.
      * An interceptor can be useful for debugging or to manipulate the messages.
-     * It can change the data of an event by return a different value or block messages
+     * It can change the data of an event by returning a different value or block messages
      * by calling cancelMessage() from the interceptor arguments.
      */
     registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor): void;
@@ -1113,36 +1216,36 @@ export interface MashroomPortalMessageBus {
 export interface MashroomPortalMasterMessageBus
     extends MashroomPortalMessageBus {
     /**
-     * Get an App specific instance.
+     * Get an App-specific instance.
      * The returned instance will set the senderId on the MashroomPortalMessageBusSubscriberCallback to the given id.
      */
     getAppInstance(appId: string): MashroomPortalMessageBus;
 
     /**
-     * Unsubscribe/Unregister everything from a given App (for cleanup after unload)
+     * Unsubscribe/Unregister everything from a given App (for cleanup after unloading)
      */
     unsubscribeEverythingFromApp(appId: string): Promise<void>;
 }
 
 export interface MashroomPortalStateService {
     /**
-     * Get a property from state.
+     * Get a property from the state.
      * It will be looked up in the URL (query param or encoded) and in the local and session storage
      */
     getStateProperty(key: string): any | null | undefined;
 
     /**
-     * Add given key value pair into the URL (encoded)
+     * Add the given key value pair into the URL (encoded)
      */
     setUrlStateProperty(key: string, value: any | null | undefined): void;
 
     /**
-     * Add given key value pair to the session storage
+     * Add the given key value pair to the session storage
      */
     setSessionStateProperty(key: string, value: any): void;
 
     /**
-     * Add given key value pair to the local storage
+     * Add the given key value pair to the local storage
      */
     setLocalStoreStateProperty(key: string, value: any): void;
 }
@@ -1188,7 +1291,7 @@ export interface MasterMashroomPortalRemoteLogger extends MashroomPortalRemoteLo
     info(msg: string, portalAppName?: string | null | undefined): void;
 
     /**
-     * Get an app specific instance.
+     * Get an App-specific instance.
      * The returned instance will set the portalAppName automatically.
      */
     getAppInstance(portalAppName: string): MashroomPortalRemoteLogger;
@@ -1208,29 +1311,17 @@ export type MashroomPortalClientServices = {
 
 /* Plugin bootstrap functions */
 
-// portal-app-registry
-
-export interface MashroomPortalAppRegistry {
-    readonly portalApps: Readonly<Array<MashroomPortalApp>>;
-}
-
-export type MashroomPortalAppRegistryBootstrapFunction = (
-    pluginName: string,
-    pluginConfig: MashroomPluginConfig,
-    contextHolder: MashroomPluginContextHolder,
-) => Promise<MashroomPortalAppRegistry>;
-
 // portal-app
 
 export type MashroomPortalAppLifecycleHooks = {
     /**
-     * Will be called before the host element will be removed from the DOM.
-     * Can be used to clean up (e.g. to unmount a React App).
+     * Will be called before the host element is removed from the DOM.
+     * Can be used to clean up (e.g., to unmount a React App).
      */
     readonly willBeRemoved?: () => void | Promise<void>;
     /**
      * Dynamically update the appConfig.
-     * If present this will be used to update the appConfig instead of restarting the whole App.
+     * If present, this will be used to update the appConfig instead of restarting the whole App.
      */
     readonly updateAppConfig?: (appConfig: MashroomPluginConfig) => void;
 };
@@ -1245,7 +1336,7 @@ export type MashroomPortalAppSSRRemoteRequest = {
 
 export type MashroomPortalAppSSRResultEmbeddedApp = {
     /**
-     * The area Id (host ID) the embedded Portal App should be integrated into
+     * The area id (host ID) the embedded Portal App should be integrated into
      */
     readonly appAreaId: string;
     /**
@@ -1299,3 +1390,7 @@ export type MashroomPortalPageEnhancementPluginBootstrapFunction = (pluginName: 
 
 export type MashroomPortalAppEnhancementPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder)
     => MashroomPortalAppEnhancementPlugin;
+
+// portal-app-config
+export type MashroomPortalAppConfigPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder)
+    => MashroomPortalAppConfigPlugin;

@@ -1,10 +1,10 @@
 
-import {Server, CLOSING, OPEN} from 'ws';
-import {v4} from 'uuid';
+import {randomUUID} from 'node:crypto';
+import WS, {WebSocketServer as WsWebSocketServer} from 'ws';
 import context from './context';
 
+import type {WebSocket, RawData} from 'ws';
 import type ReconnectMessageBufferStore from './webapp/ReconnectMessageBufferStore';
-import type WebSocket from 'ws';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {
@@ -21,7 +21,7 @@ const KEEP_ALIVE_MESSAGE = 'keepalive';
 export default class WebSocketServer implements MashroomWebSocketServer {
 
     private _logger: MashroomLogger;
-    private _server: Server;
+    private _server: WsWebSocketServer;
     private _clients: Array<{
         client: InternalMashroomWebSocketClient,
         webSocket: WebSocket,
@@ -36,7 +36,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
 
     constructor(loggerFactory: MashroomLoggerFactory, private _reconnectMessageBufferStore: ReconnectMessageBufferStore) {
         this._logger = loggerFactory('mashroom.websocket.server');
-        this._server = new Server({
+        this._server = new WsWebSocketServer({
             noServer: true
         });
         this._clients = [];
@@ -83,7 +83,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         const reconnecting = undefined;
         const clientIdFromConnectPath = this._getClientIdFromConnectPath(connectPath);
         const reconnectingClient = this._clients.find((c) => c.client.clientId === clientIdFromConnectPath);
-        const clientId = reconnectingClient ? (clientIdFromConnectPath || v4()) : v4();
+        const clientId = reconnectingClient ? (clientIdFromConnectPath || randomUUID()) : randomUUID();
 
         if (reconnectingClient) {
             contextLogger.debug(`Client ${clientId} reconnected`);
@@ -121,14 +121,14 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         this._addWebSocketListeners(webSocket, contextLogger, client);
     }
 
-    getServer(): Server {
+    getServer(): WsWebSocketServer {
         return this._server;
     }
 
     async sendMessage(client: MashroomWebSocketClient, message: any): Promise<void> {
         const webSocket = this._getWebSocket(client);
         const internalClient = client as InternalMashroomWebSocketClient;
-        if (webSocket && webSocket.readyState === OPEN && !internalClient.reconnecting) {
+        if (webSocket && webSocket.readyState === WS.OPEN && !internalClient.reconnecting) {
             const contextLogger = this._logger.withContext(client.loggerContext);
 
             return new Promise((resolve, reject) => {
@@ -143,7 +143,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
             });
         }
 
-        if (internalClient.reconnecting || (webSocket && webSocket.readyState === CLOSING)) {
+        if (internalClient.reconnecting || (webSocket && webSocket.readyState === WS.CLOSING)) {
             await this._reconnectMessageBufferStore.appendData(this._getFileName(client.user, client), JSON.stringify(message));
         }
     }
@@ -231,7 +231,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         return `${username}_${clientId}`;
     }
 
-    private _handleMessage(msg: WebSocket.Data, client: MashroomWebSocketClient): void {
+    private _handleMessage(msg: RawData, client: MashroomWebSocketClient): void {
         const contextLogger = this._logger.withContext(client.loggerContext);
 
         let textMsg: string;

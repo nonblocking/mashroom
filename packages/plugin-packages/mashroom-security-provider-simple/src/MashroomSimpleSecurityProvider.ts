@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import querystring from 'querystring';
 import {createHash} from 'crypto';
+import {configFileUtils} from '@mashroom/mashroom-utils';
 
 import type {
     MashroomSecurityAuthenticationResult,
@@ -78,7 +79,8 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
 
         const passwordHash = createHash('sha256').update(password).digest('hex');
 
-        const user = this._getUserStore(request, logger).find((u: UserStoreEntry) => u.username === username);
+        const userStore = await this._getUserStore(request, logger);
+        const user = userStore.find((u: UserStoreEntry) => u.username === username);
         const passwordCorrect = user && user.passwordHash === passwordHash;
 
         if (user && passwordCorrect) {
@@ -131,18 +133,16 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         return request.session[SIMPLE_AUTH_USER_SESSION_KEY];
     }
 
-    private _getUserStore(request: Request, logger: MashroomLogger): UserStore {
+    private async _getUserStore(request: Request, logger: MashroomLogger): Promise<UserStore> {
         if (this._userStore) {
             return this._userStore;
         }
 
         let userStore: UserStore;
         if (fs.existsSync(this._userStorePath)) {
-             
-            const userDataModule = require(this._userStorePath);
-            const userData = userDataModule.default ?? userDataModule;
+            const userData = await configFileUtils.loadConfigFile(this._userStorePath);
             userStore = Array.isArray(userData) ? userData : (userData.users || []);
-            this._createRoleDefinitions(userStore, request, logger);
+            await this._createRoleDefinitions(userStore, request, logger);
         } else {
             logger.warn(`No user definition found: ${this._userStorePath}.`);
             userStore = [];

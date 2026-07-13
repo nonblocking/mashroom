@@ -7,6 +7,8 @@
 
 export type MashroomPlugins1 =
   | MashroomPluginLoaderPluginDefinition
+  | MashroomPluginPackageScannerPluginDefinition
+  | MashroomPluginPackageDefinitionBuilderPluginDefinition
   | MashroomWebAppPluginDefinition
   | MashroomApiPluginDefinition
   | MashroomMiddlewarePluginDefinition
@@ -17,13 +19,12 @@ export type MashroomPlugins1 =
   | MashroomExternalMessagingProviderPluginDefinition
   | MashroomHttpProxyInterceptorPluginDefinition
   | MashroomMemoryCacheProviderPluginDefinition
-  | MashroomPortalAppV1PluginDefinition
   | MashroomPortalAppV2PluginDefinition
   | MashroomPortalThemePluginDefinition
   | MashroomPortalLayoutsPluginDefinition
-  | MashroomPortalAppRegistryPluginDefinition
   | MashroomPortalPageEnhancementPluginDefinition
   | MashroomPortalAppEnhancementPluginDefinition
+  | MashroomPortalAppConfigPluginDefinition
   | MashroomSecurityProviderPluginDefinition
   | MashroomSessionStoreProviderPluginDefinition
   | MashroomStorageProviderPluginDefinition
@@ -41,6 +42,10 @@ export type JavaScriptIdentifier = string;
 
 export interface MashroomPlugins {
   devModeBuildScript?: string;
+  /**
+   * An optional path to a build manifest that contains a 'version' or 'timestamp' property. Only for remote packages.
+   */
+  buildManifestPath?: string;
   plugins: MashroomPlugins1[];
   $schema?: any;
 }
@@ -62,6 +67,41 @@ export interface MashroomPluginLoaderPluginDefinition {
    */
   bootstrap: string;
   defaultConfig?: {};
+}
+export interface MashroomPluginPackageScannerPluginDefinition {
+  name: string;
+  description?: string;
+  tags?: string[];
+  /**
+   * Required plugins
+   */
+  requires?: string[];
+  type: "plugin-package-scanner";
+  /**
+   * Script that exports MashroomPluginLoaderPluginBootstrapFunction
+   */
+  bootstrap: string;
+  defaultConfig?: {};
+}
+export interface MashroomPluginPackageDefinitionBuilderPluginDefinition {
+  name: string;
+  description?: string;
+  tags?: string[];
+  /**
+   * Required plugins
+   */
+  requires?: string[];
+  type: "plugin-package-definition-builder";
+  /**
+   * Script that exports MashroomPluginLoaderPluginBootstrapFunction
+   */
+  bootstrap: string;
+  defaultConfig?: {
+    /**
+     * The order of the builder plugin - the higher it is the later it will be executed (Default: 1000)
+     */
+    order?: number;
+  };
 }
 export interface MashroomWebAppPluginDefinition {
   name: string;
@@ -118,7 +158,7 @@ export interface MashroomMiddlewarePluginDefinition {
   bootstrap: string;
   defaultConfig: {
     /**
-     * The weight of the middleware in the stack - the higher it is the later it will be executed (Default: 1000)
+     * The order of the middleware in the stack - the higher it is the later it will be executed (Default: 1000)
      */
     order?: number;
   };
@@ -189,9 +229,9 @@ export interface MashroomAdminUiIntegrationPluginDefinition {
      */
     height?: string;
     /**
-     * The weight of the menu entry, the higher the number the lower will be menu entry be (Default: 100)
+     * The order of the menu entry, the higher the number the lower the menu entry will be (Default: 1000)
      */
-    weight?: number;
+    order?: number;
   };
 }
 export interface MashroomBackgroundJobPluginDefinition {
@@ -244,7 +284,7 @@ export interface MashroomHttpProxyInterceptorPluginDefinition {
   bootstrap: string;
   defaultConfig: {
     /**
-     * The weight of the middleware in the stack - the higher it is the **later** it will be executed (Default: 1000)
+     * The order of the proxy interceptor plugin - the higher it is the **later** it will be executed (Default: 1000)
      */
     order?: number;
   };
@@ -264,119 +304,6 @@ export interface MashroomMemoryCacheProviderPluginDefinition {
   bootstrap: string;
   defaultConfig?: {};
 }
-export interface MashroomPortalAppV1PluginDefinition {
-  name: string;
-  description?: string;
-  /**
-   * Required plugins
-   */
-  requires?: string[];
-  type: "portal-app";
-  /**
-   * Optional human readable title of the App. Can be a string or an object with translations.
-   */
-  title?:
-    | string
-    | {
-        /**
-         * This interface was referenced by `undefined`'s JSON-Schema definition
-         * via the `patternProperty` "^[a-z]{2}$".
-         */
-        [k: string]: string;
-      };
-  /**
-   * An optional category to group the Apps in the Admin App
-   */
-  category?: string;
-  /**
-   * A list of tags that can also be used in the search (in the Admin App)
-   */
-  tags?: string[];
-  resources: PortalAppResources;
-  sharedResources?: PortalAppResources1;
-  /**
-   * Optional some screenshots of the App. The screenshots paths are relative to resourcesRoot
-   */
-  screenshots?: string[];
-  /**
-   * A global function that implements MashroomPortalAppPluginBootstrapFunction and starts the App within the given host element
-   */
-  bootstrap: string;
-  defaultConfig: {
-    /**
-     * The root path for APP resources such as JavaScript files and images.
-     */
-    resourcesRoot: string;
-    /**
-     * Optional default list of roles that have the VIEW permission if not set via Admin App.
-     */
-    defaultRestrictViewToRoles?: string[];
-    /**
-     * Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App
-     */
-    rolePermissions?: {
-      /**
-       * This interface was referenced by `undefined`'s JSON-Schema definition
-       * via the `patternProperty` "^[a-zA-Z_]\w+$".
-       */
-      [k: string]: string[];
-    };
-    restProxies?: {
-      /**
-       * This interface was referenced by `undefined`'s JSON-Schema definition
-       * via the `patternProperty` "^[a-zA-Z_]\w+$".
-       */
-      [k: string]: {
-        /**
-         *  The API target URI (HTTP, HTTPS or WebSocket)
-         */
-        targetUri: string;
-        /**
-         * Optional. Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)
-         */
-        sendPermissionsHeader?: boolean;
-        /**
-         * Optional list of roles that are permitted to access the proxy
-         */
-        restrictToRoles?: string[];
-      };
-    };
-    /**
-     * Optional meta info that could be used to lookup for Apps with specific features or capabilities
-     */
-    metaInfo?: {};
-    /**
-     * The default configuration that will be passed to the App. Can be adapted in the Admin App
-     */
-    appConfig?: {};
-  };
-}
-/**
- * Javascript and CSS resources that must be loaded before the bootstrap method is invoked.
- */
-export interface PortalAppResources {
-  /**
-   * JavaScript resources. Relative to resourcesRoot
-   */
-  js: string[];
-  /**
-   * CSS resources. Relative to resourcesRoot
-   */
-  css?: string[];
-}
-/**
- * Optional. Same as resources but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it.
- */
-export interface PortalAppResources1 {
-  /**
-   * JavaScript resources. Relative to resourcesRoot
-   */
-  js: string[];
-  /**
-   * CSS resources. Relative to resourcesRoot
-   */
-  css?: string[];
-}
 export interface MashroomPortalAppV2PluginDefinition {
   name: string;
   /**
@@ -388,13 +315,13 @@ export interface MashroomPortalAppV2PluginDefinition {
    * A global function that implements MashroomPortalAppPluginBootstrapFunction and starts the App within the given host element
    */
   clientBootstrap: string;
-  resources: PortalAppResources2;
-  sharedResources?: PortalAppResources3;
+  resources: PortalAppResources;
+  sharedResources?: PortalAppResources1;
   /**
    * Optional some screenshots of the App. The screenshots paths are relative to resourcesRoot
    */
   screenshots?: string[];
-  local: PortalAppLocalConfig;
+  local?: PortalAppLocalConfig;
   remote?: PortalAppRemoteConfig;
   defaultConfig?: {
     /**
@@ -450,20 +377,35 @@ export interface MashroomPortalAppV2PluginDefinition {
        * This interface was referenced by `undefined`'s JSON-Schema definition
        * via the `patternProperty` "^[a-zA-Z_]\w+$".
        */
-      [k: string]: {
-        /**
-         *  The API target URI (HTTP, HTTPS or WebSocket)
-         */
-        targetUri: string;
-        /**
-         * Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)
-         */
-        sendPermissionsHeader?: boolean;
-        /**
-         * Optional list of roles that are permitted to access the proxy
-         */
-        restrictToRoles?: string[];
-      };
+      [k: string]:
+        | {
+            /**
+             *  The API target URI (HTTP, HTTPS or WebSocket)
+             */
+            targetUri: string;
+            /**
+             * Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)
+             */
+            sendPermissionsHeader?: boolean;
+            /**
+             * Optional list of roles that are permitted to access the proxy
+             */
+            restrictToRoles?: string[];
+          }
+        | {
+            /**
+             * Path to an API that runs on the remote server that hosts this plugin (BFF)
+             */
+            targetPath: string;
+            /**
+             * Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)
+             */
+            sendPermissionsHeader?: boolean;
+            /**
+             * Optional list of roles that are permitted to access the proxy
+             */
+            restrictToRoles?: string[];
+          };
     };
     /**
      * Optional meta info that could be used to lookup for Apps with specific features or capabilities
@@ -478,7 +420,19 @@ export interface MashroomPortalAppV2PluginDefinition {
 /**
  * Javascript and CSS resources that must be loaded before the bootstrap method is invoked.
  */
-export interface PortalAppResources2 {
+export interface PortalAppResources {
+  /**
+   * The module system the JS resources are using (Default: none)
+   */
+  moduleSystem?: "none" | "ESM" | "SystemJS";
+  /**
+   * An optional import map that will be used to resolve imports. Currently ONLY supported for moduleSystem SystemJS!
+   */
+  importMap?: {
+    imports: {
+      [k: string]: string | undefined;
+    };
+  };
   /**
    * JavaScript resources. Relative to resourcesRoot
    */
@@ -491,7 +445,19 @@ export interface PortalAppResources2 {
 /**
  * Optional. Same as resources but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it.
  */
-export interface PortalAppResources3 {
+export interface PortalAppResources1 {
+  /**
+   * The module system the JS resources are using (Default: none)
+   */
+  moduleSystem?: "none" | "ESM" | "SystemJS";
+  /**
+   * An optional import map that will be used to resolve imports. Currently ONLY supported for moduleSystem SystemJS!
+   */
+  importMap?: {
+    imports: {
+      [k: string]: string | undefined;
+    };
+  };
   /**
    * JavaScript resources. Relative to resourcesRoot
    */
@@ -502,11 +468,11 @@ export interface PortalAppResources3 {
   css?: string[];
 }
 /**
- * Basic configuration if the App is deployed locally.
+ * Configuration if the App is deployed locally.
  */
 export interface PortalAppLocalConfig {
   /**
-   * The root path for APP resources such as JavaScript files and images. Needs to be relative within the package.
+   * The root path for APP resources such as JavaScript files and images. Needs to be relative within the package. (Default: ./dist)
    */
   resourcesRoot: string;
   /**
@@ -515,11 +481,11 @@ export interface PortalAppLocalConfig {
   ssrBootstrap?: string;
 }
 /**
- * Optional configuration if the App is accessed remotely.
+ * Configuration if the App is accessed remotely.
  */
 export interface PortalAppRemoteConfig {
   /**
-   * The root path for App resources such as JavaScript files and images
+   * The root path for App resources such as JavaScript files and images (Default: /)
    */
   resourcesRoot: string;
   /**
@@ -592,26 +558,6 @@ export interface MashroomPortalLayoutsPluginDefinition {
     [k: string]: PackageRelativeOrSystemPath;
   };
 }
-export interface MashroomPortalAppRegistryPluginDefinition {
-  name: string;
-  description?: string;
-  tags?: string[];
-  /**
-   * Required plugins
-   */
-  requires?: string[];
-  type: "portal-app-registry";
-  /**
-   * Script that exports MashroomPortalAppRegistryBootstrapFunction
-   */
-  bootstrap: string;
-  defaultConfig?: {
-    /**
-     * Priority of this registry if a portal-app with the same name is registered multiple times (Default: 1)
-     */
-    priority?: number;
-  };
-}
 export interface MashroomPortalPageEnhancementPluginDefinition {
   name: string;
   description?: string;
@@ -630,11 +576,11 @@ export interface MashroomPortalPageEnhancementPluginDefinition {
    * Optional script that exports MashroomPortalPageEnhancementPluginBootstrapFunction
    */
   bootstrap?: string;
-  defaultConfig: {
+  defaultConfig?: {
     /**
-     * The weight of the resources- the higher it is the **later** they will be added to the page (Default: 1000)
+     * The order of the resources - the higher it is the **later** they will be added to the page (Default: 1000)
      */
-    priority?: number;
+    order?: number;
   };
 }
 /**
@@ -700,6 +646,26 @@ export interface MashroomPortalAppEnhancementPluginDefinition {
     [k: string]: JavaScriptIdentifier;
   };
   defaultConfig?: {};
+}
+export interface MashroomPortalAppConfigPluginDefinition {
+  name: string;
+  description?: string;
+  tags?: string[];
+  /**
+   * Required plugins
+   */
+  requires?: string[];
+  type: "portal-app-config";
+  /**
+   * Optional script that exports MashroomPortalAppConfigPluginBootstrapFunction
+   */
+  bootstrap: string;
+  defaultConfig?: {
+    /**
+     * The order of the config plugin - the higher the less likely it will considered (Default: 1000)
+     */
+    order?: number;
+  };
 }
 export interface MashroomSecurityProviderPluginDefinition {
   name: string;
