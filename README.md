@@ -7,7 +7,7 @@
 > This branch contains the upcoming 3.0 release which is not production ready yet.
 > The current stable branch is [2.x](https://github.com/nonblocking/mashroom/tree/v2_maintainance).
 
-## About ##
+# About
 
 *Mashroom Server* is a *Node.js* based **Microfrontend Integration Platform**. It supports the integration of *Express* web-apps on the
 server side and composing pages from multiple *Single Page Applications* (*Portal Apps*) on the client side.
@@ -28,9 +28,9 @@ Such a plugin could be an *Express* web-app or an *SPA* or more generally all ki
 which is determined by the available plugin loaders.
 Plugin loaders itself are also just plugins, so it is possible to add any type of custom plugin type.
 
-### Key features
+## Key features
 
-#### Portal
+### Portal
 
   * Registration of Single Page Applications Microfrontends (**Portal Apps**) written with any frontend framework
     (basically, you just need to implement a startup function and provide some metadata)
@@ -60,7 +60,7 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
   * **Hot reload** of (local) *Portal Apps* in development mode
   * MCP server that allows coding agents to register and place *Portal Apps* on pages
 
-#### Core
+### Core
 
   * Shared middlewares and services
   * **Service abstractions** for security, internationalization, messaging, HTTP proxying, memory cache, and storage
@@ -78,77 +78,81 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
   * No compile-time or runtime dependencies to the server
   * Fast and lightweight
 
-## Quick Start
+# Quick Start
 
-**TODO**
+**Coming soon**
 
-## Screenshots
+For v2 Quick Start see https://github.com/nonblocking/mashroom/tree/v2_maintainance#quick-start.
 
-### A Portal page with multiple *Portal Apps* (Microfrontends)
+# Screenshots
+
+## A Portal page with multiple *Portal Apps* (Microfrontends)
 
 ![Mashroom Portal](screenshots/mashroom-portal.png)
 
 ![Mashroom Portal Dark Mode](screenshots/mashroom-portal-dark.png)
 
-### Add an App to a Portal Page
+## Add an App to a Portal Page
 
 ![Mashroom Portal Add App](screenshots/mashroom-portal-add-app.gif)
 
-### Bootstrap-based (default) Theme with a Microfrontend using Bootstrap components
+## Bootstrap-based (default) Theme with a Microfrontend using Bootstrap components
 
 ![Mashroom Portal Bootstrap Theme](screenshots/mashroom-portal-bootstrap-theme.png)
 
-### Tailwind-based Theme with a Microfrontend using Shadcn components
+## Tailwind-based Theme with a Microfrontend using Shadcn components
 
 ![Mashroom Portal Tailwind Theme](screenshots/mashroom-portal-tailwind-theme.png)
 
-### Registering and adding Apps via Code Agent
+## Registering and adding Apps via Code Agent
 
 ![Mashroom MCP](screenshots/mashroom-portal-mcp.png)
 
-### Admin UI
+## Admin UI
 
 ![Admin UI](screenshots/mashroom-admin-ui.png)
 
-### Kubernetes Integration
+## Kubernetes Integration
 
 ![Kubernetes Integration](screenshots/mashroom-admin-ui-k8s.png)
 
-## Homepage
+# Homepage
 
 [https://www.mashroom-server.com](https://www.mashroom-server.com)
 
-## Full Documentation
+# Full Documentation
 
-[https://docs.mashroom-server.com](https://docs.mashroom-server.com)
+**Coming soon**
 
-## Blog
+For Mashroom v2 documentation see https://www.mashroom-server.com/documentation/.
+
+# Blog
 
 [https://medium.com/mashroom-server](https://medium.com/mashroom-server)
 
-## Youtube Channel
+# Youtube Channel
 
 [https://www.youtube.com/@mashroomserver](https://www.youtube.com/@mashroomserver)
 
-## Development Resources
+# Development Resources
 
-### Templates
+## Templates
 
-**TODO**
+**Coming soon**
 
-### Plugin Examples
+## Plugin Examples
 
 [https://github.com/nonblocking/mashroom-plugin-demos](https://github.com/nonblocking/mashroom-plugin-demos)
 
-### Remote Portal App Demos
+## Remote Portal App Demos
 
  * [https://github.com/nonblocking/mashroom-demo-remote-portal-app](https://github.com/nonblocking/mashroom-demo-remote-portal-app)
  * [https://github.com/nonblocking/mashroom-demo-ssr-remote-portal-app](https://github.com/nonblocking/mashroom-demo-ssr-remote-portal-app) (supports server-side rendering)
 
-### Dynamic Cockpit Demo
+## Dynamic Cockpit Demo
 
 [https://github.com/nonblocking/mashroom-demo-dynamic-cockpit](https://github.com/nonblocking/mashroom-demo-dynamic-cockpit)
 
-### Microfrontend Platform based on Mashroom and Kubernetes Demo
+## Microfrontend Platform based on Mashroom and Kubernetes Demo
 
 [https://github.com/nonblocking/microfrontend-platform-kubernetes](https://github.com/nonblocking/microfrontend-platform-kubernetes)
