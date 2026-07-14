@@ -3,6 +3,7 @@
 
 ## [unreleased v3]
 
+ * Portal: Fixed sending resources from hidden folders (like /.pnpm/)
 
 ## 3.0.0-alpha.0 (July 13, 2026)
 

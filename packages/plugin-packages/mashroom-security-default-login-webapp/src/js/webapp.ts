@@ -50,7 +50,9 @@ app.get('/', async (req: Request, res: Response) => {
 });
 
 app.get('/style.css', (req: Request, res: Response) => {
-    res.sendFile(context.styleFile);
+    res.sendFile(context.styleFile, {
+        dotfiles: 'allow',
+    });
 });
 
 app.use('/assets', express.static(path.resolve(__dirname, '../assets')));

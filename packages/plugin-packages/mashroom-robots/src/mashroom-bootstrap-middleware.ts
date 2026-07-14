@@ -29,7 +29,9 @@ const bootstrap: MashroomMiddlewarePluginBootstrapFunction = async (pluginName, 
 
     return (req, res, next) => {
         if (req.url ===  '/robots.txt') {
-            res.sendFile(robotsTxtPath!);
+            res.sendFile(robotsTxtPath!, {
+                dotfiles: 'allow',
+            });
             return;
         }
         next();

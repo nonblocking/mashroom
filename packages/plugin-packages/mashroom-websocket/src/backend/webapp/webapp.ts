@@ -22,7 +22,9 @@ app.get('/test', (req: Request, res: Response) => {
 });
 
 app.get('/test-client.js', (req: Request, res: Response) => {
-    res.sendFile(path.resolve(__dirname, '../public/test-client.js'));
+    res.sendFile(path.resolve(__dirname, '../public/test-client.js'), {
+        dotfiles: 'allow',
+    });
 });
 
 export default app;

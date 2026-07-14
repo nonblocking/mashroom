@@ -35,7 +35,9 @@ export default class PortalThemeController {
             }
 
             try {
-                res.sendFile(resourceFile);
+                res.sendFile(resourceFile, {
+                    dotfiles: 'allow',
+                });
             } catch (err) {
                 logger.error(`Cannot load theme resource: ${resourceFile}`, err);
                 if (cacheControlService) {

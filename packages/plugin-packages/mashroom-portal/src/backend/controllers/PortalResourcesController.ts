@@ -16,12 +16,16 @@ export default class PortalResourcesController {
             cacheControlService.addCacheControlHeader('SHARED', req, res);
         }
 
-        res.sendFile(portalClientBundle);
+        res.sendFile(portalClientBundle, {
+            dotfiles: 'allow',
+        });
     }
 
     async getPortalClientMap(req: Request, res: Response): Promise<void> {
         const portalClientBundle = path.resolve(__dirname, '../../frontend/portal-client.js.map');
-        res.sendFile(portalClientBundle);
+        res.sendFile(portalClientBundle, {
+            dotfiles: 'allow',
+        });
     }
 
     async getSystemJS(req: Request, res: Response): Promise<void> {
@@ -34,7 +38,9 @@ export default class PortalResourcesController {
             cacheControlService.addCacheControlHeader('SHARED', req, res);
         }
 
-        res.sendFile(portalClientBundle);
+        res.sendFile(portalClientBundle, {
+            dotfiles: 'allow',
+        });
     }
 
 }
