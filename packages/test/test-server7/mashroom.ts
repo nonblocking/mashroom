@@ -130,7 +130,10 @@ const serverConfig: MashroomServerConfig = {
         },
         'Mashroom Remote Package Scanner Admin Webapp': {
             showAddRemotePluginPackageForm: true
-        }
+        },
+        'My custom plugin': {
+            foo: 2,
+        },
     }
 };
 

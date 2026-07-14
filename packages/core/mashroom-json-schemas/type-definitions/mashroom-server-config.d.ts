@@ -987,6 +987,7 @@ export interface Plugins {
      */
     cdnHosts?: string[];
   };
+  [k: string]: any | undefined;
 }
 export interface IORedisConfig {
   /**

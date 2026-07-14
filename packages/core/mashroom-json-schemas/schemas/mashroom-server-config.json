@@ -1381,7 +1381,8 @@
                     },
                     "additionalProperties": false
                 }
-            }
+            },
+            "additionalProperties": true
         }
     },
     "type": "object",
