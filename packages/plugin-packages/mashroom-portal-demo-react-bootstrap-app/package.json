@@ -1,5 +1,5 @@
 {
-    "name": "mashroom-portal-demo-react-bootstrap-app",
+    "name": "@mashroom/mashroom-portal-demo-react-bootstrap-app",
     "description": "A Microfrontend that uses React Bootstrap components",
     "homepage": "https://www.mashroom-server.com",
     "repository": {
