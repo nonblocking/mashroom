@@ -13,8 +13,8 @@ Plugin loaders itself are also just plugins, so it is possible to extend the lis
 
 ## Usage
 
-The easiest way to start is to clone one of the quickstart repositories:
- * [mashroom-quickstart](https://github.com/nonblocking/mashroom-quickstart)
- * [mashroom-portal-quickstart](https://github.com/nonblocking/mashroom-portal-quickstart)
+The server can be started with:
+
+    mashroom <config-directory>
 
 You can find the full documentation with a setup and configuration guide here: [https://docs.mashroom-server.com](https://docs.mashroom-server.com)
