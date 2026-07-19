@@ -27,7 +27,7 @@ setPortalPluginConfig({
     },
     ssrConfig: {
         ssrEnable: false,
-        renderTimoutMs: 2000,
+        renderTimeoutMs: 2000,
         cacheEnable: false,
         cacheTTLSec: 300,
         inlineStyles: true,

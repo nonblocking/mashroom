@@ -41,6 +41,16 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
             }
         };
     }
+    if ('renderTimoutMs' in portalPluginConfig.ssrConfig) {
+        portalPluginConfig = {
+            ...portalPluginConfig,
+            ssrConfig: {
+                ...portalPluginConfig.ssrConfig,
+                renderTimeoutMs: portalPluginConfig.ssrConfig.renderTimoutMs as number,
+            },
+        };
+    }
+
     setPortalPluginConfig(portalPluginConfig);
 
     setupResourceFetchHttpAgents(logger);

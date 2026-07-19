@@ -490,7 +490,7 @@ export interface Plugins {
       /**
        * Timeout for SSR which defines how long the page rendering can be blocked (Default: 2000)
        */
-      renderTimoutMs?: number;
+      renderTimeoutMs?: number;
       /**
        * Enable cache for server-side rendered HTML (Default: true)
        */

@@ -60,7 +60,7 @@ The plugin allows the following configuration properties:
             },
             "ssrConfig": {
                 "ssrEnable": true,
-                "renderTimoutMs": 2000,
+                "renderTimeoutMs": 2000,
                 "cacheEnable": true,
                 "cacheTTLSec": 300,
                 "inlineStyles": true
@@ -90,7 +90,7 @@ The plugin allows the following configuration properties:
    The *restrictToRoles* here cannot be removed per app, but apps can define other roles that are also allowed to access a proxy.
  * _ssrConfig_: Optional config for server side rendering
    * _ssrEnable_: Allow server side rendering if Apps support it (Default: true)
-   * _renderTimoutMs_: Timeout for SSR which defines how long the page rendering can be blocked. Even if SSR takes too long the result is
+   * _renderTimeoutMs_: Timeout for SSR which defines how long the page rendering can be blocked. Even if SSR takes too long the result is
      put into the cache and might be available for the next page rendering (Default: 2000)
    * _cacheEnable": Enable cache for server-side rendered HTML (Default: true)
    * _cacheTTLSec_: The timeout in seconds for cached SSR HTML (Default: 300)

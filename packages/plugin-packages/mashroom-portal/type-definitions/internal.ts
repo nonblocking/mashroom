@@ -109,7 +109,7 @@ export type MashroomPortalPluginConfig = {
     };
     readonly ssrConfig: {
         readonly ssrEnable: boolean;
-        readonly renderTimoutMs: number;
+        readonly renderTimeoutMs: number;
         readonly cacheEnable: boolean;
         readonly cacheTTLSec: number;
         readonly inlineStyles: boolean;

@@ -23,6 +23,6 @@ plugins:
             httpRejectUnauthorized: true
         ssrConfig:
             ssrEnable: true
-            renderTimoutMs: 2000
+            renderTimeoutMs: 2000
             cacheEnable: false
             cacheTTLSec: 300

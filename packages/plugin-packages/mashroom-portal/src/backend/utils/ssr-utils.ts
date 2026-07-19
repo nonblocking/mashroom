@@ -222,8 +222,8 @@ export const renderServerSide = async (pluginName: string, portalAppSetup: Mashr
     let timeout: any;
     return Promise.race([
         renderServerSideWithCache(pluginName, portalApp, portalAppSetup, renderEmbeddedPortalAppsFn,
-            ssrConfig.renderTimoutMs, pluginRegistry, req, logger),
-        new Promise<null>((resolve) => timeout = setTimeout(() => resolve(null), ssrConfig.renderTimoutMs)),
+            ssrConfig.renderTimeoutMs, pluginRegistry, req, logger),
+        new Promise<null>((resolve) => timeout = setTimeout(() => resolve(null), ssrConfig.renderTimeoutMs)),
     ]).then((result) => {
         clearTimeout(timeout);
         return result;
@@ -272,7 +272,7 @@ export const renderInlineStyleForServerSideRenderedApps = async (serverSideRende
             let timeout: any;
             const styles = await Promise.race([
                 Promise.all(portalAppStyleResourcePromises),
-                new Promise<[]>((resolve) => timeout = setTimeout(() => resolve([]), ssrConfig.renderTimoutMs)),
+                new Promise<[]>((resolve) => timeout = setTimeout(() => resolve([]), ssrConfig.renderTimeoutMs)),
             ]).then((result) => {
                 clearTimeout(timeout);
                 return result;

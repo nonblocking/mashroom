@@ -3,6 +3,7 @@
 
 ## [unreleased v3]
 
+ * Portal: Renamed config property *ssrConfig.renderTimoutMs* to *ssrConfig.renderTimeoutMs* (the old property is still considered)
  * Portal: Fixed sending resources from hidden folders (like /.pnpm/)
 
 ## 3.0.0-alpha.0 (July 13, 2026)

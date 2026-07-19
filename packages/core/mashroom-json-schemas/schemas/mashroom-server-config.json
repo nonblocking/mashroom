@@ -709,7 +709,7 @@
                                     "type": "boolean",
                                     "description": "Allow server side rendering if Apps support it (Default: true)"
                                 },
-                                "renderTimoutMs": {
+                                "renderTimeoutMs": {
                                     "type": "number",
                                     "description": "Timeout for SSR which defines how long the page rendering can be blocked (Default: 2000)"
                                 },

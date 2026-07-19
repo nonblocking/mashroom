@@ -116,7 +116,7 @@ const serverConfig: MashroomServerConfig = {
             ignoreMissingAppsOnPages: false,
             ssrConfig: {
                 ssrEnable: true,
-                renderTimoutMs: 2000,
+                renderTimeoutMs: 2000,
                 cacheEnable: true,
                 cacheTTLSec: 300
             }
