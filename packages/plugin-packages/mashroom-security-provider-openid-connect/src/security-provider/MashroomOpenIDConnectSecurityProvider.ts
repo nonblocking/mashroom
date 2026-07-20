@@ -1,5 +1,5 @@
 
-import { buildAuthorizationUrl, randomPKCECodeVerifier, calculatePKCECodeChallenge, randomState, refreshTokenGrant, tokenRevocation} from 'openid-client';
+import { buildAuthorizationUrl, randomPKCECodeVerifier, calculatePKCECodeChallenge, randomState, refreshTokenGrant, buildEndSessionUrl} from 'openid-client';
 import toTokenSet from '../to-token-set';
 import saveSession from '../save-session';
 import {OICD_AUTH_DATA_SESSION_KEY, OICD_REQUEST_DATA_SESSION_KEY_PREFIX, OICD_USER_SESSION_KEY} from '../constants';
@@ -155,10 +155,15 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         delete request.session[OICD_AUTH_DATA_SESSION_KEY];
 
         const abortController = new AbortController();
-        const abortTimeout = setTimeout(() => abortController.abort(), 2000);
+        const abortTimeout = setTimeout(() => abortController.abort(), this._clientConfiguration.httpRequestTimeoutMs);
         try {
             logger.debug('Revoking identity provider session');
-            await tokenRevocation(openIdClientConfig, authData.tokenSet.access_token);
+            const endSessionUrl = buildEndSessionUrl(openIdClientConfig, {
+                id_token_hint: authData.tokenSet.id_token ?? '',
+            });
+            await fetch(endSessionUrl, {
+                signal: abortController.signal,
+            });
         } catch (e) {
             logger.error('Revoking identity provider session failed!', e);
         } finally {
