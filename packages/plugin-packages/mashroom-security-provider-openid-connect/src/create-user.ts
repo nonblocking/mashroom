@@ -1,11 +1,11 @@
 
 import {UNDEFINED_USER_NAME} from './constants';
-import type {IdTokenClaims, UserinfoResponse} from 'openid-client';
+import type {IDToken, UserInfoResponse} from 'openid-client';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
 export default (
-    claims: IdTokenClaims | undefined,
-    userInfo: UserinfoResponse | undefined | null,
+    claims: IDToken | undefined,
+    userInfo: UserInfoResponse | undefined | null,
     rolesClaimName: string | undefined | null,
     adminRoles: Array<string> = [],
     extraDataMapping: Record<string, string> | undefined | null,
@@ -20,7 +20,7 @@ export default (
         }
 
         const username = (userInfo && (userInfo.preferred_username || userInfo.sub || userInfo.email)) ||
-            claims.preferred_username || claims.sub || claims.email || UNDEFINED_USER_NAME;
+            claims.preferred_username as string | undefined || claims.sub || claims.email as string | undefined  || UNDEFINED_USER_NAME;
 
         let extraData: any = null;
         if (extraDataMapping) {
@@ -33,15 +33,15 @@ export default (
 
         return {
             username,
-            displayName: (userInfo ? userInfo.name : claims.name) || username,
-            email: userInfo ? userInfo.email : claims.email,
+            displayName: (userInfo ? userInfo.name : claims.name as string | undefined ) || username,
+            email: userInfo ? userInfo.email : claims.email as string | undefined,
             pictureUrl: userInfo ? userInfo.picture : null,
             extraData,
             roles: roles.concat(roles.some(r => adminRoles.indexOf(r) > -1) ? ['Administrator'] : []),
             secrets: null,
         };
     } else {
-        // The user is authenticated but we don't know anything about him (e.g. pure OAuth2)
+        // The user is authenticated, but we don't know anything about him
         return {
             username: UNDEFINED_USER_NAME,
             displayName: UNDEFINED_USER_NAME,

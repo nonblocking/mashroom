@@ -1,5 +1,5 @@
 
-import type {IssuerMetadata, ResponseType, TokenSet} from 'openid-client';
+import type {ServerMetadata} from 'openid-client';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
 // Session data
@@ -14,28 +14,34 @@ declare module 'express-session' {
 export type Mode = 'OIDC' | 'OAuth2';
 
 export type ClientConfiguration = {
-    issuerDiscoveryUrl: string | undefined | null;
-    issuerMetadata: IssuerMetadata | undefined | null;
-    clientId: string;
-    clientSecret: string;
-    redirectUrl: string;
-    responseType: ResponseType;
-    httpRequestTimeoutMs: number;
+    readonly mode: Mode;
+    readonly issuerDiscoveryUrl: string | undefined | null;
+    readonly issuerMetadata: ServerMetadata | undefined | null;
+    readonly clientId: string;
+    readonly clientSecret: string;
+    readonly usePKCE: boolean;
+    readonly redirectUrl: string;
+    readonly httpRequestTimeoutMs: number;
 }
 
 export type CallbackConfiguration = {
-    mode: Mode;
-    rolesClaimName: string | undefined | null;
-    adminRoles: Array<string>;
-    extraDataMapping: Record<string, string> | undefined | null;
+    readonly rolesClaimName: string | undefined | null;
+    readonly adminRoles: Array<string>;
+    readonly extraDataMapping: Record<string, string> | undefined | null;
 }
 
 export type OpenIDConnectAuthRequestData = {
-    state: string;
-    nonce?: string;
+    readonly state: string;
     codeVerifier?: string;
-    backUrl: string;
+    readonly backUrl: string;
 }
+
+export type TokenSet = {
+    readonly access_token: string;
+    readonly id_token: string | undefined;
+    refresh_token: string | undefined;
+    readonly expires_at: number;
+};
 
 export type OpenIDConnectAuthData = {
     lastTokenCheck: number;

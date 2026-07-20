@@ -50,7 +50,6 @@ And configure this plugin like this in the server config file:
             "clientId": "mashroom",
             "clientSecret": "your-client-secret",
             "redirectUrl": "http://localhost:5050/openid-connect-cb",
-            "responseType": "code",
             "usePKCE": false,
             "extraAuthParams": {},
             "extraDataMapping": {
@@ -73,13 +72,12 @@ And configure this plugin like this in the server config file:
 
  * _mode_: Can be _OIDC_ (default) or _OAuth2_. Pure OAuth2 usually does not support permission roles (for authorization).
  * _issuerDiscoveryUrl_: The [OpenID Connect Discovery URL](https://openid.net/specs/openid-connect-discovery-1_0.html), this is usually https://&lt;your-idp-host&gt;/.well-known/openid-configuration. See Example Configurations below.
- * _issuerMetadata_: The issuer metadata if no _issuerDiscoveryUrl_ is available. Will be passed to the [Issuer constructor](https://github.com/panva/node-openid-client/blob/master/docs/README.md#issuer). See examples below.
+ * _issuerMetadata_: The issuer metadata (only) if no _issuerDiscoveryUrl_ is available. Must be of type [ServerMetadata](https://github.com/panva/openid-client/blob/main/docs/interfaces/ServerMetadata.md) (Default: null)
  * _scope_: The scope (permissions) to ask for (Default: openid email profile)
  * _clientId_: The client to use (Default: mashroom)
  * _clientSecret_: The client secret
  * _redirectUrl_: The full URL of the callback (as seen from the user). This is usually https://&lt;mashroom-server-host&gt;/openid-connect-cb.
    The path corresponds with the _path_ property in the *Mashroom OpenID Connect Security Provider Callback* config.
- * _responseType_: The OpenID Connect response type (flow) to use (Default: code)
  * _usePKCE_: Use the [Proof Key for Code Exchange](https://oauth.net/2/pkce) extension for the _code_ flow (Default: false)
  * _extraAuthParams_: Extra authentication parameters that should be used
  * _extraDataMapping_: Optionally map extra claims to _user.extraData_. The key in the map is the extraData property, the value the claim name (Default: null)

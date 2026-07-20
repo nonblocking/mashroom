@@ -1030,7 +1030,7 @@
                         },
                         "issuerMetadata": {
                             "type": ["object", "null"],
-                            "description": "The issuer metadata if no issuerDiscoveryUrl is available. Will be passed to the issuer constructor: https://github.com/panva/node-openid-client/blob/master/docs/README.md#issuer (Default: null)"
+                            "description": "The issuer metadata (only) if no _issuerDiscoveryUrl_ is available. Must be of type https://github.com/panva/openid-client/blob/main/docs/interfaces/ServerMetadata.md (Default: null)"
                         },
                         "scope": {
                             "type": "string",
@@ -1047,10 +1047,6 @@
                         "redirectUrl": {
                             "$ref": "#/definitions/HttpUrl",
                             "description": "The full URL of the callback (as seen from the user). This is usually https://<mashroom-server-host>/openid-connect-cb"
-                        },
-                        "responseType": {
-                            "type": "string",
-                            "description": "The OpenID Connect response type (flow) to use (Default: code)"
                         },
                         "usePKCE": {
                             "type": "boolean",

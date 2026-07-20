@@ -210,7 +210,6 @@
             "clientId": "mashroom",
             "clientSecret": "your-client-secret",
             "redirectUrl": "http://localhost:5050/openid-connect-cb",
-            "responseType": "code",
             "usePKCE": false,
             "extraAuthParams": {},
             "extraDataMapping": {

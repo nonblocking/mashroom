@@ -3,6 +3,7 @@
 
 ## [unreleased v3]
 
+ * OIDC Security Provider: Upgrade to openid-client 6.x
  * Portal: Renamed config property *ssrConfig.renderTimoutMs* to *ssrConfig.renderTimeoutMs* (the old property is still considered)
  * Portal: Fixed sending resources from hidden folders (like /.pnpm/)
 
