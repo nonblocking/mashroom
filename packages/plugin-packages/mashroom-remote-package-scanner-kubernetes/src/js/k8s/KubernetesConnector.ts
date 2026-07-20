@@ -1,4 +1,5 @@
 
+import {KubeConfig} from '@kubernetes/client-node';
 import WatchWithReconnect from './WatchWithReconnect';
 
 import type {
@@ -44,8 +45,6 @@ export default class KubernetesConnector implements KubernetesConnectorType {
     }
 
     async #init() {
-        // '@kubernetes/client-node' is an ESM only module
-        const {KubeConfig} = await import('@kubernetes/client-node');
         const k8sClient = new KubeConfig();
         if (!this.localConfig) {
             // This only works if the Portal runs within a Kubernetes Pod with a valid service account attached
