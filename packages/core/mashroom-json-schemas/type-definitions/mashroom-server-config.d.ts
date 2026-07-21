@@ -736,7 +736,7 @@ export interface Plugins {
      */
     issuerDiscoveryUrl?: string | null;
     /**
-     * The issuer metadata if no issuerDiscoveryUrl is available. Will be passed to the issuer constructor: https://github.com/panva/node-openid-client/blob/master/docs/README.md#issuer (Default: null)
+     * The issuer metadata (only) if no _issuerDiscoveryUrl_ is available. Must be of type https://github.com/panva/openid-client/blob/main/docs/interfaces/ServerMetadata.md (Default: null)
      */
     issuerMetadata?: {} | null;
     /**
@@ -755,10 +755,6 @@ export interface Plugins {
      * The full URL of the callback (as seen from the user). This is usually https://<mashroom-server-host>/openid-connect-cb
      */
     redirectUrl: string;
-    /**
-     * The OpenID Connect response type (flow) to use (Default: code)
-     */
-    responseType?: string;
     /**
      * Use the Proof Key for Code Exchange extension for the code flow (Default: false)
      */
@@ -780,17 +776,9 @@ export interface Plugins {
      */
     adminRoles?: string[];
     /**
-     * Reject self-signed certificates when contacting the Authorization Server (Default: true)
-     */
-    httpRequestRejectUnauthorized?: boolean;
-    /**
      * Request timeout when contacting the Authorization Server (Default: 3500)
      */
     httpRequestTimeoutMs?: number;
-    /**
-     * Number of retries when contacting the Authorization Server (Default: 0)
-     */
-    httpRequestRetry?: number;
   };
   "Mashroom OpenID Connect Security Provider Callback"?: {
     /**

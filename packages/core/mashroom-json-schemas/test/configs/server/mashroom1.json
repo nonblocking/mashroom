@@ -210,7 +210,6 @@
             "clientId": "mashroom",
             "clientSecret": "your-client-secret",
             "redirectUrl": "http://localhost:5050/openid-connect-cb",
-            "responseType": "code",
             "usePKCE": false,
             "extraAuthParams": {},
             "extraDataMapping": {
@@ -222,9 +221,7 @@
             "adminRoles": [
                 "mashroom-admin"
             ],
-            "httpRequestRejectUnauthorized": true,
-            "httpRequestTimeoutMs": 3500,
-            "httpRequestRetry": 0
+            "httpRequestTimeoutMs": 3500
         },
         "Mashroom OpenID Connect Security Provider Callback": {
             "path": "/openid-connect-cb"

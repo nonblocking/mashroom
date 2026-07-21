@@ -1,18 +1,30 @@
-import openIDConnectClient from '../openid-connect-client';
+import {authorizationCodeGrant, fetchUserInfo} from 'openid-client';
+import {skipSubjectCheck} from 'oauth4webapi';
+import determineConfiguration from '../determine-configuration';
 import createUser from '../create-user';
+import toTokenSet from '../to-token-set';
 import saveSession from '../save-session';
-import {OICD_REQUEST_DATA_SESSION_KEY_PREFIX, OICD_AUTH_DATA_SESSION_KEY, OICD_USER_SESSION_KEY} from '../constants';
-import type {OpenIDCallbackChecks, TokenSet} from 'openid-client';
+import {OICD_AUTH_DATA_SESSION_KEY, OICD_REQUEST_DATA_SESSION_KEY_PREFIX, OICD_USER_SESSION_KEY} from '../constants';
 
+import type {AuthorizationCodeGrantChecks} from 'openid-client';
 import type {Request, Response} from 'express';
-import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
-import type {CallbackConfiguration, OpenIDConnectAuthRequestData, OpenIDConnectAuthData} from '../../type-definitions';
+import type {
+    CallbackConfiguration,
+    ClientConfiguration,
+    OpenIDConnectAuthData,
+    OpenIDConnectAuthRequestData,
+} from '../../type-definitions';
 
-let _callbackConfiguration: CallbackConfiguration | undefined;
+let _callbackConfiguration: CallbackConfiguration;
+let _clientConfiguration: ClientConfiguration;
 
 export const setCallbackConfiguration = (callbackConfiguration: CallbackConfiguration): void => {
     _callbackConfiguration = callbackConfiguration;
+};
+
+export const setClientConfiguration = (clientConfiguration: ClientConfiguration): void => {
+    _clientConfiguration = clientConfiguration;
 };
 
 const backToStartPage = (response: Response, defaultBackUrl: string, backUrl?: string | undefined) => {
@@ -25,22 +37,23 @@ const backToStartPage = (response: Response, defaultBackUrl: string, backUrl?: s
 
 export default (defaultBackUrl: string) => {
     return async (request: Request, response: Response): Promise<void> => {
-        const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
+        const {loggerFactory, serverInfo: { devMode }} = request.pluginContext;
+        const logger = loggerFactory('mashroom.security.provider.openid.connect');
 
         if (!_callbackConfiguration) {
             response.sendStatus(500);
             return;
         }
-        const {mode, rolesClaimName, adminRoles, extraDataMapping} = _callbackConfiguration;
+        const {rolesClaimName, adminRoles, extraDataMapping} = _callbackConfiguration;
 
-        const client = await openIDConnectClient(request);
-        if (!client) {
+        const openIdClientConfig = await determineConfiguration(_clientConfiguration, devMode, logger);
+        if (!openIdClientConfig) {
             response.sendStatus(500);
             return;
         }
 
-        const reqParams = client.callbackParams(request);
-        logger.debug('Auth callback triggered with params:', reqParams);
+        const reqParams = request.query;
+        logger.debug('Auth callback called with params:', JSON.stringify(reqParams, null, 2));
 
         const requestDataKey = `${OICD_REQUEST_DATA_SESSION_KEY_PREFIX}${reqParams.state}`;
         const authReqData: OpenIDConnectAuthRequestData | undefined = request.session[requestDataKey];
@@ -53,32 +66,29 @@ export default (defaultBackUrl: string) => {
         // Delete the auth request data to prevent replays
         delete request.session[requestDataKey];
 
-        const {state, nonce, codeVerifier, backUrl} = authReqData;
-        const redirectUrl = client.metadata.redirect_uris && client.metadata.redirect_uris[0];
+        const {state, codeVerifier, backUrl} = authReqData;
 
-        const checks: OpenIDCallbackChecks = {
-            state,
-            nonce,
-            code_verifier: codeVerifier,
+        const currentURL = new URL(_clientConfiguration.redirectUrl + request.url.substring(1));
+        const checks: AuthorizationCodeGrantChecks = {
+            pkceCodeVerifier: codeVerifier,
+            expectedState: state,
         };
 
         try {
             let claims;
             let userInfo;
-            let tokenSet: TokenSet;
-            if (mode === 'OAuth2') {
-                tokenSet = await client.oauthCallback(redirectUrl, reqParams, checks);
-            } else {
-                tokenSet = await client.callback(redirectUrl, reqParams, checks);
-                claims = tokenSet.claims();
-                try {
-                    userInfo = await client.userinfo(tokenSet);
-                } catch (e) {
-                    // Issuer has no userinfo_endpoint
-                }
+            let tokenResponse = await authorizationCodeGrant(openIdClientConfig, currentURL, checks);
+            claims = tokenResponse.claims();
+            try {
+                userInfo = await fetchUserInfo(openIdClientConfig, tokenResponse.access_token, skipSubjectCheck);
+            } catch (e) {
+                // Issuer has no userinfo_endpoint
             }
 
-            const mashroomUser: MashroomSecurityUser = createUser(claims, userInfo, rolesClaimName, adminRoles, extraDataMapping);
+            const tokenSet = toTokenSet(tokenResponse, logger);
+
+            const mashroomUser: MashroomSecurityUser = createUser(claims, userInfo, rolesClaimName, adminRoles, extraDataMapping, logger);
+
             logger.debug('User successfully authenticated:', mashroomUser);
             logger.debug(`Token valid until: ${new Date((tokenSet.expires_at || 0) * 1000)}. Claims:`, claims, '. User info:', userInfo);
 

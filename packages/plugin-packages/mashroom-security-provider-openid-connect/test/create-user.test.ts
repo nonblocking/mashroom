@@ -1,11 +1,11 @@
 
 import createUser from '../src/create-user';
-import type {IdTokenClaims, UserinfoResponse} from 'openid-client';
+import type {IDToken, UserInfoResponse} from 'openid-client';
 
 describe('create-user', () => {
 
     it('creates a user from IDToken claims that only contains sub', () => {
-        const claims: IdTokenClaims = {
+        const claims: IDToken = {
             aud: 'x',
             exp: 0,
             iat: 0,
@@ -13,7 +13,7 @@ describe('create-user', () => {
             sub: 'admin'
         };
 
-        const user = createUser(claims, null, null, undefined, null);
+        const user = createUser(claims, null, null, undefined, null, console as any);
 
         expect(user).toEqual({
             username: 'admin',
@@ -27,7 +27,7 @@ describe('create-user', () => {
     });
 
     it('creates a user from IDToken claims', () => {
-        const claims: IdTokenClaims = {
+        const claims: IDToken = {
             aud: 'x',
             exp: 0,
             iat: 0,
@@ -38,7 +38,7 @@ describe('create-user', () => {
             email: 'admin@test.com',
         };
 
-        const user = createUser(claims, null, null, undefined, null);
+        const user = createUser(claims, null, null, undefined, null, console as any);
 
         expect(user).toEqual({
             username: 'admin',
@@ -52,7 +52,7 @@ describe('create-user', () => {
     });
 
     it('gets the roles from the IdToken claims', () => {
-        const claims: IdTokenClaims = {
+        const claims: IDToken = {
             aud: 'x',
             exp: 0,
             iat: 0,
@@ -64,7 +64,7 @@ describe('create-user', () => {
             roles: ['Role1', 'Role2', 'Role3'],
         };
 
-        const user = createUser(claims, null, 'roles', ['Role2'], null);
+        const user = createUser(claims, null, 'roles', ['Role2'], null, console as any);
 
         expect(user).toEqual({
             username: 'admin',
@@ -78,14 +78,14 @@ describe('create-user', () => {
     });
 
     it('creates a user from user info', () => {
-        const claims: IdTokenClaims = {
+        const claims: IDToken = {
             aud: 'x',
             exp: 0,
             iat: 0,
             iss: 'x',
             sub: 'admin',
         };
-        const userInfo: UserinfoResponse = {
+        const userInfo: UserInfoResponse = {
             sub: 'admin',
             preferred_username: 'admin',
             name: 'Admin User',
@@ -94,7 +94,7 @@ describe('create-user', () => {
             roles: ['Role1', 'Role2', 'Role3'],
         };
 
-        const user = createUser(claims, userInfo, 'roles', ['Role2'], null);
+        const user = createUser(claims, userInfo, 'roles', ['Role2'], null, console as any);
 
         expect(user).toEqual({
             username: 'admin',
@@ -108,7 +108,7 @@ describe('create-user', () => {
     });
 
     it('copies extra data from the id token', () => {
-        const claims: IdTokenClaims = {
+        const claims: IDToken = {
             aud: 'x',
             exp: 0,
             iat: 0,
@@ -124,7 +124,7 @@ describe('create-user', () => {
         const user = createUser(claims, undefined, 'roles', ['Role2'], {
             phoneNumber: 'phone',
             foo: 'foo',
-        });
+        }, console as any);
 
         expect(user).toEqual({
             username: 'admin',
@@ -141,14 +141,14 @@ describe('create-user', () => {
     });
 
     it('copies extra data from the user info', () => {
-        const claims: IdTokenClaims = {
+        const claims: IDToken = {
             aud: 'x',
             exp: 0,
             iat: 0,
             iss: 'x',
             sub: 'admin',
         };
-        const userInfo: UserinfoResponse = {
+        const userInfo: UserInfoResponse = {
             sub: 'admin',
             preferred_username: 'admin',
             name: 'Admin User',
@@ -161,7 +161,7 @@ describe('create-user', () => {
         const user = createUser(claims, userInfo, 'roles', ['Role2'], {
             phoneNumber: 'phone',
             foo: 'foo',
-        });
+        }, console as any);
 
         expect(user).toEqual({
             username: 'admin',
