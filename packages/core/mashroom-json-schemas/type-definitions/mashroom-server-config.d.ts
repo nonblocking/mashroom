@@ -776,17 +776,9 @@ export interface Plugins {
      */
     adminRoles?: string[];
     /**
-     * Reject self-signed certificates when contacting the Authorization Server (Default: true)
-     */
-    httpRequestRejectUnauthorized?: boolean;
-    /**
      * Request timeout when contacting the Authorization Server (Default: 3500)
      */
     httpRequestTimeoutMs?: number;
-    /**
-     * Number of retries when contacting the Authorization Server (Default: 0)
-     */
-    httpRequestRetry?: number;
   };
   "Mashroom OpenID Connect Security Provider Callback"?: {
     /**

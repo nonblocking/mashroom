@@ -1071,17 +1071,9 @@
                             },
                             "description": "A list of user roles that should get the Mashroom _Administrator_ role (Default: [\"mashroom-admin\"])"
                         },
-                        "httpRequestRejectUnauthorized": {
-                            "type": "boolean",
-                            "description": "Reject self-signed certificates when contacting the Authorization Server (Default: true)"
-                        },
                         "httpRequestTimeoutMs": {
                             "type": "integer",
                             "description": "Request timeout when contacting the Authorization Server (Default: 3500)"
-                        },
-                        "httpRequestRetry": {
-                            "type": "integer",
-                            "description": "Number of retries when contacting the Authorization Server (Default: 0)"
                         }
                     },
                     "additionalProperties": false
