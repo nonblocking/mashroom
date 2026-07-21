@@ -41,8 +41,10 @@
         ],
         "testRegex": "(\\.(test|spec))\\.ts$",
         "transform": {
-            "^.+\\.ts$": "ts-jest"
+            "^.+\\.ts$": "ts-jest",
+            "^.+(?!(chokidar|readdirp)).+\\.js$": "ts-jest"
         },
+        "transformIgnorePatterns": ["/node_modules/(?!(chokidar|readdirp)/)"],
         "reporters": [
             "default",
             "jest-junit"
@@ -54,7 +56,7 @@
     "scripts": {
         "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
-        "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=1 --detectOpenHandles",
+        "test": "jest --detectOpenHandles",
         "build": "babel src -d dist --extensions \".ts\" && cpy ./src/hooks dist/hooks --flat",
         "dev": "npm run build && node dist/server.js"
     }
