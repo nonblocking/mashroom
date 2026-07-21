@@ -7,19 +7,14 @@ This plugin adds an OpenID Connect/OAuth2 security provider that can be used to 
 all Identity Providers or Identity Platforms.
 
 Tested with:
- * [Github OAuth 2.0](https://developer.github.com/v3/oauth)
- * [Google Identity Platform](https://developers.google.com/identity)
- * [Keylcoak Identity Provider](https://www.keycloak.org)
- * [Open AM](https://github.com/OpenIdentityPlatform/OpenAM)
 
-Should work with (among others):
- * [Auth0](https://auth0.com/docs/protocols/oidc)
- * [Facebook Login](https://developers.facebook.com/docs/facebook-login)
- * [Gluu](https://gluu.org/docs/ce/api-guide/openid-connect-api)
- * [Microsoft Identity Platform](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-overview)
- * [Okta](https://developer.okta.com/docs/reference/api/oidc)
- * [OneLogin](https://developers.onelogin.com/openid-connect)
- * [PingIdentity](https://www.pingidentity.com/developer/en/resources/openid-connect-developers-guide.html)
+ * [Keylcoak](https://www.keycloak.org)
+ * [Authentic](https://goauthentik.io)
+ * [Open AM](https://github.com/OpenIdentityPlatform/OpenAM)
+ * [Google Identity Platform](https://developers.google.com/identity)
+ * [Github OAuth 2.0](https://developer.github.com/v3/oauth)
+
+But should work with any other OIDC/OAuth2 provider as well.
 
 ## Usage
 
@@ -103,6 +98,9 @@ So, if the authentication session gets revoked in the identity provider, the use
 The expiration time of the access token defines after which time the user is automatically signed out due to inactivity.
 And the expiration time of the refresh token defines how long the user can work without signing in again.
 
+> [!IMPORTANT]
+> HTTP *issuerDiscoveryUrl*s are only allowed in dev mode.
+
 ## Example Configurations
 
 ### Keycloak
@@ -126,10 +124,41 @@ If your Keycloak runs on localhost, the Realm name is *test* amd the client name
     "plugins": {
         "Mashroom OpenID Connect Security Provider": {
             "issuerDiscoveryUrl": "http://localhost:8080/auth/realms/test/.well-known/uma2-configuration",
-            "clientId": "mashroom",
-            "clientSecret": "xxxxxxxxxxxxxxxx",
+            "clientId": "<client-id>",
+            "clientSecret": "<client-secret>",
             "redirectUrl": "http://localhost:5050/openid-connect-cb",
-            "rolesClaim": "roles",
+            "rolesClaimName": "roles",
+            "adminRoles": [
+                "mashroom-admin"
+            ]
+        }
+    }
+}
+```
+
+### Authentik
+
+Setup:
+
+ * Create a new application with an arbitrary name (e.g., mashroom)
+ * Select Oauth2/OpenID Provider
+ * Authorization Flow: provider-authorization-explicit-consent
+ * Client Type: Confidential
+ * Redirect URI: Add http://localhost:5050/openid-connect-cb
+ * You should create a role (e.g. *mashroom-admin*) for users with Administrator rights
+
+If your Autentic server runs on localhost and the application name is mashroom, then the config would look like this:
+
+```json
+{
+    "plugins": {
+        "Mashroom OpenID Connect Security Provider": {
+            "issuerDiscoveryUrl": "http://localhost:9000/application/o/mashroom/.well-known/openid-configuration",
+            "scope": "openid email profile",
+            "clientId": "<client-id>",
+            "clientSecret": "<client-secret>",
+            "redirectUrl": "http://localhost:5050/openid-connect-cb",
+            "rolesClaimName": "groups",
             "adminRoles": [
                 "mashroom-admin"
             ]
@@ -146,7 +175,9 @@ Setup:
  * Create a new OIDC configuration: OAuth provider → Configure OpenID Connect → Create from the Dashboard)
  * Create a new Agent (e.g. *mashroom*): Applications → OAuth 2.0 → Agent from the Dashboard)
  * Make sure the agent has at least the scopes *openid email profile* and the *ID Token Signing Algorithm* is set to *RS256*
- * Follow [this KB article](https://backstage.forgerock.com/knowledge/kb/article/a15751293) to add the OpenAM groups as roles claim
+ * Make sure the agents *Token Endpoint Authentication Method* is set to *client_secret_post*
+ * Make sure the *Redirect URIs* contain your redirect URL (e.g.,
+ * Follow [this KB article](https://backstage.forgerock.com/knowledge/kb/article/a15751293) to add the OpenAM groups as role claim
 
 You'll find more details about the configuration here: [https://backstage.forgerock.com/docs/openam/13.5/admin-guide](https://backstage.forgerock.com/docs/openam/13.5/admin-guide/#chap-openid-connect)
 
@@ -159,9 +190,10 @@ If your OpenAM server runs on localhost, the Realm name is *Test* and the client
             "issuerDiscoveryUrl": "http://localhost:8080/openam/oauth2/Test/.well-known/openid-configuration",
             "scope": "openid email profile",
             "clientId": "mashroom",
-            "clientSecret": "mashroom",
+            "clientSecret": "<client-secret>",
+            "usePKCE": true,
             "redirectUrl": "http://localhost:5050/openid-connect-cb",
-            "rolesClaim": "roles",
+            "rolesClaimName": "roles",
             "adminRoles": [
                 "mashroom-admin"
             ]
@@ -187,8 +219,8 @@ Possible config:
         "Mashroom OpenID Connect Security Provider": {
             "issuerDiscoveryUrl": "https://accounts.google.com/.well-known/openid-configuration",
             "scope": "openid email profile",
-            "clientId": "xxxxxxxxxxxxxxxx.apps.googleusercontent.com",
-            "clientSecret": "xxxxxxxxxxxxxxxx",
+            "clientId": "<client-id>",
+            "clientSecret": "<client-secret>",
             "redirectUrl": "http://localhost:5050/openid-connect-cb",
             "extraAuthParams": {
                 "access_type": "offline"
@@ -201,7 +233,7 @@ Possible config:
 
 The *access_type=offline* parameter is necessary to get a refresh token.
 
-Since Google users don't have authorization roles there is no way to make some users _Administrator_.
+Since Google users don't have authorization roles, there is no way to make some users _Administrator_.
 
 ### GitHub OAuth2
 
@@ -211,23 +243,17 @@ Setup:
  * Click on "New OAuth App"
  * Enter the application name and correct callback URL (e.g., http://localhost:5050/openid-connect-cb)
 
-Possible config:
+Example configuration:
 
 ```json
 {
     "plugins": {
         "Mashroom OpenID Connect Security Provider": {
             "mode": "OAuth2",
-            "issuerMetadata": {
-                "issuer": "GitHub",
-                "authorization_endpoint": "https://github.com/login/oauth/authorize",
-                "token_endpoint": "https://github.com/login/oauth/access_token",
-                "userinfo_endpoint": "https://api.github.com/user",
-                "end_session_endpoint": null
-            },
-            "scope": "openid email profile",
-            "clientId": "xxxxxxxxxxxxxxxx",
-            "clientSecret": "xxxxxxxxxxxxxxxx",
+            "issuerDiscoveryUrl": "https://github.com/login/oauth/.well-known/openid-configuration",
+            "scope": "read:user",
+            "clientId": "<client-id>",
+            "clientSecret": "<client-secret>",
             "redirectUrl": "http://localhost:5050/openid-connect-cb"
         }
     }
@@ -235,4 +261,4 @@ Possible config:
 ```
 
 Since GitHub uses pure OAuth2 the users don't have permission roles and there is no way to make some users _Administrator_.
-It also supports no *userinfo* endpoint, so it actually makes not much sense to use it with *Mashroom*.
+Also, it seems there is no way to get the username and email address as claims.

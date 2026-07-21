@@ -1,8 +1,8 @@
 import {discovery, Configuration as OpenIdClientConfiguration, allowInsecureRequests} from 'openid-client';
+import {CONFIG_REFRESH_TIMEOUT_SEC} from './constants';
+
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {ClientConfiguration} from '../type-definitions';
-
-const CONFIG_REFRESH_TIMEOUT_SEC = 30;
 
 let _config: OpenIdClientConfiguration | null = null;
 let _lastConfigRefresh: number | undefined;

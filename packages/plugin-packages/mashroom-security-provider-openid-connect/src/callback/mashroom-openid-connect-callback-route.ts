@@ -85,9 +85,9 @@ export default (defaultBackUrl: string) => {
                 // Issuer has no userinfo_endpoint
             }
 
-            const tokenSet = toTokenSet(tokenResponse);
+            const tokenSet = toTokenSet(tokenResponse, logger);
 
-            const mashroomUser: MashroomSecurityUser = createUser(claims, userInfo, rolesClaimName, adminRoles, extraDataMapping);
+            const mashroomUser: MashroomSecurityUser = createUser(claims, userInfo, rolesClaimName, adminRoles, extraDataMapping, logger);
 
             logger.debug('User successfully authenticated:', mashroomUser);
             logger.debug(`Token valid until: ${new Date((tokenSet.expires_at || 0) * 1000)}. Claims:`, claims, '. User info:', userInfo);

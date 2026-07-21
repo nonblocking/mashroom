@@ -13,7 +13,7 @@ describe('create-user', () => {
             sub: 'admin'
         };
 
-        const user = createUser(claims, null, null, undefined, null);
+        const user = createUser(claims, null, null, undefined, null, console as any);
 
         expect(user).toEqual({
             username: 'admin',
@@ -38,7 +38,7 @@ describe('create-user', () => {
             email: 'admin@test.com',
         };
 
-        const user = createUser(claims, null, null, undefined, null);
+        const user = createUser(claims, null, null, undefined, null, console as any);
 
         expect(user).toEqual({
             username: 'admin',
@@ -64,7 +64,7 @@ describe('create-user', () => {
             roles: ['Role1', 'Role2', 'Role3'],
         };
 
-        const user = createUser(claims, null, 'roles', ['Role2'], null);
+        const user = createUser(claims, null, 'roles', ['Role2'], null, console as any);
 
         expect(user).toEqual({
             username: 'admin',
@@ -94,7 +94,7 @@ describe('create-user', () => {
             roles: ['Role1', 'Role2', 'Role3'],
         };
 
-        const user = createUser(claims, userInfo, 'roles', ['Role2'], null);
+        const user = createUser(claims, userInfo, 'roles', ['Role2'], null, console as any);
 
         expect(user).toEqual({
             username: 'admin',
@@ -124,7 +124,7 @@ describe('create-user', () => {
         const user = createUser(claims, undefined, 'roles', ['Role2'], {
             phoneNumber: 'phone',
             foo: 'foo',
-        });
+        }, console as any);
 
         expect(user).toEqual({
             username: 'admin',
@@ -161,7 +161,7 @@ describe('create-user', () => {
         const user = createUser(claims, userInfo, 'roles', ['Role2'], {
             phoneNumber: 'phone',
             foo: 'foo',
-        });
+        }, console as any);
 
         expect(user).toEqual({
             username: 'admin',

@@ -57,7 +57,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         if (this._clientConfiguration.usePKCE) {
             const code_verifier = randomPKCECodeVerifier();
             authReqData.codeVerifier = code_verifier;
-            if (serverMetadata.code_challenge_methods_supported?.includes('S256')) {
+            if (!serverMetadata.code_challenge_methods_supported || serverMetadata.code_challenge_methods_supported.includes('S256')) {
                 logger.debug('Using PKCE code challenge method: S256');
                 code_challenge = await calculatePKCECodeChallenge(code_verifier);
                 code_challenge_method = 'S256';
@@ -113,7 +113,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
 
             const refreshResponse = await refreshTokenGrant(openIdClientConfig, refreshToken);
             authData.lastTokenCheck = Date.now();
-            authData.tokenSet = toTokenSet(refreshResponse);
+            authData.tokenSet = toTokenSet(refreshResponse, logger);
             if (!authData.tokenSet.refresh_token) {
                 // Keep refresh token
                 authData.tokenSet.refresh_token = refreshToken;

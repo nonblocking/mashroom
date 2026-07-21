@@ -1,5 +1,5 @@
 
-import {UNDEFINED_USER_NAME} from './constants';
+import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {IDToken, UserInfoResponse} from 'openid-client';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
@@ -9,6 +9,7 @@ export default (
     rolesClaimName: string | undefined | null,
     adminRoles: Array<string> = [],
     extraDataMapping: Record<string, string> | undefined | null,
+    logger: MashroomLogger,
 ): MashroomSecurityUser => {
     if (claims) {
         // claims can be part of the ID Tokens (claims object) or in the userInfo object
@@ -20,7 +21,7 @@ export default (
         }
 
         const username = (userInfo && (userInfo.preferred_username || userInfo.sub || userInfo.email)) ||
-            claims.preferred_username as string | undefined || claims.sub || claims.email as string | undefined  || UNDEFINED_USER_NAME;
+            claims.preferred_username as string | undefined || claims.sub || claims.email as string | undefined  || '';
 
         let extraData: any = null;
         if (extraDataMapping) {
@@ -41,10 +42,10 @@ export default (
             secrets: null,
         };
     } else {
-        // The user is authenticated, but we don't know anything about him
+        logger.warn('User is authenticated be no claims or user info available!');
         return {
-            username: UNDEFINED_USER_NAME,
-            displayName: UNDEFINED_USER_NAME,
+            username: '',
+            displayName: '',
             email: null,
             pictureUrl: null,
             extraData: null,

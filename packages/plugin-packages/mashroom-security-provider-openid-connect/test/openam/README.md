@@ -12,10 +12,11 @@
  6. In the Dashboard select Configure OAuth provider -> Configure OpenID Connect -> Create
  7. In the Dashboard select Applications -> OAuth 2.0 from the menu and create a new Agent
  8. Click on the new agent:
-    * Add the redirection URI (e.g. http://localhost:5050/openid-connect-cb)
+    * Add the redirection URI (e.g., http://localhost:5050/openid-connect-cb)
     * Add the scopes: openid email profile
     * Set the ID Token Signing Algorithm to RS256
- 9. In the Realm Dashboard go to Scripts -> New Script -> Create a script with type OIDC_CLAIMS
+    * Set Token Endpoint Authentication Method to client_secret_post
+ 9. In the Realm Dashboard go to Scripts -> New Script -> Create a script with the type OIDC_CLAIMS
     * Add _import com.sun.identity.idm.IdType_
     * Add the following to the _claimAttributes_:
         ```
