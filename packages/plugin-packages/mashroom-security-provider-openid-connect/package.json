@@ -27,10 +27,8 @@
         ],
         "testRegex": "(\\.(test|spec))\\.ts",
         "transform": {
-            "^.+\\.ts$": "ts-jest",
-            "^.+\\.js": "ts-jest"
+            "^.+\\.ts$": "ts-jest"
         },
-        "transformIgnorePatterns": ["/node_modules/(?!(openid-client|oauth4webapi|jose)/)"],
         "reporters": [
             "default",
             "jest-junit"
@@ -42,7 +40,7 @@
     "scripts": {
         "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
-        "test": "jest",
+        "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
         "build": "babel src --extensions \".ts\" -d dist"
     }
 }
