@@ -21,11 +21,11 @@
         "handlebars": "^4.7.9"
     },
     "devDependencies": {
-        "@fortawesome/fontawesome-free": "^7.3.0",
         "@mashroom/mashroom": "3.0.0-alpha.0",
         "@mashroom/mashroom-portal": "3.0.0-alpha.0",
+        "@fortawesome/fontawesome-free": "^7.3.1",
         "tailwind-bootstrap-grid": "^7.0.0",
-        "tailwindcss": "^4.3.2"
+        "tailwindcss": "^4.3.3"
     },
     "scripts": {
         "lint": "eslint --fix",

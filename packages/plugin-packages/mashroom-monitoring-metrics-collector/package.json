@@ -15,8 +15,8 @@
     ],
     "dependencies": {
         "@opentelemetry/api": "^1.9.1",
-        "@opentelemetry/resources": "^2.9.0",
-        "@opentelemetry/sdk-metrics": "^2.9.0",
+        "@opentelemetry/resources": "^2.10.0",
+        "@opentelemetry/sdk-metrics": "^2.10.0",
         "@opentelemetry/semantic-conventions": "^1.43.0",
         "opentelemetry-node-metrics": "^3.0.0",
         "response-time": "^2.3.4",

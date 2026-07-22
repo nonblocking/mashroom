@@ -17,8 +17,8 @@
         "@mashroom/mashroom-portal": "3.0.0-alpha.0",
         "@types/react": "^19.2.17",
         "@types/react-dom": "^19.2.3",
-        "react": "^19.2.7",
-        "react-dom": "^19.2.7"
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8"
     },
     "scripts": {
         "lint": "eslint --fix",

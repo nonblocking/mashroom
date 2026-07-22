@@ -21,9 +21,9 @@
         "@types/react-dom": "^19.2.3",
         "formik": "^2.4.9",
         "latinize": "^2.0.0",
-        "react": "^19.2.7",
-        "react-dom": "^19.2.7",
-        "react-i18next": "^17.0.9",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+        "react-i18next": "^17.0.10",
         "zustand": "^5.0.14"
     },
     "jest": {

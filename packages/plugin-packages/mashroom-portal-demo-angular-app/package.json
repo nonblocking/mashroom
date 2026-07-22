@@ -1,42 +1,42 @@
 {
-  "name": "@mashroom/mashroom-portal-demo-angular-app",
-  "description": "A simple Angular based Microfrontend that can be used in the Mashroom Portal",
-  "homepage": "https://www.mashroom-server.com",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nonblocking/mashroom.git"
-  },
-  "license": "MIT",
-  "version": "3.0.0-alpha.0",
-  "files": [
-    "dist/**",
-    "mashroom.json"
-  ],
-  "devDependencies": {
-    "@angular/build": "^22.0.6",
-    "@angular/cli": "^22.0.6",
-    "@angular/common": "^22.0.6",
-    "@angular/compiler": "^22.0.6",
-    "@angular/compiler-cli": "^22.0.6",
-    "@angular/core": "^22.0.6",
-    "@angular/language-service": "^22.0.6",
-    "@angular/platform-browser": "^22.0.6",
-    "@mashroom/mashroom-portal": "3.0.0-alpha.0",
-    "angular-eslint": "^22.0.0"
-  },
-  "scripts": {
-    "dev": "ng serve",
-    "build": "ng build --configuration production && cpy ./screenshot.png dist/browser",
-    "lint": "eslint --fix",
-    "type-check": "tsc --noEmit"
-  },
-  "lavamoat": {
-    "allowScripts": {
-      "@angular/build>esbuild": false,
-      "@angular/build>lmdb": false,
-      "@angular/build>lmdb>msgpackr>msgpackr-extract": false,
-      "@angular/build>sass>@parcel/watcher": false,
-      "@angular/build>vite>esbuild": false
+    "name": "@mashroom/mashroom-portal-demo-angular-app",
+    "description": "A simple Angular based Microfrontend that can be used in the Mashroom Portal",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
+    "license": "MIT",
+    "version": "3.0.0-alpha.0",
+    "files": [
+        "dist/**",
+        "mashroom.json"
+    ],
+    "devDependencies": {
+        "@mashroom/mashroom-portal": "3.0.0-alpha.0",
+        "@angular/build": "^22.0.7",
+        "@angular/cli": "^22.0.7",
+        "@angular/common": "^22.0.7",
+        "@angular/compiler": "^22.0.7",
+        "@angular/compiler-cli": "^22.0.7",
+        "@angular/core": "^22.0.7",
+        "@angular/language-service": "^22.0.7",
+        "@angular/platform-browser": "^22.0.7",
+        "angular-eslint": "^22.1.0"
+    },
+    "scripts": {
+        "dev": "ng serve",
+        "build": "ng build --configuration production && cpy ./screenshot.png dist/browser",
+        "lint": "eslint --fix",
+        "type-check": "tsc --noEmit"
+    },
+    "lavamoat": {
+        "allowScripts": {
+            "@angular/build>esbuild": false,
+            "@angular/build>lmdb": false,
+            "@angular/build>lmdb>msgpackr>msgpackr-extract": false,
+            "@angular/build>sass>@parcel/watcher": false,
+            "@angular/build>vite>esbuild": false
+        }
     }
-  }
 }

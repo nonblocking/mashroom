@@ -4,7 +4,7 @@
 A test server which runs in dev mode and requires a bunch of external services:
 
  * [OpenLDAP](https://www.openldap.org/) for security (via OpenID Connect)
- * [RabbitMQ](https://www.rabbitmq.com/) as external messaging provider (via AMQP)
+ * [RabbitMQ](https://www.rabbitmq.com/) as an external messaging provider (via AMQP)
 
 ## Start
 

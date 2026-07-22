@@ -13,7 +13,7 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "helmet": "^8.2.0"
+        "helmet": "^8.3.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "3.0.0-alpha.0"

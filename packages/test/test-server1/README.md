@@ -1,7 +1,7 @@
 
 # Test Server 1
 
-A simple test server which runs in dev mode (re-compiles and reloads after code changes) and doesn't require any external services.
+A simple test server that runs in dev mode (re-compiles and reloads after code changes) and doesn't require any external services.
 
 It automatically adds all plugins from https://github.com/nonblocking/mashroom-plugin-demos if it is cloned into
 a folder *mashroom-plugin-demos* on the same level as this repo.

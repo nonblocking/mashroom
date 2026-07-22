@@ -1,12 +1,12 @@
 
 # Test Server 3
 
-A test server which runs in dev mode and requires a bunch of external services:
+A test server that runs in dev mode and requires a bunch of external services:
 
  * [Redis](https://redis.io) for sessions
  * [MongoDB](https://www.mongodb.com) for storage
  * [Keycloak](https://www.keycloak.org) for security (via OpenID Connect)
- * [Mosquitto](https://mosquitto.org) as external messaging provider (via MQTT)
+ * [Mosquitto](https://mosquitto.org) as an external messaging provider (via MQTT)
 
 ## Start
 

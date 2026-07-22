@@ -24,9 +24,9 @@
         "@types/react-autosuggest": "^10.1.11",
         "@types/react-click-outside": "^3.0.7",
         "@types/react-dom": "^19.2.3",
-        "react": "^19.2.7",
-        "react-dom": "^19.2.7",
-        "react-i18next": "^17.0.9"
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+        "react-i18next": "^17.0.10"
     },
     "scripts": {
         "build": "babel js -d dist --copy-files --extensions .ts,.tsx & npm run type-gen",
