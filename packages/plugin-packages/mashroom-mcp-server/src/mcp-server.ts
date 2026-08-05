@@ -1,15 +1,22 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import * as z from 'zod/v4';
-import listPortalSites from './tools/sites/list-portal-sites';
-import listPortalPages from './tools/pages/list-portal-pages';
 import serverInfo from './tools/server-info';
-import portalPageDetails from './tools/pages/portal-page-details';
 import listRegisteredPortalApps from './tools/apps/list-registered-portal-apps';
 import registerRemotePortalApp from './tools/apps/register-remote-portal-app';
 import unregisterRemotePortalApp from './tools/apps/unregister-remote-portal-app';
 import addPortalAppToPage from './tools/apps/add-portal-app-to-page';
 import removePortalAppFromPage from './tools/apps/remove-portal-app-from-page';
 import movePortalAppOnPage from './tools/apps/move-portal-app-on-page';
+import listPortalLayouts from './tools/layouts/list-portal-layouts';
+import getPortalLayoutTemplate from './tools/layouts/get-portal-layout-template';
+import addPortalPage from './tools/pages/add-portal-page';
+import deletePortalPage from './tools/pages/delete-portal-page';
+import portalPageDetails from './tools/pages/get-portal-page-details';
+import listPortalPages from './tools/pages/list-portal-pages';
+import updatePortalPage from './tools/pages/update-portal-page';
+import listPortalSites from './tools/sites/list-portal-sites';
+import updatePortalSite from './tools/sites/update-portal-site';
+import listPortalThemes from './tools/themes/list-portal-themes';
 import type {Request} from 'express';
 
 export default (req: Request) => {
@@ -50,6 +57,23 @@ export default (req: Request) => {
     );
 
     server.registerTool(
+        'update-portal-site',
+        {
+            title: 'Update Portal Site Tool',
+            description: 'Update Portal Site properties',
+            inputSchema: {
+                siteId: z.string().describe('The Site ID'),
+                newTitle: z.string().optional().describe('The new title (optional)'),
+                newTitleTranslations: z.object().optional().describe('The new title translations (languageCode: title) (optional)'),
+                newPath: z.string().optional().describe('The new Site path (optional)'),
+                newDefaultLayout: z.string().optional().describe('The new Site default layout (optional)'),
+                newDefaultTheme: z.string().optional().describe('The new Site default theme (optional)'),
+            }
+        },
+        updatePortalSite(req),
+    );
+
+    server.registerTool(
         'list-portal-pages',
         {
             title: 'List Portal Pages Tool',
@@ -71,6 +95,94 @@ export default (req: Request) => {
             }
         },
         portalPageDetails(req),
+    );
+
+    server.registerTool(
+        'add-portal-page',
+        {
+            title: 'Add New Portal Page Tool',
+            description: 'Add a new Page to the Mashroom Portal',
+            inputSchema: {
+                siteId: z.string().describe('The Site ID'),
+                pageId: z.string().optional().describe('A desired Page ID (optional)'),
+                parentPageId: z.string().optional().describe('The ID of the parent Page (optional)'),
+                insertAfterPageId: z.string().optional().describe('Insert the new Page behind the given Page ID (optional)'),
+                title: z.string().describe('The Page title'),
+                titleTranslations: z.object().optional().describe('The Page title translations (languageCode: title) (optional)'),
+                description: z.string().optional().describe('The Page description (optional)'),
+                hidden: z.boolean().optional().describe('Hide the Page in the navigation (optional)'),
+                route: z.string().describe('The Page route. Must start with a slash.'),
+                newClientSideRouting: z.boolean().optional().describe('Enable client-side routing for this Page (optional)'),
+                layout: z.string().optional().describe('The Page layout (optional)'),
+                theme: z.string().optional().describe('The Page theme (optional)'),
+            }
+        },
+        addPortalPage(req),
+    );
+
+    server.registerTool(
+        'update-portal-page',
+        {
+            title: 'Update Portal Page Tool',
+            description: 'Update Portal Page properties',
+            inputSchema: {
+                pageId: z.string().describe('A Page ID'),
+                newTitle: z.string().optional().describe('The new title (optional)'),
+                newTitleTranslations: z.object().optional().describe('The new title translations (languageCode: title) (optional)'),
+                newHidden: z.boolean().optional().describe('Hide the Page in the navigation (optional)'),
+                newRoute: z.string().optional().describe('The new Page route (optional)'),
+                newClientSideRouting: z.boolean().optional().describe('Enable client-side routing for this Page (optional)'),
+                newLayout: z.string().optional().describe('The new Page layout (optional)'),
+                newTheme: z.string().optional().describe('The new Page theme (optional)'),
+            }
+        },
+        updatePortalPage(req),
+    );
+
+    server.registerTool(
+        'delete-portal-page',
+        {
+            title: 'Delete Portal Page Tool',
+            description: 'Deletes a Portal Page and all its sub pages',
+            inputSchema: {
+                pageId: z.string().describe('A Page ID'),
+            }
+        },
+        deletePortalPage(req),
+    );
+
+    server.registerTool(
+        'list-portal-themes',
+        {
+            title: 'List Registered Portal Themes Tool',
+            description: 'List all Themes currently registered in Mashroom Portal',
+            inputSchema: {
+            }
+        },
+        listPortalThemes(req),
+    );
+
+    server.registerTool(
+        'list-portal-layouts',
+        {
+            title: 'List Registered Portal Layouts Tool',
+            description: 'List all Layouts currently registered in Mashroom Portal',
+            inputSchema: {
+            }
+        },
+        listPortalLayouts(req),
+    );
+
+    server.registerTool(
+        'get-portal-layout-template',
+        {
+            title: 'Get Portal Layout Template Tool',
+            description: 'Get the HTML template for the given Portal Layout',
+            inputSchema: {
+                layoutName: z.string().describe('The Portal Layout name'),
+            }
+        },
+        getPortalLayoutTemplate(req),
     );
 
     server.registerTool(

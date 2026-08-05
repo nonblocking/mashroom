@@ -25,8 +25,10 @@ export default (req: Request) => async (
 
     logger.info('Executing add-portal-app-to-page');
 
+    const { site, pageRef } = await determineSiteAndPageRef(pageId, pluginContext) ?? {};
     const page = await portalService.getPage(pageId);
-    if (!page) {
+
+    if (!site || !page || !pageRef) {
         return {
             content: [
                 {
@@ -37,7 +39,6 @@ export default (req: Request) => async (
         };
     }
 
-    const { site, pageRef } = await determineSiteAndPageRef(pageId, pluginContext);
     const serverUrl = determineServerUrl(req);
     const pageUrl = `${serverUrl}${site?.path}${pageRef?.friendlyUrl}`;
 

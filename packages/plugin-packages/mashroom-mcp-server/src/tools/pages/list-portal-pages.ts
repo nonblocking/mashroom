@@ -39,7 +39,7 @@ export default (req: Request) => async ({ siteId }: { siteId: string | undefined
         pages.forEach((p) => addPages(p, null));
 
         const pageLines = allPages.map((p, idx) =>
-            `${idx + 1}. Page ID: ${p.pageId}, Parent Page ID: ${p.parentPageId ?? '(none)'}, Friendly URL: ${p.friendlyUrl}, Full URL: ${p.fullUrl}, Title: ${serializeI18NString(p.title, pluginContext)}, Number sub pages: ${p.subPages?.length ?? 0}, Hidden: ${p.hidden ? 'yes' : 'no'}`,
+            `${idx + 1}. Page ID: ${p.pageId}, Parent Page ID: ${p.parentPageId ?? '(none)'}, Page Route: ${p.friendlyUrl}, Full URL: ${p.fullUrl}, Title: ${serializeI18NString(p.title, pluginContext)}, Number sub pages: ${p.subPages?.length ?? 0}, Hidden: ${p.hidden ? 'yes' : 'no'}`,
         );
 
         lines.push(`Site "${site.siteId}" pages (${allPages.length}):\n`);

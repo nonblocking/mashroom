@@ -10,12 +10,19 @@ const site1: MashroomPortalSite = {
     path: '/web',
     title: 'Default Site',
     pages: [{
-        pageId: '1',
+        pageId: 'page1',
         title: {
             en: 'Page 1',
             de: 'Seite 1'
         },
         friendlyUrl: '/page1',
+    }, {
+        pageId: 'page2',
+        title: {
+            en: 'Page 2',
+            de: 'Seite 2'
+        },
+        friendlyUrl: '/page2',
     }],
 };
 
@@ -37,14 +44,6 @@ const page1: MashroomPortalPage = {
     }
 };
 
-const pageRef = {
-    pageId: 'page1',
-    title: {
-        en: 'Page 1',
-        de: 'Seite 1'
-    },
-    friendlyUrl: '/page1',
-};
 
 const app1: Partial<MashroomPortalApp> = {
     name: 'My App 2',
@@ -78,9 +77,6 @@ describe('add-portal-app-to-page', () => {
                             return [site1];
                         },
                         getPortalApps: () => [app1],
-                        findPageRefByPageId: async () => {
-                            return pageRef;
-                        },
                         updatePage: mockUpdatePage,
                         insertPortalAppInstance: mockInsertPortalAppInstance,
                     }
@@ -100,14 +96,14 @@ describe('add-portal-app-to-page', () => {
 
         const result = await addPortalAppToPage(req)({
             appName: 'My App 2',
-            pageId: '123',
+            pageId: 'page1',
             areaId: 'area1',
             overrideAppConfig: {
                 foo: 'bar',
             },
         });
 
-        expect((result.content[0] as any).text).toContain('Success: Portal App "My App 2" added to page "123" at position 0 in area "area1. App Instance ID:');
+        expect((result.content[0] as any).text).toContain('Success: Portal App "My App 2" added to page "page1" at position 0 in area "area1. App Instance ID:');
         expect((result.content[0] as any).text).toContain('Full page URL: http://localhost:1234/portal/web/page1');
 
         expect(mockUpdatePage).toHaveBeenCalled();

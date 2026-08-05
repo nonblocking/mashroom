@@ -1,11 +1,12 @@
 
 # Change Log
 
-## [unreleased v3]
+## [unreleased]
 
+ * MCP Server: Added tools to create, update and delete Pages and to update the Site properties
  * OIDC Security Provider: Upgrade to openid-client 6.x
  * Portal: Renamed config property *ssrConfig.renderTimoutMs* to *ssrConfig.renderTimeoutMs* (the old property is still considered)
- * Portal: Fixed sending resources from hidden folders (like /.pnpm/)
+ * Portal: Fixed providing resources from hidden folders (like /.pnpm/)
 
 ## 3.0.0-alpha.0 (July 13, 2026)
 

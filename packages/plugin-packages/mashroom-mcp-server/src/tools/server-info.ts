@@ -27,6 +27,8 @@ export default (pluginContext: MashroomPluginContext) => async (): Promise<CallT
 
                     Every Page has a configurable Layout with multiple areas where Microfrontends can be placed.
 
+                    Mashroom documentation: https://docs.mashroom-server.com
+
                     Details about this Mashroom Server:
 
                     Server Name: ${serverConfig.name}

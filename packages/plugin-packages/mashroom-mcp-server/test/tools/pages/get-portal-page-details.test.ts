@@ -1,6 +1,6 @@
 
 import {resolve} from 'path';
-import portalPageDetails from '../../../src/tools/pages/portal-page-details';
+import getPortalPageDetails from '../../../src/tools/pages/get-portal-page-details';
 import type {
     MashroomPortalLayout,
     MashroomPortalPage,
@@ -15,7 +15,21 @@ const site1: MashroomPortalSite = {
         en: 'Default Site',
         de: 'Standard-Site',
     },
-    pages: [],
+    pages: [{
+        pageId: 'page1',
+        title: {
+            en: 'Page 1',
+            de: 'Seite 1'
+        },
+        friendlyUrl: '/page1',
+    }, {
+        pageId: 'page2',
+        title: {
+            en: 'Page 2',
+            de: 'Seite 2'
+        },
+        friendlyUrl: '/page2',
+    }],
 };
 
 const page1: MashroomPortalPage = {
@@ -33,23 +47,15 @@ const page1: MashroomPortalPage = {
             instanceId: '123123123',
         }],
     }
-};
-
-const pageRef = {
-    pageId: 'page1',
-    title: {
-        en: 'Page 1',
-        de: 'Seite 1'
-    },
-    friendlyUrl: '/page1',
-};
+};;
 
 const layout: Partial<MashroomPortalLayout> = {
-    name: 'Layout 2',
+    name: 'Mashroom Portal Default Layouts',
+    layoutId: 'Layout 2',
     layoutPath: resolve(__dirname, '../../data', 'test_layout.html'),
 };
 
-describe('portal-page-details', () => {
+describe('get-portal-page-details', () => {
 
     it('returns the page details',  async () => {
         const pluginContext: any = {
@@ -69,9 +75,6 @@ describe('portal-page-details', () => {
                         },
                         getPage: async () => {
                             return page1;
-                        },
-                        findPageRefByPageId: async () => {
-                            return pageRef;
                         },
                         getLayouts: () => {
                             return [layout];
@@ -93,11 +96,11 @@ describe('portal-page-details', () => {
             pluginContext,
         };
 
-        const result = await portalPageDetails(req)({ pageId: '1'});
+        const result = await getPortalPageDetails(req)({ pageId: 'page1'});
 
         expect(result.content).toEqual([{
             type: 'text',
-            text: `\nPage "1" Details:\n\nTitle: Page 1 (Translations: de: Seite 1)\nDescription: undefined\nFriendlyUrl: /page1\nFull URL: http://localhost:1234/portal/web/page1\nLayout: Layout 2\nLayout Area IDs: app-area1, app-area2\nApps on the Page:\n    1. Name: App 1, Instance ID: 22, Area ID: area1\n1. Name: App 2, Instance ID: 3, Area ID: area1\n2. Name: App 55, Instance ID: 123123123, Area ID: area2\n                `,
+            text: `\nPage "page1" Details:\n\nTitle: Page 1 (Translations: de: Seite 1)\nDescription: undefined\nRoute: /page1\nFull URL: http://localhost:1234/portal/web/page1\nLayout: Layout 2\nLayout Area IDs: app-area1, app-area2\nApps on the Page:\n    1. Name: App 1, Instance ID: 22, Area ID: area1\n1. Name: App 2, Instance ID: 3, Area ID: area1\n2. Name: App 55, Instance ID: 123123123, Area ID: area2\n                `,
         }]);
     });
 });
