@@ -38,7 +38,7 @@
         "jest": "^30.4.2",
         "jest-junit": "^17.0.0",
         "ts-jest": "^29.4.11",
-        "lerna": "^9.0.7",
+        "lerna": "^10.0.0",
         "mini-css-extract-plugin": "^2.10.2",
         "nock": "^14.0.16",
         "nodemon": "^3.1.14",
@@ -75,7 +75,7 @@
             "sass>@parcel/watcher": false,
             "jest>@jest/core>jest-resolve>unrs-resolver": false,
             "lerna>nx>@swc/core": false,
-            "lerna>nx#22.7.7": true
+            "lerna>nx#23.1.1": true
         }
     }
 }
