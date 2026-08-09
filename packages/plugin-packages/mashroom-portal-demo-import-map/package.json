@@ -8,14 +8,14 @@
     },
     "type": "module",
     "license": "MIT",
-    "version": "3.0.0-alpha.0",
+    "version": "3.0.0-alpha.1",
     "sideEffects": false,
     "files": [
         "dist/**",
         "mashroom.ts"
     ],
     "devDependencies": {
-        "@mashroom/mashroom-portal": "3.0.0-alpha.0"
+        "@mashroom/mashroom-portal": "3.0.0-alpha.1"
     },
     "scripts": {
         "lint": "eslint --fix",

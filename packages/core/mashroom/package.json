@@ -7,7 +7,7 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "3.0.0-alpha.0",
+    "version": "3.0.0-alpha.1",
     "main": "dist",
     "files": [
         "dist/**",
@@ -20,7 +20,7 @@
         "mashroom": "dist/server.js"
     },
     "dependencies": {
-        "@mashroom/mashroom-utils": "3.0.0-alpha.0",
+        "@mashroom/mashroom-utils": "3.0.0-alpha.1",
         "@types/express": "^5.0.6",
         "@types/minimist": "^1.2.5",
         "anymatch": "^3.1.3",
@@ -45,7 +45,9 @@
             "^.+\\.ts$": "ts-jest",
             "^.+(?!(chokidar|readdirp)).+\\.js$": "ts-jest"
         },
-        "transformIgnorePatterns": ["/node_modules/(?!(chokidar|readdirp)/)"],
+        "transformIgnorePatterns": [
+            "/node_modules/(?!(chokidar|readdirp)/)"
+        ],
         "reporters": [
             "default",
             "jest-junit"
