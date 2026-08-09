@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 3.0.0-alpha.1 (August 9, 2026)
+
  * MCP Server: Added tools to create, update and delete Pages and to update the Site properties
  * OIDC Security Provider: Upgrade to openid-client 6.x
  * Portal: Renamed config property *ssrConfig.renderTimoutMs* to *ssrConfig.renderTimeoutMs* (the old property is still considered)
