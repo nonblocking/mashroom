@@ -12,7 +12,7 @@
     "sideEffects": false,
     "files": [
         "dist/**",
-        "mashroom.ts"
+        "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom-portal": "3.0.0-alpha.1"
