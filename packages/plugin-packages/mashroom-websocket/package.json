@@ -15,10 +15,10 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "express-handlebars": "^9.0.1",
-        "fs-extra": "^11.3.6",
-        "handlebars": "^4.7.9",
-        "ws": "^8.21.1"
+        "express-handlebars": "^9.0.4",
+        "fs-extra": "^11.4.1",
+        "handlebars": "^4.7.10",
+        "ws": "^8.22.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "3.0.0-alpha.1",
@@ -26,7 +26,7 @@
         "@mashroom/mashroom-security": "3.0.0-alpha.1",
         "@mashroom/mashroom-utils": "3.0.0-alpha.1",
         "@types/fs-extra": "^11.0.4",
-        "@types/ws": "^8.18.1"
+        "@types/ws": "^8.18.2"
     },
     "jest": {
         "testEnvironment": "node",

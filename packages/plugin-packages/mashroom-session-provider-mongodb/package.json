@@ -14,7 +14,7 @@
     ],
     "dependencies": {
         "connect-mongo": "^6.0.0",
-        "mongodb": "^7.5.0"
+        "mongodb": "7.5.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "3.0.0-alpha.1",

@@ -24,14 +24,18 @@ export interface MashroomSecurityAcl {
    * This interface was referenced by `MashroomSecurityAcl`'s JSON-Schema definition
    * via the `patternProperty` "^/.*$".
    */
-  [k: string]: {
-    /**
-     * This interface was referenced by `undefined`'s JSON-Schema definition
-     * via the `patternProperty` "^(\*|GET|POST|PUT|DELETE|PATCH|OPTIONS)$".
-     */
-    [k: string]: {
-      allow?: Rule;
-      deny?: Rule;
-    };
-  };
+  [k: string]:
+    | {
+        /**
+         * This interface was referenced by `undefined`'s JSON-Schema definition
+         * via the `patternProperty` "^(\*|GET|POST|PUT|DELETE|PATCH|OPTIONS)$".
+         */
+        [k: string]:
+          | {
+              allow?: Rule;
+              deny?: Rule;
+            }
+          | undefined;
+      }
+    | undefined;
 }

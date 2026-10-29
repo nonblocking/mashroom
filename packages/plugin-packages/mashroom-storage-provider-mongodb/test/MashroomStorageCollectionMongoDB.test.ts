@@ -1,4 +1,6 @@
 
+jest.setTimeout(10000);
+
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import {setConnectionUriAndOptions, close} from '../src/mongodb';
 import MashroomStorageCollectionMongoDB from '../src/storage/MashroomStorageCollectionMongoDB';

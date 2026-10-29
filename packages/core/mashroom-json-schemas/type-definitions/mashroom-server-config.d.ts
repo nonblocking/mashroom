@@ -116,7 +116,7 @@ export interface Plugins {
      * If the file path is not absolute the plugin will expect it to be relative to the plugin folder or the Mashroom server config file.
      */
     mapping?: {
-      [k: string]: PackagerRelativeOrSystemPathOrHttp;
+      [k: string]: PackagerRelativeOrSystemPathOrHttp | undefined;
     };
   };
   "Mashroom Helmet Middleware"?: {
@@ -361,7 +361,7 @@ export interface Plugins {
        * This interface was referenced by `undefined`'s JSON-Schema definition
        * via the `patternProperty` "^.*$".
        */
-      [k: string]: number[];
+      [k: string]: number[] | undefined;
     };
   };
   "Mashroom Monitoring PM2 Exporter"?: {
@@ -701,7 +701,7 @@ export interface Plugins {
        * This interface was referenced by `undefined`'s JSON-Schema definition
        * via the `patternProperty` "^.*$".
        */
-      [k: string]: string;
+      [k: string]: string | undefined;
     };
     /**
      * Optionally map extra LDAP attributes to user.secrets (Default: null)
@@ -711,7 +711,7 @@ export interface Plugins {
        * This interface was referenced by `undefined`'s JSON-Schema definition
        * via the `patternProperty` "^.*$".
        */
-      [k: string]: string;
+      [k: string]: string | undefined;
     };
     /**
      * An optional JSON file that contains a user group to roles mapping (Default: /groupToRoleMapping.json)
@@ -889,11 +889,13 @@ export interface Plugins {
          * This interface was referenced by `undefined`'s JSON-Schema definition
          * via the `patternProperty` "^.*$".
          */
-        [k: string]: {
-          enabled?: boolean;
-          ttlSec?: number;
-          invalidateOnUpdate?: boolean;
-        };
+        [k: string]:
+          | {
+              enabled?: boolean;
+              ttlSec?: number;
+              invalidateOnUpdate?: boolean;
+            }
+          | undefined;
       };
     };
   };
@@ -920,16 +922,18 @@ export interface Plugins {
        * This interface was referenced by `undefined`'s JSON-Schema definition
        * via the `patternProperty` "^[^/]+$".
        */
-      [k: string]: {
-        frontendBasePath?: string;
-        mapping?: {
-          /**
-           * This interface was referenced by `undefined`'s JSON-Schema definition
-           * via the `patternProperty` "^/.*$".
-           */
-          [k: string]: string;
-        };
-      };
+      [k: string]:
+        | {
+            frontendBasePath?: string;
+            mapping?: {
+              /**
+               * This interface was referenced by `undefined`'s JSON-Schema definition
+               * via the `patternProperty` "^/.*$".
+               */
+              [k: string]: string | undefined;
+            };
+          }
+        | undefined;
     };
   };
   "Mashroom WebSocket Webapp"?: {
@@ -1001,6 +1005,9 @@ export interface IORedisConfig {
    * Enables cluster support
    */
   cluster?: boolean;
+  /**
+   * Items: Cluster start nodes
+   */
   clusterNodes?: {
     host?: string;
     port?: string;

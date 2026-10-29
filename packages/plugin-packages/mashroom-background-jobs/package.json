@@ -16,9 +16,9 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "express-handlebars": "^9.0.1",
-        "handlebars": "^4.7.9",
-        "node-schedule": "^2.1.1"
+        "express-handlebars": "^9.0.4",
+        "handlebars": "^4.7.10",
+        "node-schedule": "^2.1.2"
     },
     "devDependencies": {
         "@mashroom/mashroom": "3.0.0-alpha.1",

@@ -15,9 +15,9 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "body-parser": "^2.3.0",
-        "express-handlebars": "^9.0.1",
-        "handlebars": "^4.7.9"
+        "body-parser": "^2.4.0",
+        "express-handlebars": "^9.0.4",
+        "handlebars": "^4.7.10"
     },
     "devDependencies": {
         "@mashroom/mashroom": "3.0.0-alpha.1",

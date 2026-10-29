@@ -16,9 +16,9 @@
     "devDependencies": {
         "@mashroom/mashroom-json-schemas": "3.0.0-alpha.1",
         "@mashroom/mashroom-portal": "3.0.0-alpha.1",
-        "babel-preset-solid": "^1.9.12",
-        "eslint-plugin-solid": "^0.14.5",
-        "solid-js": "^1.9.14"
+        "babel-preset-solid": "^1.9.16",
+        "eslint-plugin-solid": "^0.18.1",
+        "solid-js": "^1.9.17"
     },
     "scripts": {
         "lint": "eslint --fix",

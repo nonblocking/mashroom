@@ -15,7 +15,7 @@
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "3.0.0-alpha.1",
-        "body-parser": "^2.3.0",
+        "body-parser": "^2.4.0",
         "express-sse-ts": "^1.0.2"
     },
     "devDependencies": {

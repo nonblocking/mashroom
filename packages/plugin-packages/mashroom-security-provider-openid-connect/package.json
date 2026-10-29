@@ -13,7 +13,7 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "openid-client": "^6.8.4"
+        "openid-client": "^6.8.8"
     },
     "devDependencies": {
         "@mashroom/mashroom": "3.0.0-alpha.1",

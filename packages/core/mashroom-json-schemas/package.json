@@ -14,7 +14,7 @@
     ],
     "devDependencies": {
         "ajv": "^8.20.0",
-        "json-schema-to-typescript": "^15.0.4"
+        "json-schema-to-typescript": "^16.0.0"
     },
     "jest": {
         "testEnvironment": "node",

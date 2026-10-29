@@ -14,8 +14,8 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "express-handlebars": "^9.0.1",
-        "handlebars": "^4.7.9"
+        "express-handlebars": "^9.0.4",
+        "handlebars": "^4.7.10"
     },
     "devDependencies": {
         "@fortawesome/fontawesome-free": "^7.3.1",

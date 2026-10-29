@@ -334,7 +334,7 @@ export interface MashroomPortalAppV2PluginDefinition {
            * This interface was referenced by `undefined`'s JSON-Schema definition
            * via the `patternProperty` "^[a-z]{2}$".
            */
-          [k: string]: string;
+          [k: string]: string | undefined;
         };
     /**
      * An optional category to group the Apps in the Admin App
@@ -354,7 +354,7 @@ export interface MashroomPortalAppV2PluginDefinition {
            * This interface was referenced by `undefined`'s JSON-Schema definition
            * via the `patternProperty` "^[a-z]{2}$".
            */
-          [k: string]: string;
+          [k: string]: string | undefined;
         };
     /**
      * Optional default list of roles that have the VIEW permission if not set via Admin App.
@@ -368,7 +368,7 @@ export interface MashroomPortalAppV2PluginDefinition {
        * This interface was referenced by `undefined`'s JSON-Schema definition
        * via the `patternProperty` "^[a-zA-Z_]\w+$".
        */
-      [k: string]: string[];
+      [k: string]: string[] | undefined;
     };
     caching?: PortalAppCachingConfig;
     editor?: PortalAppEditorConfig;
@@ -405,7 +405,8 @@ export interface MashroomPortalAppV2PluginDefinition {
              * Optional list of roles that are permitted to access the proxy
              */
             restrictToRoles?: string[];
-          };
+          }
+        | undefined;
     };
     /**
      * Optional meta info that could be used to lookup for Apps with specific features or capabilities
@@ -555,7 +556,7 @@ export interface MashroomPortalLayoutsPluginDefinition {
    *  A map with the layout html files (on the local file system)
    */
   layouts: {
-    [k: string]: PackageRelativeOrSystemPath;
+    [k: string]: PackageRelativeOrSystemPath | undefined;
   };
 }
 export interface MashroomPortalPageEnhancementPluginDefinition {
@@ -643,7 +644,7 @@ export interface MashroomPortalAppEnhancementPluginDefinition {
    * The value needs to be an existing global variable on the page (in window)
    */
   portalCustomClientServices?: {
-    [k: string]: JavaScriptIdentifier;
+    [k: string]: JavaScriptIdentifier | undefined;
   };
   defaultConfig?: {};
 }

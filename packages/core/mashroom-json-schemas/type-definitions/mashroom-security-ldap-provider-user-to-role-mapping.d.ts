@@ -11,5 +11,5 @@ export interface MashroomSecurityLdapProviderUserToRoleMapping {
    * This interface was referenced by `MashroomSecurityLdapProviderUserToRoleMapping`'s JSON-Schema definition
    * via the `patternProperty` "^[^$].*$".
    */
-  [k: string]: string[];
+  [k: string]: string[] | undefined;
 }

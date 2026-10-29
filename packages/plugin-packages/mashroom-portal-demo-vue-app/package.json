@@ -19,10 +19,10 @@
     "devDependencies": {
         "@mashroom/mashroom-portal": "3.0.0-alpha.1",
         "@vue/eslint-config-typescript": "^14.9.0",
-        "eslint-plugin-vue": "^10.10.0",
+        "eslint-plugin-vue": "^10.12.0",
         "vue-eslint-parser": "^10.4.1",
         "vue-loader": "^17.4.2",
-        "vue-tsc": "^3.3.7"
+        "vue-tsc": "^3.3.13"
     },
     "scripts": {
         "lint": "eslint --fix",

@@ -13,8 +13,10 @@ export interface MashroomSecurityTopicAcl {
    * This interface was referenced by `MashroomSecurityTopicAcl`'s JSON-Schema definition
    * via the `patternProperty` "^[a-zA-Z0-9/?#]+$".
    */
-  [k: string]: {
-    allow?: Rule;
-    deny?: Rule;
-  };
+  [k: string]:
+    | {
+        allow?: Rule;
+        deny?: Rule;
+      }
+    | undefined;
 }
