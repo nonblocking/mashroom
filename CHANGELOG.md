@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * LDAP Security Provider: Fixed escaping of special characters in group search filters (if the DN contained characters like "(", ")" or "*")
+
 ## 3.0.0-alpha.1 (August 9, 2026)
 
  * MCP Server: Added tools to create, update and delete Pages and to update the Site properties

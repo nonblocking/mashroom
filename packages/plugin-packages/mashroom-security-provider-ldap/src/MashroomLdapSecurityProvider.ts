@@ -20,7 +20,6 @@ import type {GroupToRoleMapping, UserToRoleMapping, LdapClient, LdapEntryUser, B
 
 const LDAP_AUTH_USER_SESSION_KEY = '__MASHROOM_SECURITY_LDAP_AUTH_USER';
 const LDAP_AUTH_EXPIRES_SESSION_KEY = '__MASHROOM_SECURITY_LDAP_AUTH_EXPIRES';
-const LDAP_SPECIAL_CHARACTERS = [',', '=', '+', '<', '>', '#', ';'];
 
 export default class MashroomLdapSecurityProvider implements MashroomSecurityProvider {
 
@@ -108,7 +107,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         }
 
         let user: LdapEntryUser | null = null;
-        const userSearchFilter = this._userSearchFilter.replace('@username@', username);
+        const userSearchFilter = this._userSearchFilter.replace('@username@', this._escapeSpecialCharactersInSearchFilterString(username));
         logger.debug(`Search for users: ${userSearchFilter}`);
         const extraAttributes = [
             ...(this._secretsMapping ? Object.values(this._secretsMapping) : []),
@@ -227,8 +226,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
             return [];
         }
 
-        const distinguishedName = this._escapeSpecialCharactersInDistinguishedName(user.dn);
-        const groupSearchFilter = `(&${this._groupSearchFilter}(member=${distinguishedName}))`;
+        const groupSearchFilter = `(&${this._groupSearchFilter}(member=${this._escapeSpecialCharactersInSearchFilterString(user.dn)}))`;
         logger.debug(`Search for user groups: ${groupSearchFilter}`);
         const groupEntries = await this._ldapClient.searchGroups(groupSearchFilter);
         return groupEntries.map((e) => e.cn);
@@ -329,18 +327,12 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         }
     }
 
-    // Escape special characters in the distinguished name.
-    // See RFC 2253: https://datatracker.ietf.org/doc/html/rfc2253
-    private _escapeSpecialCharactersInDistinguishedName(dn: string): string {
-        return dn
-            .split(',').map((rdn) => {
-                const [attribute, value] = rdn.split('=');
-                let escapedValue = value;
-                LDAP_SPECIAL_CHARACTERS.forEach((specialChar) => {
-                    escapedValue = escapedValue.replaceAll(specialChar, `\\${specialChar}`);
-                });
-                return `${attribute}=${escapedValue}`;
-            })
-            .join(',');
+    // Escape special characters search filters
+    // See https://datatracker.ietf.org/doc/html/rfc4515
+    private _escapeSpecialCharactersInSearchFilterString(filter: string): string {
+        return filter.replaceAll('\\', '\\5c')
+            .replaceAll('(', '\\28')
+            .replaceAll(')', '\\29')
+            .replaceAll('*', '\\2A');
     }
 }

@@ -177,11 +177,11 @@ describe('MashroomLdapSecurityProvider', () => {
         const mockSearch = jest.fn((filter) => {
             if (filter.indexOf('objectClass=person') !== -1 && filter.indexOf('test') !== -1) {
                 return Promise.resolve([{
-                    dn: 'uid=Mashroom+Server,ou=users,dc=nonblocking,dc=at',
+                    dn: 'uid=Mashroom (Server),ou=users,dc=nonblocking,dc=at',
                     cn: 'user1',
                     sn: 'User'
                 }]);
-            } else if (filter.indexOf('objectClass=group') !== -1 && filter.indexOf('Mashroom\\+Server') !== -1) {
+            } else if (filter.indexOf('objectClass=group') !== -1 && filter.indexOf('Mashroom \\28Server\\29') !== -1) {
                 return Promise.resolve([{
                     dn: 'cn=group1,ou=users,dc=nonblocking,dc=at',
                     cn: 'GROUP1'
