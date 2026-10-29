@@ -74,7 +74,7 @@
             "sass>@parcel/watcher": false,
             "jest>@jest/core>jest-resolve>unrs-resolver": false,
             "lerna>nx>@swc/core": false,
-            "lerna>nx#23.3.1": true
+            "lerna>nx#23.2.1": true
         }
     }
 }
