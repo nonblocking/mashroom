@@ -151,6 +151,10 @@
    * Ready probe returns HTTP 200 as soon as all local plugin packages are processed (even if some plugins could not be loaded)
    * *MashroomPluginPackage.pluginPackagePath* is legacy now and only works for local plugins. Use *MashroomPluginPackage.pluginPackageURL*
 
+## 2.9.5 (November 13, 2026)
+
+ * OpenTelemetry and other 3rd party dependencies upgraded
+
 ## 2.9.4 (January 5, 2026)
 
  * Core: The *trustProxy* property is now also propagated to child webapps, which was not the case by default. See: https://github.com/expressjs/express/issues/2552

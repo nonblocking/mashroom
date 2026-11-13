@@ -3,7 +3,7 @@ on:
   push:
     branches: [ master, v2_maintainance ]
   pull_request:
-    branches: [ master, v2_maintainance ]
+    branches: [ master ]
 jobs:
   build:
     runs-on: ubuntu-latest
