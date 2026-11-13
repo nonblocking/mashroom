@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 2.9.5 (November 13, 2026)
+
  * OpenTelemetry and other 3rd party dependencies upgraded
 
 ## 2.9.4 (January 5, 2026)
