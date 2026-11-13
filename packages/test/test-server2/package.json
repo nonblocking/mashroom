@@ -3,7 +3,7 @@
     "version": "2.9.4",
     "private": true,
     "dependencies": {
-        "@opentelemetry/exporter-prometheus": "^0.57.2",
+        "@opentelemetry/exporter-prometheus": "^0.301.1",
         "pm2": "^6.0.5"
     },
     "devDependencies": {

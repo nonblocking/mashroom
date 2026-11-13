@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * OpenTelemetry and other 3rd party dependencies upgraded
+
 ## 2.9.4 (January 5, 2026)
 
  * Core: The *trustProxy* property is now also propagated to child webapps, which was not the case by default. See: https://github.com/expressjs/express/issues/2552
