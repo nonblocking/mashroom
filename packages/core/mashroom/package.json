@@ -7,7 +7,7 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "3.0.0-alpha.1",
+    "version": "3.0.0-alpha.2",
     "main": "dist",
     "files": [
         "dist/**",
@@ -20,7 +20,7 @@
         "mashroom": "dist/server.js"
     },
     "dependencies": {
-        "@mashroom/mashroom-utils": "3.0.0-alpha.1",
+        "@mashroom/mashroom-utils": "3.0.0-alpha.2",
         "@types/express": "^5.0.6",
         "@types/minimist": "^1.2.5",
         "anymatch": "^3.1.3",

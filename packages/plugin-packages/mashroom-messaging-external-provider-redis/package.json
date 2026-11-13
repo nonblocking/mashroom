@@ -7,19 +7,19 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "3.0.0-alpha.1",
+    "version": "3.0.0-alpha.2",
     "files": [
         "dist/**",
         "mashroom.json"
     ],
     "dependencies": {
-        "@mashroom/mashroom-utils": "3.0.0-alpha.1",
+        "@mashroom/mashroom-utils": "3.0.0-alpha.2",
         "ioredis": "^5.11.1"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "3.0.0-alpha.1",
-        "@mashroom/mashroom-messaging": "3.0.0-alpha.1",
-        "@mashroom/mashroom-monitoring-metrics-collector": "3.0.0-alpha.1"
+        "@mashroom/mashroom": "3.0.0-alpha.2",
+        "@mashroom/mashroom-messaging": "3.0.0-alpha.2",
+        "@mashroom/mashroom-monitoring-metrics-collector": "3.0.0-alpha.2"
     },
     "jest": {
         "testEnvironment": "node",
