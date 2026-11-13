@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 3.0.0-alpha.2 (November 13, 2026)
+
  * LDAP Security Provider: Fixed escaping of special characters in group search filters (if the DN contained characters like "(", ")" or "*")
 
 ## 3.0.0-alpha.1 (August 9, 2026)
